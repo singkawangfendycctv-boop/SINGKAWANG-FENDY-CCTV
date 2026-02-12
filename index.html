@@ -329,20 +329,23 @@ footer{
 
 <script>
 /* AKTIFKAN SUARA SETELAH 1 INTERAKSI USER */
-function aktifkanSuara() {
+/* SUARA AKTIF SAAT USER INTERAKSI PERTAMA */
+function aktifkanSuara(){
   const v = document.getElementById("imlekVideo");
-  if (v) {
+  if(v){
     v.muted = false;
     v.volume = 1;
     v.play().catch(()=>{});
   }
+
+  document.removeEventListener("scroll", aktifkanSuara);
+  document.removeEventListener("touchstart", aktifkanSuara);
+  document.removeEventListener("click", aktifkanSuara);
 }
 
-/* Tambahkan semua gesture */
-document.addEventListener("click", aktifkanSuara, { once: true });
-document.addEventListener("scroll", aktifkanSuara, { once: true });
-document.addEventListener("touchstart", aktifkanSuara, { once: true });
-
+document.addEventListener("scroll", aktifkanSuara);
+document.addEventListener("touchstart", aktifkanSuara);
+document.addEventListener("click", aktifkanSuara);
 
 
 /* ===== 🔥 FIX TOTAL: LAMPION TIDAK BERHENTI + SINKRON KIRI-KANAN ===== */
