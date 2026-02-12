@@ -329,33 +329,15 @@ footer{
 
 <script>
 /* AKTIFKAN SUARA SETELAH 1 INTERAKSI USER */
-/* SUARA AKTIF SAAT USER INTERAKSI PERTAMA */
-/* SUARA AKTIF SAAT INTERAKSI PERTAMA (VERSI STABIL) */
-function aktifkanSuara(){
-
-  const v = document.getElementById("imlekVideo");
-  if(!v) return;
-
-  if(v.muted){
-    v.muted = false;
-    v.volume = 1;
-  }
-
-  // pastikan tetap play kalau browser sempat pause
-  if(v.paused){
+document.addEventListener("click", function aktifkanSuara(){
+  const v=document.getElementById("imlekVideo");
+  if(v){
+    v.muted=false;
+    v.volume=1;
     v.play().catch(()=>{});
   }
-
-  window.removeEventListener("scroll", aktifkanSuara);
-  window.removeEventListener("touchstart", aktifkanSuara);
-  window.removeEventListener("click", aktifkanSuara);
-}
-
-/* pakai window bukan document */
-window.addEventListener("scroll", aktifkanSuara, { passive:true });
-window.addEventListener("touchstart", aktifkanSuara, { passive:true });
-window.addEventListener("click", aktifkanSuara);
-
+  document.removeEventListener("click", aktifkanSuara);
+});
 
 /* ===== 🔥 FIX TOTAL: LAMPION TIDAK BERHENTI + SINKRON KIRI-KANAN ===== */
 function jagaLampionTetapMutar(){
