@@ -261,8 +261,9 @@ footer{
 <body>
 
 <header>
+  <!-- LAMPION KIRI -->
   <div class="header-lampion lampion-kiri">
-    <video autoplay muted loop playsinline>
+    <video autoplay muted playsinline preload="auto">
       <source src="lampion.webm" type="video/webm">
     </video>
   </div>
@@ -270,8 +271,9 @@ footer{
   <img src="logo.png">
   <h3>Fendy Freelance Store</h3>
 
+  <!-- LAMPION KANAN -->
   <div class="header-lampion lampion-kanan">
-    <video autoplay muted loop playsinline>
+    <video autoplay muted playsinline preload="auto">
       <source src="lampion.webm" type="video/webm">
     </video>
   </div>
@@ -336,6 +338,34 @@ document.addEventListener("click", function aktifkanSuara(){
   }
   document.removeEventListener("click", aktifkanSuara);
 });
+
+/* ===== 🔥 FIX TOTAL: LAMPION TIDAK BERHENTI + SINKRON KIRI-KANAN ===== */
+function jagaLampionTetapMutar(){
+
+  const videos = document.querySelectorAll(".header-lampion video");
+
+  videos.forEach(v => {
+    v.muted = true;
+    v.playsInline = true;
+    v.preload = "auto";
+    v.loop = false; // JANGAN pakai loop bawaan browser
+  });
+
+  function playAll(){
+    videos.forEach(v => {
+      v.currentTime = 0;
+      v.play().catch(()=>{});
+    });
+  }
+
+  // 🔴 MAIN TRICK: pakai satu timer global biar sinkron
+  setInterval(() => {
+    playAll();
+  }, 6000); // sesuaikan dengan DURASI video lampion.webm Anda
+
+  // play pertama kali
+  playAll();
+}
 </script>
 
 </body>
