@@ -263,7 +263,7 @@ footer{
 <header>
   <!-- LAMPION KIRI -->
   <div class="header-lampion lampion-kiri">
-    <video autoplay muted playsinline preload="auto">
+    <video autoplay muted playsinline loop preload="auto">
       <source src="lampion.webm" type="video/webm">
     </video>
   </div>
@@ -273,7 +273,7 @@ footer{
 
   <!-- LAMPION KANAN -->
   <div class="header-lampion lampion-kanan">
-    <video autoplay muted playsinline preload="auto">
+    <video autoplay muted playsinline loop preload="auto">
       <source src="lampion.webm" type="video/webm">
     </video>
   </div>
@@ -366,6 +366,12 @@ function jagaLampionTetapMutar(){
   // play pertama kali
   playAll();
 }
+
+// ✅ START LAMPION SEKALI SAJA (POSISI PALING BAWAH)
+window.addEventListener("load", ()=>{
+  jagaLampionTetapMutar();
+});
+
 </script>
 
 </body>
