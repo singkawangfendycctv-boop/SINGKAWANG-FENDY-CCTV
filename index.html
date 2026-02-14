@@ -249,6 +249,30 @@ header img{width:42px}
   }
 }
 
+.video-wrapper{
+  position:relative;
+  width:100%;
+}
+
+.video-wrapper video{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  border-radius:16px;
+  background:#000;
+  opacity:0;
+  transition:opacity .15s linear;
+}
+
+#videoA{
+  position:relative;
+  opacity:1;
+}
+
+
+
+
 /* ================= FOOTER ================= */
 footer{
   text-align:center;
@@ -282,14 +306,16 @@ footer{
 <!-- VIDEO -->
 <section class="video-section">
   <div class="video-card">
-  <div class="xiangyun-right">☁  ☁</div>
+    <div class="xiangyun-right">☁  ☁</div>
 
-  <video id="imlekVideo" autoplay muted loop playsinline preload="auto">
-    <source src="总合成01_1 (online-video-cutter.com).mp4" type="video/mp4">
-  </video>
-</div>
+    <div class="video-wrapper">
+      <video id="videoA" autoplay muted playsinline preload="auto"></video>
+      <video id="videoB" muted playsinline preload="auto"></video>
+    </div>
 
+  </div>
 </section>
+
 
 <!-- PENGUMUMAN -->
 <section class="imlek-notice">
@@ -330,14 +356,20 @@ footer{
 <script>
 /* AKTIFKAN SUARA SETELAH 1 INTERAKSI USER */
 document.addEventListener("click", function aktifkanSuara(){
-  const v=document.getElementById("imlekVideo");
-  if(v){
-    v.muted=false;
-    v.volume=1;
-    v.play().catch(()=>{});
-  }
+
+  const v1 = document.getElementById("videoA");
+  const v2 = document.getElementById("videoB");
+
+  [v1, v2].forEach(v=>{
+    if(v){
+      v.muted = false;
+      v.volume = 1;
+    }
+  });
+
   document.removeEventListener("click", aktifkanSuara);
 });
+
 
 /* ===== 🔥 FIX TOTAL: LAMPION TIDAK BERHENTI + SINKRON KIRI-KANAN ===== */
 function jagaLampionTetapMutar(){
@@ -371,6 +403,56 @@ function jagaLampionTetapMutar(){
 window.addEventListener("load", ()=>{
   jagaLampionTetapMutar();
 });
+
+// ===== VIDEO 1 & 2 BERGANTIAN =====
+// ===== SUPER SMOOTH SWITCH (NO GAP) =====
+window.addEventListener("load", () => {
+
+  const videoA = document.getElementById("videoA");
+  const videoB = document.getElementById("videoB");
+
+  const playlist = [
+    "video1.mp4",
+    "video2.mp4"
+  ];
+
+  let current = videoA;
+  let next = videoB;
+  let index = 0;
+
+  function startVideo(video, src){
+    video.src = src;
+    video.load();
+    video.play().catch(()=>{});
+  }
+
+  // preload dua video
+  videoA.src = playlist[0];
+  videoB.src = playlist[1];
+
+  videoA.play();
+
+  videoA.addEventListener("ended", swap);
+  videoB.addEventListener("ended", swap);
+
+  function swap(){
+    index = (index + 1) % playlist.length;
+
+    next.src = playlist[index];
+    next.load();
+
+    next.play().catch(()=>{});
+
+    current.style.opacity = "0";
+    next.style.opacity = "1";
+
+    // tukar posisi
+    [current, next] = [next, current];
+  }
+
+});
+
+
 
 </script>
 
