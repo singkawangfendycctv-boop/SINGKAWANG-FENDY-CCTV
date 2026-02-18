@@ -3,199 +3,121 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fendy Freelance Store – Pengumuman Imlek</title>
+<title>Fendy Freelance Store</title>
 
 <style>
-html{
+  html{
   background:#020617;
-  overscroll-behavior:none;
+  overscroll-behavior: none;
+  /* ===== FIX SUPAYA POSITION:FIXED BENAR-BENAR DI LAYAR ===== */
 }
-*{box-sizing:border-box}
 
 html, body{
   overflow-x: hidden;   /* 🔴 PENTING: cegah halaman melebar ke kanan */
   max-width: 100vw;
 }
 
+
+html, body {
+  transform: none !important;
+  position: static !important;}
+
+:root{
+  --primary:#e11d48;
+  --card:rgba(2,6,23,.75);
+  --text:#f1f5f9;
+}
+*{box-sizing:border-box}
 body{
   margin:0;
-  font-family:Segoe UI, Arial, sans-serif;
-  color:#f1f5f9;
+  font-family:Segoe UI,Arial,sans-serif;
+  color:var(--text);
+  min-height:100vh;
   background:
     linear-gradient(rgba(2,6,23,.25), rgba(2,6,23,.9)),
     url("bg.jpg") center/cover no-repeat fixed;
 }
 
-/* ================= HEADER ================= */
 header{
-  position:relative;
   display:flex;
   align-items:center;
   gap:12px;
   padding:18px 30px;
   background:rgba(2,6,23,.85);
-  z-index:5;
 }
 header img{width:42px}
 
-/* ================= LAMPION BASE ================= */
+/* ===== LAMPION VIDEO KIRI & KANAN ===== */
+/* ===== SETELAN LAMPION (ATUR DI SINI SAJA) ===== */
 :root{
-  --lampion-width:420px;
-  --lampion-height:360px;
-  --lampion-top:16px;
-  --lampion-offset:6vw;
+  --lampion-width: 420px;   /* 🔥 SUPER GEDE */
+  --lampion-top: 16px;     /* mulai menggantung dari atas layar */
+  --lampion-offset: 6vw;    /* posisi mendekati titik merah Anda */
 }
 
+
+/* ===== LAMPION VIDEO ===== */
+header{
+  position: relative;   /* penting supaya lampion nempel ke header */
+}
+
+/* ===== LAMPION VIDEO ===== */
 .header-lampion{
-  position:absolute;
-  top:var(--lampion-top);
-  width:var(--lampion-width);
-  height:var(--lampion-height);
+  position: absolute;
+  top: var(--lampion-top);
+  height: 360px;
+  width: var(--lampion-width);
+  max-width: 100vw;   /* 🔴 TAMBAHAN PENTING */
   pointer-events:none;
   overflow:hidden;
-  z-index:10;
+  z-index: 10;
 }
 
+/* ===== RING KAIT LAMPION (DESKTOP) ===== */
 .header-lampion::before{
   content:"";
   position:absolute;
-  top:18%;
+
+  /* posisi dikunci RELATIF ke tinggi lampion */
+  top: 18%;      
+
   left:50%;
-  transform:translate(-50%,-50%);
+  transform:translate(-50%, -50%);
+
   width:12px;
   height:12px;
   border:3px solid #facc15;
   border-radius:50%;
   background:rgba(0,0,0,.45);
+  z-index:12;
+
+  shape-rendering: geometricPrecision; /* biar tajam saat zoom */
 }
+
 
 .header-lampion video{
-  width:100%;
   height:100%;
+  width:100%;
   object-fit:contain;
-}
 
-.lampion-kiri{ left:var(--lampion-offset); }
-.lampion-kanan{ right:var(--lampion-offset); }
-
-/* ================= VIDEO ================= */
-.video-section{
-  display:flex;
-  justify-content:center;
-  margin-top:120px;
-  margin-bottom:60px;
-}
-
-/* ================= VIDEO CARD 中国风 ================= */
-/* ================= VIDEO CARD 中国风 ================= */
-.video-card{
-  position:relative;
-  max-width:560px;
-  width:100%;
-  padding:22px;
-  border-radius:26px;
-
-  background:
-    linear-gradient(135deg,
-      rgba(185,28,28,.85),
-      rgba(127,29,29,.85)
-    );
-
-  border:2px solid rgba(250,204,21,.8);
-  box-shadow:
-    0 0 35px rgba(250,204,21,.35),
-    inset 0 0 0 1px rgba(255,255,255,.15);
-}
-
-/* bingkai emas dalam */
-.video-card::before{
-  content:"";
-  position:absolute;
-  inset:10px;
-  border-radius:18px;
-  border:1px solid rgba(250,204,21,.6);
-  pointer-events:none;
-}
-
-/* 祥云 kiri */
-.video-card::after{
-  content:"☁  ☁";
-  position:absolute;
-  top:-18px;
-  left:20px;
-  font-size:18px;
-  letter-spacing:2px;
-  color:rgba(250,204,21,.85);
-  opacity:.85;
-}
-
-.video-card .xiangyun-right{
-  position:absolute;
-  top:-18px;
-  right:20px;
-  font-size:18px;
-  letter-spacing:2px;
-  color:rgba(250,204,21,.85);
-  opacity:.85;
-}
-
-@media (max-width:768px){
-  .video-card::after,
-  .video-card .xiangyun-right{
-    font-size:16px;      /* mobile */
-  }
+  /* 🔴 FIX MULUS GPU */
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
 
 
-
-/* video */
-.video-card video{
-  width:100%;
-  display:block;
-  border-radius:16px;
-  background:#000;
+/* posisi kiri */
+.lampion-kiri{
+  left: var(--lampion-offset);
 }
 
-
-
-/* ================= PENGUMUMAN ================= */
-.imlek-notice{
-  display:flex;
-  justify-content:center;
-  padding:40px 20px;
+/* posisi kanan */
+.lampion-kanan{
+  right: var(--lampion-offset);
 }
 
-.imlek-card{
-  max-width:640px;
-  width:100%;
-  text-align:center;
-  padding:44px 32px;
-  background:rgba(255,255,255,.06);
-  backdrop-filter:blur(14px);
-  border-radius:28px;
-  border:1px solid rgba(250,204,21,.45);
-  box-shadow:0 0 40px rgba(250,204,21,.25);
-}
-
-.imlek-card h1{
-  color:#facc15;
-  letter-spacing:3px;
-}
-
-.info{font-size:18px;line-height:1.75}
-.tanggal{color:#fde68a;font-size:19px}
-
-.divider{
-  height:1px;
-  margin:30px 0;
-  background:linear-gradient(to right, transparent, #facc15, transparent);
-}
-
-.ucapan-cn{color:#fde68a;font-size:18px}
-.brand{margin-top:28px;font-weight:700}
-
-/* ================= MOBILE (HP) ================= */
 @media (max-width: 768px){
 
   :root{
@@ -208,14 +130,12 @@ header img{width:42px}
   }
 
   .lampion-kiri{
-  left: calc(50% - 260px);
-}
+    left: calc(50% - 260px);
+  }
 
-.lampion-kanan{
-  right: calc(50% - 260px);
-}
-
-
+  .lampion-kanan{
+    right: calc(50% - 260px);
+  }
 
   /* 🔴 RING KHUSUS MOBILE (BIAR PAS DI UJUNG TALI) */
   .header-lampion::before{
@@ -249,34 +169,328 @@ header img{width:42px}
   }
 }
 
-.video-wrapper{
-  position:relative;
+
+
+.hero{text-align:center;padding:70px 20px}
+.search-box input{
   width:100%;
+  max-width:420px;
+  padding:14px 18px;
+  border-radius:14px;
+  border:none;
 }
 
-.video-wrapper video{
+/* ===== RUNNING TEXT FINAL (ANTI LOMPAT & ANTI KETIMPAK) ===== */
+.running-text{
+  margin:18px auto 0;
+  max-width:520px;
+  overflow:hidden;
+  background:rgba(225,29,72,.15);
+  border:1px solid rgba(225,29,72,.4);
+  border-radius:12px;
+  padding:10px 0;
+}
+
+.marquee{
+  display:flex;
+  width:max-content;
+  overflow:hidden;
+}
+
+.marquee__group{
+  display:flex;
+  white-space:nowrap;
+  animation: scroll 32s linear infinite;
+}
+
+.marquee__group span{
+  padding-right:60px;
+  color:#facc15;
+  font-weight:600;
+  font-size:22px;
+}
+
+@keyframes scroll{
+  from{
+    transform: translateX(0);
+  }
+  to{
+    transform: translateX(-100%);
+  }
+}
+
+
+
+/* 🔴🔴🔴 PROMO STYLE START (SMALL + RICH) 🔴🔴🔴 */
+.promo-box{
+  margin:20px auto;
+  max-width:1100px;
+  padding:16px;
+  background:linear-gradient(135deg,#020617,#1e293b);
+  border-radius:18px;
+  border:2px solid #facc15;
+  position:relative;
+  overflow:hidden;
+}
+
+/* efek kilap jalan */
+.promo-box::before{
+  content:"";
   position:absolute;
-  top:0;
-  left:0;
-  width:100%;
-  border-radius:16px;
-  background:#000;
-  opacity:0;
-  transition:opacity .15s linear;
+  inset:0;
+  background:linear-gradient(
+    120deg,
+    transparent 0%,
+    rgba(250,204,21,.25) 50%,
+    transparent 100%
+  );
+  animation:shine 4s infinite;
 }
 
-#videoA{
+@keyframes shine{
+  from{transform:translateX(-100%)}
+  to{transform:translateX(100%)}
+}
+
+.promo-title{
+  text-align:center;
+  font-size:20px;
+  font-weight:800;
+  margin-bottom:14px;
+  color:#facc15;
+  letter-spacing:1px;
+}
+
+/* 🔴 FIX KOLOM PROMO JADI LEBIH KECIL */
+/* 🔴🔴🔴 PROMO SCROLL KE SAMPING (KANAN ↔ KIRI) 🔴🔴🔴 */
+.promo-grid{
+  display:flex;              /* ⬅ bukan grid */
+  gap:14px;
+  overflow-x:auto;           /* ⬅ scroll kanan kiri */
+  padding-bottom:10px;
+  scroll-snap-type:x mandatory;
+}
+
+/* sembunyikan scrollbar tapi tetap bisa scroll */
+.promo-grid::-webkit-scrollbar{
+  height:6px;
+}
+.promo-grid::-webkit-scrollbar-thumb{
+  background:#facc15;
+  border-radius:10px;
+}
+
+/* 🔴 SETIAP CARD PROMO */
+.promo-grid .card{
+  min-width:180px;           /* ⬅ ukuran card */
+  flex-shrink:0;             /* ⬅ jangan mengecil */
+  scroll-snap-align:start;
+}
+
+
+.promo-grid .card{
+  padding:14px;
   position:relative;
-  opacity:1;
+  border:1px solid rgba(250,204,21,.4);
+}
+/* 🔴 PERKECIL CARD PROMO */
+.promo-grid .card{
+  padding:12px;
+  border-radius:14px;
+}
+
+
+/* badge promo */
+.promo-grid .card::after{
+  content:"PROMO";
+  position:absolute;
+  top:10px;
+  right:10px;
+  background:#dc2626;
+  color:#fff;
+  font-size:11px;
+  font-weight:700;
+  padding:4px 8px;
+  border-radius:999px;
+  animation:blink 1.6s infinite;
+}
+
+@keyframes blink{
+  0%,100%{opacity:1}
+  50%{opacity:.5}
+}
+
+/* 🔴 KHUSUS GAMBAR PROMO */
+.promo-grid img{
+  height:110px;
+  object-fit:contain;
+}
+.container{
+  padding:30px;
+}
+/* 🔴 TEKS PROMO LEBIH KECIL */
+.promo-grid h3{
+  font-size:14px;
+  margin:6px 0;
+}
+
+.price-promo{
+  font-size:16px;
+}
+
+.price-normal{
+  font-size:12px;
+}
+
+.price-normal{
+  text-decoration:line-through;
+  color:#94a3b8;
+  font-size:13px;
+}
+
+.price-promo{
+  font-size:18px;
+  font-weight:800;
+  color:#22c55e;
+}
+/* 🔴🔴🔴 PROMO STYLE END 🔴🔴🔴 */
+
+
+.container{padding:30px}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:22px;
+
+  /* 🔴 TAMBAHAN ANTI LAG */
+  will-change: contents;
+}
+.card{
+  background:var(--card);
+  border-radius:18px;
+  padding:18px;
+  cursor:pointer;
+  transition:.3s;
+  position:relative; /* ✅ sudah benar */
+}
+
+/* ===== BADGE GARANSI TAM (LEBIH GEDE & TURUN) ===== */
+.badge-tam{
+  position:absolute;
+  top:44px;              /* ⬅ TURUN, AMAN DARI PROMO */
+  right:12px;
+  width:54px;            /* ⬅ LEBIH GEDE */
+  height:54px;
+  background:url("tam.png") center/contain no-repeat;
+  z-index:6;
+  pointer-events:none;
+
+  .badge-tam{
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,.6));
+}
+
 }
 
 
 
+/* TENGAHKAN TEKS KATEGORI, BRAND, PRODUK */
+.card h3,
+.card h2,
+.card p,
+.price,
+#judul {
+  text-align: center;
+}
 
-/* ================= FOOTER ================= */
+/* DETAIL PRODUK */
+.card ul {
+  text-align: left;        /* biar spesifikasi tetap rapi */
+  margin: 12px auto;
+  padding-left: 20px;
+}
+
+.card img {
+  display: block;
+  margin: 0 auto;
+}
+
+.card:hover{transform:translateY(-5px)}
+.card img{width:100%;height:140px;object-fit:contain}
+.img-produk{cursor:zoom-in}
+.price{color:var(--primary);font-weight:bold}
+.back{grid-column:1/-1;cursor:pointer;color:#93c5fd;font-weight:600}
+
+.btn-cart{
+  margin-top:12px;
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:16px;
+  background:#facc15;
+  font-weight:bold;
+}
+.btn-wa{
+  margin-top:12px;
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:16px;
+  background:#25D366;
+  font-weight:bold;
+}
+
+/* CART */
+.cart-float{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#25D366;
+  color:#000;
+  padding:14px 18px;
+  border-radius:50px;
+  font-weight:bold;
+  cursor:pointer;
+  z-index:999;
+}
+.cart-box{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.85);
+  display:none;
+  z-index:9999;
+}
+.cart-content{
+  background:#020617;
+  max-width:420px;
+  margin:60px auto;
+  padding:20px;
+  border-radius:18px;
+}
+.cart-item{
+  display:flex;
+  justify-content:space-between;
+  margin:8px 0;
+}
+.cart-total{margin-top:14px;font-weight:bold}
+
+/* ZOOM */
+.zoom{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.9);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+}
+.zoom img{max-width:95%;max-height:95%}
+
+/* FOOTER */
 footer{
   text-align:center;
-  padding:20px;
+  padding:20px 10px;
+  font-size:14px;
+  color:#cbd5f5;
   background:rgba(2,6,23,.85);
 }
 </style>
@@ -284,10 +498,20 @@ footer{
 
 <body>
 
-<header>
+  <!-- ================================================= -->
+<!-- 🔴🔴🔴 OPSI PRO – DIV BACKGROUND (WAJIB ADA) -->
+<!-- ================================================= -->
+<div class="bg-wrap"></div>
+<!-- ================================================= -->
+ 
+<!-- ===== VIEWPORT LAYER (BENAR-BENAR TIDAK SCROLL) ===== -->
+<div class="lampion-layer">
+
+ <header>
+
   <!-- LAMPION KIRI -->
   <div class="header-lampion lampion-kiri">
-    <video autoplay muted playsinline loop preload="auto">
+    <video autoplay muted playsinline preload="auto">
       <source src="lampion.webm" type="video/webm">
     </video>
   </div>
@@ -297,79 +521,151 @@ footer{
 
   <!-- LAMPION KANAN -->
   <div class="header-lampion lampion-kanan">
-    <video autoplay muted playsinline loop preload="auto">
+    <video autoplay muted playsinline preload="auto">
       <source src="lampion.webm" type="video/webm">
     </video>
   </div>
+
 </header>
 
-<!-- VIDEO -->
-<section class="video-section">
-  <div class="video-card">
-    <div class="xiangyun-right">☁  ☁</div>
 
-    <div class="video-wrapper">
-      <video id="videoA" autoplay muted playsinline preload="auto"></video>
-      <video id="videoB" muted playsinline preload="auto"></video>
+<section class="hero">
+  <h2>SELAMAT DATANG</h2>
+  <p>Komputer • Laptop • CCTV • Smartphone • Service • Dll</p>
+  <div class="search-box">
+    <input id="search" placeholder="Cari produk... (contoh: axioo)">
+  </div>
+
+  <!-- 🔴 TAMBAHAN: RUNNING TEXT -->
+<div class="running-text">
+  <div class="marquee">
+    <div class="marquee__group">
+      <span>⚠️ HATI-HATI PENIPUAN! TRANSAKSI HANYA MELALUI WA ADMIN RESMI FENDY FREELANCE STORE • WA RESMI HANYA 0821-5371-9616 • FREE ONGKIR AREA SINGKAWANG DAN SEKITARNYA • KETERSEDIAAN STOK TIDAK SELALU READY •
+      HARGA DAPAT BERUBAH SEWAKTU-WAKTU TANPA PEMBERITAHUAN •</span>
     </div>
+    <div class="marquee__group">
+      <span>⚠️ HATI-HATI PENIPUAN! TRANSAKSI HANYA MELALUI WA ADMIN RESMI FENDY FREELANCE STORE • WA RESMI HANYA 0821-5371-9616 • FREE ONGKIR AREA SINGKAWANG DAN SEKITARNYA • KETERSEDIAAN STOK TIDAK SELALU READY •
+      HARGA DAPAT BERUBAH SEWAKTU-WAKTU TANPA PEMBERITAHUAN •</span>
+    </div>
+  </div>
+</div>
 
+</section>
+<!-- 🔴 PROMO / FLASH SALE (AUTO HIDE) -->
+<section id="promoSection" style="display:none">
+  <div class="promo-box">
+    <div class="promo-title">🔥 PROMO IMLEK SPESIAL 🔥</div>
+    <div id="promoView" class="promo-grid"></div>
   </div>
 </section>
 
-
-<!-- PENGUMUMAN -->
-<section class="imlek-notice">
-  <div class="imlek-card">
-    <h1>PENGUMUMAN</h1>
-
-    <p class="info">
-      Sehubungan dengan perayaan<br>
-      <strong>Tahun Baru Imlek</strong><br><br>
-      <span class="tanggal">
-        Store tutup sementara<br>
-        <b>16 – 20 Februari 2026</b><br>
-        Dibuka kembali<br>
-        <b>21 Februari 2026</b>
-      </span>
-    </p>
-
-    <div class="divider"></div>
-
-    <p class="ucapan-id">
-      🧧Selamat Tahun Baru Imlek 🧧<br>
-      Semoga kebahagiaan, kesehatan,<br>
-      dan rezeki selalu menyertai Anda.
-    </p>
-
-    <p class="ucapan-cn">
-      恭祝新春快乐<br>
-      身体健康 · 万事如意<br>
-      财源广进 · 阖家幸福
-    </p>
-
-    <span class="brand">Fendy Freelance Store</span>
-  </div>
+<section class="container">
+  <h2 id="judul">Kategori Produk</h2>
+  <div id="view" class="grid"></div>
 </section>
+
+<!-- CART -->
+<div class="cart-float" onclick="openCart()">
+  🛒 Keranjang (<span id="cartCount">0</span>)
+</div>
+
+<div class="cart-box" id="cartBox">
+  <div class="cart-content">
+    <h3>Keranjang Belanja</h3>
+    <div id="cartList"></div>
+    <div class="cart-total" id="cartTotal"></div>
+    <button class="btn-wa" onclick="checkoutWA()">Kirim Total ke WhatsApp</button>
+    <button class="btn-wa" style="background:#64748b" onclick="closeCart()">Tutup</button>
+  </div>
+</div>
+
+<div class="zoom" id="zoom"><img id="zoomImg"></div>
 
 <footer>© 2026 Fendy Freelance Store</footer>
 
 <script>
-/* AKTIFKAN SUARA SETELAH 1 INTERAKSI USER */
-document.addEventListener("click", function aktifkanSuara(){
 
-  const v1 = document.getElementById("videoA");
-  const v2 = document.getElementById("videoB");
+let kategori=[], brand=[], produk=[], cart=[];
+let produkSiap = false;
+// 🔴🔴🔴 TAMBAHAN ANTI LAG SEARCH
+let searchTimer = null;
+let fromPromo = false;
+// 🔴 TAMBAHAN: SIMPAN POSISI KLIK PRODUK
+let lastProductScroll = 0;
 
-  [v1, v2].forEach(v=>{
-    if(v){
-      v.muted = false;
-      v.volume = 1;
-    }
-  });
+// 🔴 WAJIB: GLOBAL SEARCH
+const search = document.getElementById("search");
 
-  document.removeEventListener("click", aktifkanSuara);
-});
+const view=document.getElementById("view");
+const judul=document.getElementById("judul");
+const zoom=document.getElementById("zoom");
+const zoomImg=document.getElementById("zoomImg");
 
+
+/* 🔴 TAMBAHAN: WA ADMIN (TIDAK DARI CSV) */
+const WA_ADMIN = "6282153719616";
+/* 🔴 HARGA AKTIF (PROMO / NORMAL) */
+function hargaAktif(p){
+  if(p.harga_promo && p.harga_promo > 0 && p.harga_promo < p.harga){
+    return p.harga_promo;
+  }
+  return p.harga;
+}
+
+/* NAV STATE */
+/* ================= FIX SCROLL (TANPA GANGGU KODING LAIN) ================= */
+let nav={
+  level:"kategori",
+  kategori:null,
+  brand:null,
+  scroll:{
+  kategori:0,
+  brand:{},
+  produk:{},
+  detail:0 // 🔴 TAMBAHAN
+}
+
+};
+
+let searchState = {
+  aktif: false,
+  keyword: "",
+  scroll: 0        //
+};
+
+
+function saveScroll(){
+  if(nav.level==="kategori"){
+    nav.scroll.kategori = window.scrollY;
+  }
+  else if(nav.level==="brand"){
+    nav.scroll.brand[nav.kategori] = window.scrollY;
+  }
+  else if(nav.level==="produk"){
+    nav.scroll.produk[nav.brand] = window.scrollY;
+  }
+}
+
+function restoreScroll(){
+  let y = 0;
+
+  if(nav.level==="kategori"){
+    y = nav.scroll.kategori || 0;
+  }
+  else if(nav.level==="brand"){
+    y = nav.scroll.brand[nav.kategori] || 0;
+  }
+  else if(nav.level==="produk"){
+    y = nav.scroll.produk[nav.brand] || 0;
+  }
+  else if(nav.level==="detail"){
+    y = nav.scroll.detail || 0;
+  }
+
+  setTimeout(()=>{
+    window.scrollTo({ top:y, behavior:"auto" });
+  },0);
+}
 
 /* ===== 🔥 FIX TOTAL: LAMPION TIDAK BERHENTI + SINKRON KIRI-KANAN ===== */
 function jagaLampionTetapMutar(){
@@ -399,60 +695,479 @@ function jagaLampionTetapMutar(){
   playAll();
 }
 
+
+
+/* ===== PROTEKSI JIKA BROWSER PAUSE (TAB PINDAH / MINIMIZE) ===== */
+document.addEventListener("visibilitychange", ()=>{
+  if(!document.hidden){
+    document.querySelectorAll(".header-lampion video").forEach(v=>{
+      if(v.paused) v.play().catch(()=>{});
+    });
+  }
+});
+
+
+
+/* ================= END FIX SCROLL ================= */
+
+/* LOAD CSV */
+fetch("kategori.csv").then(r=>r.text()).then(t=>{
+  kategori=t.trim().split("\n").slice(1).map(r=>{
+    const [id,nama,desk,foto]=r.split(",");
+    return {id,nama,desk,foto};
+  });
+  tampilKategori();
+});
+fetch("brand.csv").then(r=>r.text()).then(t=>{
+  brand=t.trim().split("\n").slice(1).map(r=>{
+    const [id,nama,kategori,foto]=r.split(",");
+    return {id,nama,kategori,foto};
+  });
+});
+fetch("produk.csv")
+.then(r=>r.text())
+.then(t=>{
+  produk = t.trim().split("\n").slice(1).map(r=>{
+    const [id,nama,harga,brand,foto,spek,harga_promo] = r.split(",");
+    return {
+      id,
+      nama,
+      harga:Number(harga),
+      brand,
+      foto,
+      spek,
+      harga_promo: harga_promo ? Number(harga_promo) : 0
+    };
+  });
+
+  produkSiap = true;
+  tampilPromo(); // 🔴 PANGGIL PROMO
+});
+
+
+/* VIEW */
+function tampilKategori(){
+  nav.level="kategori";
+  judul.innerText="Kategori Produk";
+  view.innerHTML="";
+  kategori.forEach(k=>{
+    view.innerHTML+=`
+      <div class="card" onclick="saveScroll();nav.kategori='${k.id}';tampilBrand('${k.id}','${k.nama}')">
+        <img src="${k.foto}">
+        <h3>${k.nama}</h3>
+        <p>${k.desk}</p>
+      </div>`;
+  });
+  restoreScroll();
+}
+
+function tampilBrand(id,nama){
+  saveScroll(); // 🔴 TAMBAH
+  nav.level="brand";
+  judul.innerText=nama;
+  view.innerHTML=`<div class="back" onclick="navBack()">⬅ Kembali</div>`;
+  brand.filter(b=>b.kategori===id).forEach(b=>{
+    view.innerHTML+=`
+      <div class="card" onclick="saveScroll();nav.brand='${b.id}';tampilProduk('${b.id}','${b.nama}')">
+        <img src="${b.foto}">
+        <h3>${b.nama}</h3>
+      </div>`;
+  });
+  restoreScroll();
+}
+
+function tampilProduk(id,nama){
+  nav.level="produk";
+  judul.innerText=nama;
+  view.innerHTML=`<div class="back" onclick="navBack()">⬅ Kembali</div>`;
+
+  produk.filter(p=>p.brand===id).forEach(p=>{
+  const isApple = id.toLowerCase().includes("apple");
+
+  view.innerHTML+=`
+    <div class="card" onclick="
+      lastProductScroll = window.scrollY;
+      tampilDetail('${p.id}')
+    ">
+
+      ${isApple ? `<div class="badge-tam"></div>` : ``}
+
+      <img src="${p.foto}" class="img-produk">
+      <h3>${p.nama}</h3>
+      <div class="price">
+        Rp ${hargaAktif(p).toLocaleString("id-ID")}
+      </div>
+
+    </div>`;
+});
+
+  restoreScroll(); // ✅ BALIK KE POSISI TENGAH
+}
+
+/* 🔴🔴🔴 PROMO FUNCTION START 🔴🔴🔴 */
+/* 🔴🔴🔴 PROMO FUNCTION START (BISA DIKLIK & HARGA PROMO) 🔴🔴🔴 */
+function tampilPromo(){
+  const promo = produk.filter(p => p.harga_promo > 0 && p.harga_promo < p.harga);
+  const section = document.getElementById("promoSection");
+  const pv = document.getElementById("promoView");
+
+  if(promo.length === 0){
+    section.style.display = "none";
+    return;
+  }
+
+  section.style.display = "block";
+  pv.innerHTML = "";
+
+  promo.forEach(p=>{
+  const diskon = Math.round(((p.harga - p.harga_promo) / p.harga) * 100);
+  const isApple = p.brand.toLowerCase().includes("apple");
+
+  pv.innerHTML += `
+    <div class="card" onclick="fromPromo=true; tampilDetail('${p.id}')">
+
+      ${isApple ? `<div class="badge-tam"></div>` : ``}
+
+      <img src="${p.foto}">
+      <h3>${p.nama}</h3>
+
+      <div class="price-normal">
+        Rp ${p.harga.toLocaleString("id-ID")}
+      </div>
+
+      <div class="price-promo">
+        Rp ${p.harga_promo.toLocaleString("id-ID")}
+      </div>
+
+      <div style="font-size:12px;color:#facc15">
+        Hemat ${diskon}%
+      </div>
+    </div>
+  `;
+});
+
+}
+/* 🔴🔴🔴 PROMO FUNCTION END 🔴🔴🔴 */
+
+function tampilDetail(id){
+
+  // 🔴 SIMPAN POSISI SEBELUM MASUK DETAIL
+  nav.scroll.detail = window.scrollY;
+
+  nav.level = "detail";
+
+
+  // 🔴🔴🔴 JIKA DARI SEARCH, SIMPAN SCROLL SEARCH
+  if(searchState.aktif){
+    searchState.scroll = window.scrollY;
+  }else{
+    saveScroll(); // default kategori / brand 
+  }
+
+  nav.level="detail";
+  const p=produk.find(x=>x.id===id);
+  judul.innerText=p.nama;
+  view.innerHTML=`
+    <div class="back" onclick="navBack()">⬅ Kembali</div>
+    <div class="card">
+      <img src="${p.foto}" class="img-produk">
+      <h2>${p.nama}</h2>
+      <!-- 🔴 PERBAIKAN -->
+<div class="price">Rp ${hargaAktif(p).toLocaleString("id-ID")}</div>
+
+      <ul>${p.spek.split(";").map(s=>`<li>${s}</li>`).join("")}</ul>
+
+      <!-- TAMBAHAN QTY + - -->
+<div style="display:flex;gap:10px;justify-content:center;margin-top:10px">
+  <button class="btn-cart" onclick="ubahQty('${p.id}',-1)">−</button>
+  <div id="qty-${p.id}" style="font-size:18px;font-weight:bold;line-height:48px">0</div>
+  <button class="btn-cart" onclick="ubahQty('${p.id}',1)">+</button>
+</div>
+    </div>`;
+}
+
+/* 🔴 RESET SEARCH INPUT */
+function resetSearch(){
+  search.value = "";          // kosongkan input
+  searchState.aktif = false;
+  searchState.keyword = "";
+  searchState.scroll = 0;
+}
+
+
+/* NAV BACK */
+function navBack(){
+  /* 🔴 JIKA DARI SEARCH & KEMBALI KE KATEGORI */
+  if(nav.level === "search"){
+    resetSearch();          // ⬅ AUTO HILANGKAN TEKS SEARCH
+    nav.level = "kategori";
+    tampilKategori();
+    restoreScroll();
+    return;
+  }
+
+  if(nav.level==="detail" && searchState.aktif){
+    nav.level="search";
+    renderSearchUlang();
+    return;
+  }
+
+  if(nav.level==="detail" && fromPromo){
+    fromPromo=false;
+    nav.level="kategori";
+    tampilKategori();
+    restoreScroll();
+    return;
+  }
+
+  if(nav.level==="detail"){
+  nav.level="produk";
+  tampilProduk(nav.brand,"");
+
+  // 🔴 BALIK KE POSISI SAAT KLIK PRODUK
+  setTimeout(()=>{
+    window.scrollTo({
+      top: lastProductScroll,
+      behavior: "auto"
+    });
+  },0);
+}
+
+  else if(nav.level==="produk"){
+    nav.level="brand";
+    tampilBrand(nav.kategori,"");
+    restoreScroll();
+  }
+  else{
+    nav.level="kategori";
+    tampilKategori();
+    restoreScroll();
+  }
+}
+
+
+/* ================= RESTORE SEARCH TANPA REFRESH ================= */
+function renderSearchUlang(){
+  judul.innerText = "Hasil Pencarian";
+  view.innerHTML = `<div class="back" onclick="navBack()">⬅ Kembali</div>`;
+
+  const hasil = produk.filter(p =>
+    p.nama && p.nama.toLowerCase().includes(searchState.keyword)
+  );
+
+  if(hasil.length === 0){
+    view.innerHTML += `<p style="text-align:center">Produk tidak ditemukan</p>`;
+    return;
+  }
+
+  hasil.forEach(p=>{
+    view.innerHTML += `
+      <div class="card" onclick="tampilDetail('${p.id}')">
+        <img src="${p.foto}" class="img-produk">
+        <h3>${p.nama}</h3>
+        <div class="price">Rp ${Number(p.harga).toLocaleString("id-ID")}</div>
+      </div>`;
+  });
+
+  // 🔴🔴🔴 BALIK KE POSISI SAAT PRODUK DIKLIK
+  setTimeout(()=>{
+    window.scrollTo({top:searchState.scroll,behavior:"auto"});
+  },0);
+}
+
+
+/* CART */
+function addCart(p){
+  const i=cart.find(x=>x.id===p.id);
+  i?i.qty++:cart.push({...p,qty:1});
+ updateCart();
+}
+
+
+/* TAMBAHAN */
+/* 🔴🔴🔴 QTY + - (PAKAI HARGA PROMO) 🔴🔴🔴 */
+function ubahQty(id, delta){
+  const p = produk.find(x => x.id === id);
+  let item = cart.find(x => x.id === id);
+
+  if(!item && delta > 0){
+    cart.push({
+      id: p.id,
+      qty: 1
+    });
+    item = cart.find(x => x.id === id);
+  }
+  else if(item){
+    item.qty += delta;
+    if(item.qty <= 0){
+      cart = cart.filter(x => x.id !== id);
+      item = null;
+    }
+  }
+
+  const el = document.getElementById("qty-" + id);
+  if(el) el.innerText = item ? item.qty : 0;
+
+  updateCart();
+}
+
+function updateCart(){
+cartCount.innerText=cart.reduce((a,b)=>a+b.qty,0);
+}
+
+
+/* 🔴🔴🔴 OPEN CART (HARGA PROMO) 🔴🔴🔴 */
+function openCart(){
+  cartBox.style.display = "block";
+  cartList.innerHTML = "";
+  let total = 0;
+
+  cart.forEach(item=>{
+    const p = produk.find(x => x.id === item.id);
+    const harga = hargaAktif(p); // 🔴 PROMO MASUK
+    const sub = harga * item.qty;
+    total += sub;
+
+    cartList.innerHTML += `
+      <div class="cart-item">
+        <div>${p.nama} (${item.qty})</div>
+        <div>Rp ${sub.toLocaleString("id-ID")}</div>
+      </div>
+    `;
+  });
+
+  cartTotal.innerText = "TOTAL: Rp " + total.toLocaleString("id-ID");
+}
+
+/* 🔴 FIX TOMBOL TUTUP KERANJANG */
+function closeCart(){
+  cartBox.style.display = "none";
+}
+
+
+/* ===== INI SATU-SATUNYA BAGIAN YANG DIPERBAIKI ===== */
+/* 🔴🔴🔴 CHECKOUT WA (HARGA PROMO MASUK) 🔴🔴🔴 */
+function checkoutWA(){
+  if(cart.length === 0){
+    alert("Keranjang masih kosong");
+    return;
+  }
+
+  let text = "Halo, saya mau order:%0A%0A";
+  let total = 0;
+
+  cart.forEach((item,i)=>{
+    const p = produk.find(x => x.id === item.id);
+    const harga = hargaAktif(p); // 🔴 PROMO DIPAKAI
+    const sub = harga * item.qty;
+    total += sub;
+
+    text += `${i+1}. ${p.nama}%0A`;
+    text += `Harga: Rp ${harga.toLocaleString("id-ID")}%0A`;
+    text += `Qty: ${item.qty}%0A`;
+    text += `Subtotal: Rp ${sub.toLocaleString("id-ID")}%0A%0A`;
+  });
+
+  text += `TOTAL: Rp ${total.toLocaleString("id-ID")}`;
+
+  window.open(`https://wa.me/${WA_ADMIN}?text=${text}`, "_blank");
+}
+
+
+/* ================================================ */
+
+/* SEARCH */
+/* ================= SEARCH FIX PALING AMAN ================= */
+/* ================= SEARCH FINAL (ANTI LAG) ================= */
+search.addEventListener("input", function () {
+  if (!produkSiap) return;
+
+  // 🔴 HENTIKAN PROSES SEBELUMNYA
+  clearTimeout(searchTimer);
+
+  // 🔴 TUNGGU USER SELESAI NGETIK
+  searchTimer = setTimeout(() => {
+
+    const k = search.value.trim().toLowerCase();
+
+    // 🔴 JIKA KURANG DARI 2 HURUF → BALIK KATEGORI
+    if (k.length < 2) {
+      searchState.aktif = false;
+      nav.level = "kategori";
+      tampilKategori();
+      return;
+    }
+
+    searchState.aktif = true;
+    searchState.keyword = k;
+    nav.level = "search";
+
+    judul.innerText = "Hasil Pencarian";
+    view.innerHTML = `<div class="back" onclick="navBack()">⬅ Kembali</div>`;
+
+    const hasil = produk.filter(p =>
+      p.nama && p.nama.toLowerCase().includes(k)
+    );
+
+    if (hasil.length === 0) {
+      view.innerHTML += `<p style="text-align:center">Produk tidak ditemukan</p>`;
+      return;
+    }
+
+    hasil.forEach(p=>{
+      view.innerHTML += `
+        <div class="card" onclick="tampilDetail('${p.id}')">
+          <img src="${p.foto}" class="img-produk">
+          <h3>${p.nama}</h3>
+          <div class="price">Rp ${Number(p.harga).toLocaleString("id-ID")}</div>
+        </div>`;
+    });
+
+  }, 300); // ⏱️ 300ms = HALUS
+});
+/* =========================================================== */
+
+/* ZOOM */
+function zoomFoto(src){
+  zoomImg.src=src;
+  zoom.style.display="flex";
+}
+zoom.onclick=()=>zoom.style.display="none";
+
+/* ================================================= */
+/* ===== FIX FOTO PRODUK (PC & MOBILE, TANPA UBAH HTML) ===== */
+/* ================================================= */
+/* ===== ZOOM FOTO AKTIF HANYA DI HALAMAN DETAIL ===== */
+document.addEventListener("click", function(e){
+  const img = e.target.closest(".img-produk");
+  if(!img) return;
+
+  // ❌ selain halaman detail → MATI
+  if(nav.level !== "detail") return;
+
+  e.preventDefault();
+  e.stopPropagation();
+  e.stopImmediatePropagation();
+  zoomFoto(img.src);
+}, true);
+
+document.addEventListener("touchstart", function(e){
+  const img = e.target.closest(".img-produk");
+  if(!img) return;
+
+  if(nav.level !== "detail") return;
+
+  e.preventDefault();
+  e.stopPropagation();
+  e.stopImmediatePropagation();
+  zoomFoto(img.src);
+}, { capture:true, passive:false });
+
 // ✅ START LAMPION SEKALI SAJA (POSISI PALING BAWAH)
 window.addEventListener("load", ()=>{
   jagaLampionTetapMutar();
 });
-
-// ===== VIDEO 1 & 2 BERGANTIAN =====
-// ===== SUPER SMOOTH SWITCH (NO GAP) =====
-window.addEventListener("load", () => {
-
-  const videoA = document.getElementById("videoA");
-  const videoB = document.getElementById("videoB");
-
-  const playlist = [
-    "video1.mp4",
-    "video2.mp4"
-  ];
-
-  let current = videoA;
-  let next = videoB;
-  let index = 0;
-
-  function startVideo(video, src){
-    video.src = src;
-    video.load();
-    video.play().catch(()=>{});
-  }
-
-  // preload dua video
-  videoA.src = playlist[0];
-  videoB.src = playlist[1];
-
-  videoA.play();
-
-  videoA.addEventListener("ended", swap);
-  videoB.addEventListener("ended", swap);
-
-  function swap(){
-    index = (index + 1) % playlist.length;
-
-    next.src = playlist[index];
-    next.load();
-
-    next.play().catch(()=>{});
-
-    current.style.opacity = "0";
-    next.style.opacity = "1";
-
-    // tukar posisi
-    [current, next] = [next, current];
-  }
-
-});
-
-
+</script>
 
 </script>
 
