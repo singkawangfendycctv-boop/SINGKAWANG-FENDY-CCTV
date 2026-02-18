@@ -669,14 +669,11 @@ function restoreScroll(){
 
 /* ===== 🔥 FIX TOTAL: LAMPION TIDAK BERHENTI + SINKRON KIRI-KANAN ===== */
 function jagaLampionTetapMutar(){
-
   const videos = document.querySelectorAll(".header-lampion video");
 
   videos.forEach(v => {
     v.muted = true;
-    v.playsInline = true;
-    v.preload = "auto";
-    v.loop = false; // JANGAN pakai loop bawaan browser
+    v.loop = false;
   });
 
   function playAll(){
@@ -686,16 +683,9 @@ function jagaLampionTetapMutar(){
     });
   }
 
-  // 🔴 MAIN TRICK: pakai satu timer global biar sinkron
-  setInterval(() => {
-    playAll();
-  }, 6000); // sesuaikan dengan DURASI video lampion.webm Anda
-
-  // play pertama kali
+  setInterval(playAll, 6000);
   playAll();
 }
-
-
 
 /* ===== PROTEKSI JIKA BROWSER PAUSE (TAB PINDAH / MINIMIZE) ===== */
 document.addEventListener("visibilitychange", ()=>{
