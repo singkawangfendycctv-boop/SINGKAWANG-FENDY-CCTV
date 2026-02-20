@@ -236,7 +236,26 @@ header img{width:42px}
   padding:18px;
   cursor:pointer;
   transition:.3s;
+  position:relative; /* ✅ sudah benar */
 }
+
+/* ===== BADGE GARANSI TAM (LEBIH GEDE & TURUN) ===== */
+.badge-tam{
+  position:absolute;
+  top:44px;              /* ⬅ TURUN, AMAN DARI PROMO */
+  right:12px;
+  width:54px;            /* ⬅ LEBIH GEDE */
+  height:54px;
+  background:url("tam.png") center/contain no-repeat;
+  z-index:6;
+  pointer-events:none;
+}
+
+.badge-tam{
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,.6));
+}
+
+
 
 /* TENGAHKAN TEKS KATEGORI, BRAND, PRODUK */
 .card h3,
@@ -568,19 +587,25 @@ function tampilProduk(id,nama){
   view.innerHTML=`<div class="back" onclick="navBack()">⬅ Kembali</div>`;
 
   produk.filter(p=>p.brand===id).forEach(p=>{
-    view.innerHTML+=`
-      <div class="card" onclick="
-  lastProductScroll = window.scrollY;
-  tampilDetail('${p.id}')
-">
+  const isApple = id.toLowerCase().includes("apple");
 
-        <img src="${p.foto}" class="img-produk">
-        <h3>${p.nama}</h3>
-        <!-- 🔴 PERBAIKAN -->
-<div class="price">Rp ${hargaAktif(p).toLocaleString("id-ID")}</div>
+  view.innerHTML+=`
+    <div class="card" onclick="
+      lastProductScroll = window.scrollY;
+      tampilDetail('${p.id}')
+    ">
 
-      </div>`;
-  });
+      ${isApple ? `<div class="badge-tam"></div>` : ``}
+
+      <img src="${p.foto}" class="img-produk">
+      <h3>${p.nama}</h3>
+      <div class="price">
+        Rp ${hargaAktif(p).toLocaleString("id-ID")}
+      </div>
+
+    </div>`;
+});
+
 
   restoreScroll(); // ✅ BALIK KE POSISI TENGAH
 }
@@ -601,29 +626,32 @@ function tampilPromo(){
   pv.innerHTML = "";
 
   promo.forEach(p=>{
-    const diskon = Math.round(((p.harga - p.harga_promo) / p.harga) * 100);
+  const diskon = Math.round(((p.harga - p.harga_promo) / p.harga) * 100);
+  const isApple = p.brand.toLowerCase().includes("apple");
 
-    pv.innerHTML += `
-      <!-- 🔴 PROMO BISA DIKLIK -->
-      <!-- 🔴 FIX BACK PROMO -->
-<div class="card" onclick="fromPromo=true; tampilDetail('${p.id}')">
-        <img src="${p.foto}">
-        <h3>${p.nama}</h3>
+  pv.innerHTML += `
+    <div class="card" onclick="fromPromo=true; tampilDetail('${p.id}')">
 
-        <div class="price-normal">
-          Rp ${p.harga.toLocaleString("id-ID")}
-        </div>
+      ${isApple ? `<div class="badge-tam"></div>` : ``}
 
-        <div class="price-promo">
-          Rp ${p.harga_promo.toLocaleString("id-ID")}
-        </div>
+      <img src="${p.foto}">
+      <h3>${p.nama}</h3>
 
-        <div style="font-size:12px;color:#facc15">
-          Hemat ${diskon}%
-        </div>
+      <div class="price-normal">
+        Rp ${p.harga.toLocaleString("id-ID")}
       </div>
-    `;
-  });
+
+      <div class="price-promo">
+        Rp ${p.harga_promo.toLocaleString("id-ID")}
+      </div>
+
+      <div style="font-size:12px;color:#facc15">
+        Hemat ${diskon}%
+      </div>
+    </div>
+  `;
+});
+
 }
 /* 🔴🔴🔴 PROMO FUNCTION END 🔴🔴🔴 */
 
