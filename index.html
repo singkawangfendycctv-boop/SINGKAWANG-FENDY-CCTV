@@ -9,18 +9,7 @@
   html{
   background:#020617;
   overscroll-behavior: none;
-  /* ===== FIX SUPAYA POSITION:FIXED BENAR-BENAR DI LAYAR ===== */
 }
-
-html, body{
-  overflow-x: hidden;   /* 🔴 PENTING: cegah halaman melebar ke kanan */
-  max-width: 100vw;
-}
-
-
-html, body {
-  transform: none !important;
-  position: static !important;}
 
 :root{
   --primary:#e11d48;
@@ -46,130 +35,6 @@ header{
   background:rgba(2,6,23,.85);
 }
 header img{width:42px}
-
-/* ===== LAMPION VIDEO KIRI & KANAN ===== */
-/* ===== SETELAN LAMPION (ATUR DI SINI SAJA) ===== */
-:root{
-  --lampion-width: 420px;   /* 🔥 SUPER GEDE */
-  --lampion-top: 16px;     /* mulai menggantung dari atas layar */
-  --lampion-offset: 6vw;    /* posisi mendekati titik merah Anda */
-}
-
-
-/* ===== LAMPION VIDEO ===== */
-header{
-  position: relative;   /* penting supaya lampion nempel ke header */
-}
-
-/* ===== LAMPION VIDEO ===== */
-.header-lampion{
-  position: absolute;
-  top: var(--lampion-top);
-  height: 360px;
-  width: var(--lampion-width);
-  max-width: 100vw;   /* 🔴 TAMBAHAN PENTING */
-  pointer-events:none;
-  overflow:hidden;
-  z-index: 10;
-}
-
-/* ===== RING KAIT LAMPION (DESKTOP) ===== */
-.header-lampion::before{
-  content:"";
-  position:absolute;
-
-  /* posisi dikunci RELATIF ke tinggi lampion */
-  top: 18%;      
-
-  left:50%;
-  transform:translate(-50%, -50%);
-
-  width:12px;
-  height:12px;
-  border:3px solid #facc15;
-  border-radius:50%;
-  background:rgba(0,0,0,.45);
-  z-index:12;
-
-  shape-rendering: geometricPrecision; /* biar tajam saat zoom */
-}
-
-
-.header-lampion video{
-  height:100%;
-  width:100%;
-  object-fit:contain;
-
-  /* 🔴 FIX MULUS GPU */
-  will-change: transform;
-  backface-visibility: hidden;
-  transform: translateZ(0);
-}
-
-
-
-/* posisi kiri */
-.lampion-kiri{
-  left: var(--lampion-offset);
-}
-
-/* posisi kanan */
-.lampion-kanan{
-  right: var(--lampion-offset);
-}
-
-@media (max-width: 768px){
-
-  :root{
-    --lampion-width: 260px;
-    --lampion-top: 42px;
-  }
-
-  .header-lampion{
-    height: 220px;
-  }
-
-  .lampion-kiri{
-    left: calc(50% - 260px);
-  }
-
-  .lampion-kanan{
-    right: calc(50% - 260px);
-  }
-
-  /* 🔴 RING KHUSUS MOBILE (BIAR PAS DI UJUNG TALI) */
-  .header-lampion::before{
-    top: 17%;      /* lebih turun dikit biar pas di HP */
-    width:9px;
-    height:9px;
-    border-width:2px;
-  }
-}
-
-
-
-@media (min-width: 769px) and (max-width: 1024px){
-
-  :root{
-    --lampion-width: 360px;
-    --lampion-top: 28px;
-    --lampion-offset: 2vw;
-  }
-
-  .header-lampion{
-    height: 300px;
-  }
-
-  /* 🔴 RING KHUSUS TABLET */
-  .header-lampion::before{
-    top: 17%;      /* sedikit turun dari desktop */
-    width:11px;
-    height:11px;
-    border-width:3px;
-  }
-}
-
-
 
 .hero{text-align:center;padding:70px 20px}
 .search-box input{
@@ -371,27 +236,7 @@ header{
   padding:18px;
   cursor:pointer;
   transition:.3s;
-  position:relative; /* ✅ sudah benar */
 }
-
-/* ===== BADGE GARANSI TAM (LEBIH GEDE & TURUN) ===== */
-.badge-tam{
-  position:absolute;
-  top:44px;              /* ⬅ TURUN, AMAN DARI PROMO */
-  right:12px;
-  width:54px;            /* ⬅ LEBIH GEDE */
-  height:54px;
-  background:url("tam.png") center/contain no-repeat;
-  z-index:6;
-  pointer-events:none;
-
-  .badge-tam{
-  filter: drop-shadow(0 2px 6px rgba(0,0,0,.6));
-}
-
-}
-
-
 
 /* TENGAHKAN TEKS KATEGORI, BRAND, PRODUK */
 .card h3,
@@ -504,30 +349,10 @@ footer{
 <div class="bg-wrap"></div>
 <!-- ================================================= -->
  
-<!-- ===== VIEWPORT LAYER (BENAR-BENAR TIDAK SCROLL) ===== -->
-<div class="lampion-layer">
-
- <header>
-
-  <!-- LAMPION KIRI -->
-  <div class="header-lampion lampion-kiri">
-    <video autoplay muted playsinline preload="auto">
-      <source src="lampion.webm" type="video/webm">
-    </video>
-  </div>
-
+<header>
   <img src="logo.png">
   <h3>Fendy Freelance Store</h3>
-
-  <!-- LAMPION KANAN -->
-  <div class="header-lampion lampion-kanan">
-    <video autoplay muted playsinline preload="auto">
-      <source src="lampion.webm" type="video/webm">
-    </video>
-  </div>
-
 </header>
-
 
 <section class="hero">
   <h2>SELAMAT DATANG</h2>
@@ -550,11 +375,13 @@ footer{
   </div>
 </div>
 
+
+
 </section>
 <!-- 🔴 PROMO / FLASH SALE (AUTO HIDE) -->
 <section id="promoSection" style="display:none">
   <div class="promo-box">
-    <div class="promo-title">🔥 PROMO IMLEK SPESIAL 🔥</div>
+    <div class="promo-title">🔥 PROMO TERBATAS 🔥</div>
     <div id="promoView" class="promo-grid"></div>
   </div>
 </section>
@@ -667,37 +494,6 @@ function restoreScroll(){
   },0);
 }
 
-/* ===== 🔥 FIX TOTAL: LAMPION TIDAK BERHENTI + SINKRON KIRI-KANAN ===== */
-function jagaLampionTetapMutar(){
-  const videos = document.querySelectorAll(".header-lampion video");
-
-  videos.forEach(v => {
-    v.muted = true;
-    v.loop = false;
-  });
-
-  function playAll(){
-    videos.forEach(v => {
-      v.currentTime = 0;
-      v.play().catch(()=>{});
-    });
-  }
-
-  setInterval(playAll, 6000);
-  playAll();
-}
-
-/* ===== PROTEKSI JIKA BROWSER PAUSE (TAB PINDAH / MINIMIZE) ===== */
-document.addEventListener("visibilitychange", ()=>{
-  if(!document.hidden){
-    document.querySelectorAll(".header-lampion video").forEach(v=>{
-      if(v.paused) v.play().catch(()=>{});
-    });
-  }
-});
-
-
-
 /* ================= END FIX SCROLL ================= */
 
 /* LOAD CSV */
@@ -772,24 +568,19 @@ function tampilProduk(id,nama){
   view.innerHTML=`<div class="back" onclick="navBack()">⬅ Kembali</div>`;
 
   produk.filter(p=>p.brand===id).forEach(p=>{
-  const isApple = id.toLowerCase().includes("apple");
+    view.innerHTML+=`
+      <div class="card" onclick="
+  lastProductScroll = window.scrollY;
+  tampilDetail('${p.id}')
+">
 
-  view.innerHTML+=`
-    <div class="card" onclick="
-      lastProductScroll = window.scrollY;
-      tampilDetail('${p.id}')
-    ">
+        <img src="${p.foto}" class="img-produk">
+        <h3>${p.nama}</h3>
+        <!-- 🔴 PERBAIKAN -->
+<div class="price">Rp ${hargaAktif(p).toLocaleString("id-ID")}</div>
 
-      ${isApple ? `<div class="badge-tam"></div>` : ``}
-
-      <img src="${p.foto}" class="img-produk">
-      <h3>${p.nama}</h3>
-      <div class="price">
-        Rp ${hargaAktif(p).toLocaleString("id-ID")}
-      </div>
-
-    </div>`;
-});
+      </div>`;
+  });
 
   restoreScroll(); // ✅ BALIK KE POSISI TENGAH
 }
@@ -810,32 +601,29 @@ function tampilPromo(){
   pv.innerHTML = "";
 
   promo.forEach(p=>{
-  const diskon = Math.round(((p.harga - p.harga_promo) / p.harga) * 100);
-  const isApple = p.brand.toLowerCase().includes("apple");
+    const diskon = Math.round(((p.harga - p.harga_promo) / p.harga) * 100);
 
-  pv.innerHTML += `
-    <div class="card" onclick="fromPromo=true; tampilDetail('${p.id}')">
+    pv.innerHTML += `
+      <!-- 🔴 PROMO BISA DIKLIK -->
+      <!-- 🔴 FIX BACK PROMO -->
+<div class="card" onclick="fromPromo=true; tampilDetail('${p.id}')">
+        <img src="${p.foto}">
+        <h3>${p.nama}</h3>
 
-      ${isApple ? `<div class="badge-tam"></div>` : ``}
+        <div class="price-normal">
+          Rp ${p.harga.toLocaleString("id-ID")}
+        </div>
 
-      <img src="${p.foto}">
-      <h3>${p.nama}</h3>
+        <div class="price-promo">
+          Rp ${p.harga_promo.toLocaleString("id-ID")}
+        </div>
 
-      <div class="price-normal">
-        Rp ${p.harga.toLocaleString("id-ID")}
+        <div style="font-size:12px;color:#facc15">
+          Hemat ${diskon}%
+        </div>
       </div>
-
-      <div class="price-promo">
-        Rp ${p.harga_promo.toLocaleString("id-ID")}
-      </div>
-
-      <div style="font-size:12px;color:#facc15">
-        Hemat ${diskon}%
-      </div>
-    </div>
-  `;
-});
-
+    `;
+  });
 }
 /* 🔴🔴🔴 PROMO FUNCTION END 🔴🔴🔴 */
 
@@ -1152,11 +940,6 @@ document.addEventListener("touchstart", function(e){
   e.stopImmediatePropagation();
   zoomFoto(img.src);
 }, { capture:true, passive:false });
-
-// ✅ START LAMPION SEKALI SAJA (POSISI PALING BAWAH)
-window.addEventListener("load", jagaLampionTetapMutar);
-</script>
-
 </script>
 
 </body>
