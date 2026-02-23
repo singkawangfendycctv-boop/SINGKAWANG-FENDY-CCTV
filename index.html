@@ -18,6 +18,10 @@ html, body{
 }
 
 
+html, body {
+  transform: none !important;
+  position: static !important;}
+
 :root{
   --primary:#e11d48;
   --card:rgba(2,6,23,.75);
@@ -31,8 +35,7 @@ body{
   min-height:100vh;
   background:
     linear-gradient(rgba(2,6,23,.25), rgba(2,6,23,.9)),
-    url("bg.jpg") center/cover no-repeat;
-  background-attachment: scroll; /* 🔴 jangan fixed */
+    url("bg.jpg") center/cover no-repeat fixed;
 }
 
 header{
@@ -56,7 +59,6 @@ header img{width:42px}
 /* ===== LAMPION VIDEO ===== */
 header{
   position: relative;   /* penting supaya lampion nempel ke header */
- overflow:hidden; /* 🔴 WAJIB supaya lampion tidak dorong layout */
 }
 
 /* ===== LAMPION VIDEO ===== */
@@ -490,11 +492,6 @@ footer{
   font-size:14px;
   color:#cbd5f5;
   background:rgba(2,6,23,.85);
-}
-
-/* 🔴 ANTI LAYOUT MELEBAR DI UC / REALME */
-body{
-  overflow-x:hidden !important;
 }
 </style>
 </head>
