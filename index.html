@@ -485,6 +485,38 @@ header{
 }
 .zoom img{max-width:95%;max-height:95%}
 
+/* ===== DETAIL SPESIFIKASI RAPI ===== */
+.spek-list{
+  list-style:none;
+  padding:0;
+  margin:18px 0;
+}
+
+.spek-list{
+  background:rgba(255,255,255,.03);
+  padding:12px;
+  border-radius:12px;
+}
+
+.spek-list li{
+  display:flex;
+  justify-content:space-between;
+  padding:8px 0;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  font-size:14px;
+}
+
+.spek-label{
+  color:#94a3b8;
+  font-weight:600;
+  min-width:90px;
+}
+
+.spek-value{
+  text-align:right;
+  font-weight:500;
+}
+
 /* FOOTER */
 footer{
   text-align:center;
@@ -865,7 +897,23 @@ function tampilDetail(id){
       <!-- 🔴 PERBAIKAN -->
 <div class="price">Rp ${hargaAktif(p).toLocaleString("id-ID")}</div>
 
-      <ul>${p.spek.split(";").map(s=>`<li>${s}</li>`).join("")}</ul>
+      <ul class="spek-list">
+  ${
+    p.spek.split(";").map(s=>{
+      const parts = s.split(":");
+      if(parts.length === 2){
+        return `
+          <li>
+            <span class="spek-label">${parts[0]}</span>
+            <span class="spek-value">${parts[1]}</span>
+          </li>
+        `;
+      }else{
+        return `<li>${s}</li>`;
+      }
+    }).join("")
+  }
+</ul>
 
       <!-- TAMBAHAN QTY + - -->
 <div style="display:flex;gap:10px;justify-content:center;margin-top:10px">
