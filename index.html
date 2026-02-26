@@ -71,6 +71,10 @@ header{
   pointer-events:none;
   overflow:hidden;
   z-index: 10;
+  background: transparent !important;   /* 🔴 TAMBAH DI SINI */
+  /* 🔴 FIX SAFARI DOUBLE RENDER */
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 /* ===== RING KAIT LAMPION (DESKTOP) ===== */
@@ -106,6 +110,14 @@ header{
   transform: translateZ(0);
 }
 
+.header-lampion video::-webkit-media-controls {
+  display: none !important;
+}
+
+.header-lampion video {
+  pointer-events: none;
+  background: transparent !important;
+}
 
 
 /* posisi kiri */
@@ -384,13 +396,8 @@ header{
   background:url("tam.png") center/contain no-repeat;
   z-index:6;
   pointer-events:none;
-
-  .badge-tam{
   filter: drop-shadow(0 2px 6px rgba(0,0,0,.6));
 }
-
-}
-
 
 
 /* TENGAHKAN TEKS KATEGORI, BRAND, PRODUK */
@@ -543,9 +550,18 @@ footer{
 
   <!-- LAMPION KIRI -->
   <div class="header-lampion lampion-kiri">
-    <video autoplay muted playsinline preload="auto">
-      <source src="lampion.webm" type="video/webm">
-    </video>
+    <video 
+  autoplay 
+  muted 
+  playsinline 
+  webkit-playsinline 
+  preload="auto"
+  disablePictureInPicture
+  controlsList="nodownload nofullscreen noplaybackrate"
+>
+  <source src="lampion.mp4" type="video/mp4">
+  <source src="lampion.webm" type="video/webm">
+</video>
   </div>
 
   <img src="logo.png">
@@ -553,9 +569,18 @@ footer{
 
   <!-- LAMPION KANAN -->
   <div class="header-lampion lampion-kanan">
-    <video autoplay muted playsinline preload="auto">
-      <source src="lampion.webm" type="video/webm">
-    </video>
+    <video 
+  autoplay 
+  muted 
+  playsinline 
+  webkit-playsinline 
+  preload="auto"
+  disablePictureInPicture
+  controlsList="nodownload nofullscreen noplaybackrate"
+>
+  <source src="lampion.mp4" type="video/mp4">
+  <source src="lampion.webm" type="video/webm">
+</video>
   </div>
 
 </header>
@@ -1203,8 +1228,6 @@ document.addEventListener("touchstart", function(e){
 
 // ✅ START LAMPION SEKALI SAJA (POSISI PALING BAWAH)
 window.addEventListener("load", jagaLampionTetapMutar);
-</script>
-
 </script>
 
 </body>
