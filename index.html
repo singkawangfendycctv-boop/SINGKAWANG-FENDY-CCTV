@@ -5,12 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fendy Freelance Store</title>
 
-<script>
-if (!window.fetch) {
-  alert("Browser terlalu lama. Gunakan Chrome terbaru.");
-}
-</script>
-
 <style>
   html{
   background:#020617;
@@ -22,6 +16,11 @@ html, body{
   overflow-x: hidden;   /* 🔴 PENTING: cegah halaman melebar ke kanan */
   max-width: 100vw;
 }
+
+
+html, body {
+  transform: none !important;
+  position: static !important;}
 
 :root{
   --primary:#e11d48;
@@ -36,8 +35,7 @@ body{
   min-height:100vh;
   background:
     linear-gradient(rgba(2,6,23,.25), rgba(2,6,23,.9)),
-    url("bg.jpg") center/cover no-repeat;
-  background-attachment: scroll; /* FIX Safari iOS */
+    url("bg.jpg") center/cover no-repeat fixed;
 }
 
 header{
@@ -266,10 +264,11 @@ header{
 /* 🔴 FIX KOLOM PROMO JADI LEBIH KECIL */
 /* 🔴🔴🔴 PROMO SCROLL KE SAMPING (KANAN ↔ KIRI) 🔴🔴🔴 */
 .promo-grid{
-  display:flex;
+  display:flex;              /* ⬅ bukan grid */
   gap:14px;
-  overflow-x:auto;
+  overflow-x:auto;           /* ⬅ scroll kanan kiri */
   padding-bottom:10px;
+  scroll-snap-type:x mandatory;
 }
 
 /* sembunyikan scrollbar tapi tetap bisa scroll */
@@ -285,6 +284,7 @@ header{
 .promo-grid .card{
   min-width:180px;           /* ⬅ ukuran card */
   flex-shrink:0;             /* ⬅ jangan mengecil */
+  scroll-snap-align:start;
 }
 
 
@@ -543,7 +543,7 @@ footer{
 
   <!-- LAMPION KIRI -->
   <div class="header-lampion lampion-kiri">
-    <video autoplay muted playsinline webkit-playsinline preload="auto">
+    <video autoplay muted playsinline preload="auto">
       <source src="lampion.webm" type="video/webm">
     </video>
   </div>
@@ -553,7 +553,7 @@ footer{
 
   <!-- LAMPION KANAN -->
   <div class="header-lampion lampion-kanan">
-    <video autoplay muted playsinline webkit-playsinline preload="auto">
+    <video autoplay muted playsinline preload="auto">
       <source src="lampion.webm" type="video/webm">
     </video>
   </div>
@@ -694,8 +694,8 @@ function restoreScroll(){
     y = nav.scroll.detail || 0;
   }
 
-  setTimeout(function(){
-    window.scrollTo(0, y);
+  setTimeout(()=>{
+    window.scrollTo({ top:y, behavior:"auto" });
   },0);
 }
 
@@ -817,7 +817,7 @@ function tampilProduk(id,nama){
       <img src="${p.foto}" class="img-produk">
       <h3>${p.nama}</h3>
       <div class="price">
-        Rp ${hargaAktif(p).toLocaleString()}
+        Rp ${hargaAktif(p).toLocaleString("id-ID")}
       </div>
 
     </div>`;
@@ -854,11 +854,11 @@ function tampilPromo(){
       <h3>${p.nama}</h3>
 
       <div class="price-normal">
-        Rp ${p.harga.toLocaleString()}
+        Rp ${p.harga.toLocaleString("id-ID")}
       </div>
 
       <div class="price-promo">
-        Rp ${p.harga_promo.toLocaleString()}
+        Rp ${p.harga_promo.toLocaleString("id-ID")}
       </div>
 
       <div style="font-size:12px;color:#facc15">
@@ -895,7 +895,7 @@ function tampilDetail(id){
       <img src="${p.foto}" class="img-produk">
       <h2>${p.nama}</h2>
       <!-- 🔴 PERBAIKAN -->
-<div class="price">Rp ${hargaAktif(p).toLocaleString()}</div>
+<div class="price">Rp ${hargaAktif(p).toLocaleString("id-ID")}</div>
 
       <ul class="spek-list">
   ${
@@ -964,7 +964,10 @@ function navBack(){
 
   // 🔴 BALIK KE POSISI SAAT KLIK PRODUK
   setTimeout(()=>{
-    window.scrollTo(0, lastProductScroll);
+    window.scrollTo({
+      top: lastProductScroll,
+      behavior: "auto"
+    });
   },0);
 }
 
@@ -1000,13 +1003,13 @@ function renderSearchUlang(){
       <div class="card" onclick="tampilDetail('${p.id}')">
         <img src="${p.foto}" class="img-produk">
         <h3>${p.nama}</h3>
-        <div class="price">Rp ${Number(p.harga).toLocaleString()}</div>
+        <div class="price">Rp ${Number(p.harga).toLocaleString("id-ID")}</div>
       </div>`;
   });
 
   // 🔴🔴🔴 BALIK KE POSISI SAAT PRODUK DIKLIK
-    setTimeout(function(){
-    window.scrollTo(0, searchState.scroll);
+  setTimeout(()=>{
+    window.scrollTo({top:searchState.scroll,behavior:"auto"});
   },0);
 }
 
@@ -1066,12 +1069,12 @@ function openCart(){
     cartList.innerHTML += `
       <div class="cart-item">
         <div>${p.nama} (${item.qty})</div>
-        <div>Rp ${sub.toLocaleString()}</div>
+        <div>Rp ${sub.toLocaleString("id-ID")}</div>
       </div>
     `;
   });
 
-  cartTotal.innerText = "TOTAL: Rp " + total.toLocaleString();
+  cartTotal.innerText = "TOTAL: Rp " + total.toLocaleString("id-ID");
 }
 
 /* 🔴 FIX TOMBOL TUTUP KERANJANG */
@@ -1098,12 +1101,12 @@ function checkoutWA(){
     total += sub;
 
     text += `${i+1}. ${p.nama}%0A`;
-    text += `Harga: Rp ${harga.toLocaleString()}%0A`;
+    text += `Harga: Rp ${harga.toLocaleString("id-ID")}%0A`;
     text += `Qty: ${item.qty}%0A`;
-    text += `Subtotal: Rp ${sub.toLocaleString()}%0A%0A`;
+    text += `Subtotal: Rp ${sub.toLocaleString("id-ID")}%0A%0A`;
   });
 
-  text += `TOTAL: Rp ${total.toLocaleString()}`;
+  text += `TOTAL: Rp ${total.toLocaleString("id-ID")}`;
 
   window.open(`https://wa.me/${WA_ADMIN}?text=${text}`, "_blank");
 }
@@ -1154,7 +1157,7 @@ search.addEventListener("input", function () {
         <div class="card" onclick="tampilDetail('${p.id}')">
           <img src="${p.foto}" class="img-produk">
           <h3>${p.nama}</h3>
-          <div class="price">Rp ${Number(p.harga).toLocaleString()}</div>
+          <div class="price">Rp ${Number(p.harga).toLocaleString("id-ID")}</div>
         </div>`;
     });
 
