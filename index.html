@@ -3,13 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
 <title>Fendy Freelance Store</title>
 
 <style>
   html{
   background:#020617;
   overscroll-behavior: none;
+  /* ===== FIX SUPAYA POSITION:FIXED BENAR-BENAR DI LAYAR ===== */
 }
+
+html, body{
+  overflow-x: hidden;   /* 🔴 PENTING: cegah halaman melebar ke kanan */
+  max-width: 100vw;
+}
+
+
+html, body {
+  transform: none !important;
+  position: static !important;}
 
 :root{
   --primary:#e11d48;
@@ -17,6 +31,17 @@
   --text:#f1f5f9;
 }
 *{box-sizing:border-box}
+
+
+/* 🔥 TAMBAHKAN DI SINI */
+html, body{
+  -webkit-overflow-scrolling: touch;
+}
+
+html{
+  -webkit-text-size-adjust:100%;
+}
+
 body{
   margin:0;
   font-family:Segoe UI,Arial,sans-serif;
@@ -24,7 +49,7 @@ body{
   min-height:100vh;
   background:
     linear-gradient(rgba(2,6,23,.25), rgba(2,6,23,.9)),
-    url("bg.jpg") center/cover no-repeat fixed;
+    url("bg.jpg") center/cover no-repeat;
 }
 
 header{
@@ -35,6 +60,130 @@ header{
   background:rgba(2,6,23,.85);
 }
 header img{width:42px}
+
+/* ===== LAMPION VIDEO KIRI & KANAN ===== */
+/* ===== SETELAN LAMPION (ATUR DI SINI SAJA) ===== */
+:root{
+  --lampion-width: 420px;   /* 🔥 SUPER GEDE */
+  --lampion-top: 16px;     /* mulai menggantung dari atas layar */
+  --lampion-offset: 6vw;    /* posisi mendekati titik merah Anda */
+}
+
+
+/* ===== LAMPION VIDEO ===== */
+header{
+  position: relative;   /* penting supaya lampion nempel ke header */
+}
+
+/* ===== LAMPION VIDEO ===== */
+.header-lampion{
+  position: absolute;
+  top: var(--lampion-top);
+  height: 360px;
+  width: var(--lampion-width);
+  max-width: 100vw;   /* 🔴 TAMBAHAN PENTING */
+  pointer-events:none;
+  overflow:hidden;
+  z-index: 10;
+}
+
+/* ===== RING KAIT LAMPION (DESKTOP) ===== */
+.header-lampion::before{
+  content:"";
+  position:absolute;
+
+  /* posisi dikunci RELATIF ke tinggi lampion */
+  top: 18%;      
+
+  left:50%;
+  transform:translate(-50%, -50%);
+
+  width:12px;
+  height:12px;
+  border:3px solid #facc15;
+  border-radius:50%;
+  background:rgba(0,0,0,.45);
+  z-index:12;
+
+  shape-rendering: geometricPrecision; /* biar tajam saat zoom */
+}
+
+
+.header-lampion video{
+  height:100%;
+  width:100%;
+  object-fit:contain;
+
+  /* 🔴 FIX MULUS GPU */
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+
+
+/* posisi kiri */
+.lampion-kiri{
+  left: var(--lampion-offset);
+}
+
+/* posisi kanan */
+.lampion-kanan{
+  right: var(--lampion-offset);
+}
+
+@media (max-width: 768px){
+
+  :root{
+    --lampion-width: 260px;
+    --lampion-top: 42px;
+  }
+
+  .header-lampion{
+    height: 220px;
+  }
+
+  .lampion-kiri{
+    left: calc(50% - 260px);
+  }
+
+  .lampion-kanan{
+    right: calc(50% - 260px);
+  }
+
+  /* 🔴 RING KHUSUS MOBILE (BIAR PAS DI UJUNG TALI) */
+  .header-lampion::before{
+    top: 17%;      /* lebih turun dikit biar pas di HP */
+    width:9px;
+    height:9px;
+    border-width:2px;
+  }
+}
+
+
+
+@media (min-width: 769px) and (max-width: 1024px){
+
+  :root{
+    --lampion-width: 360px;
+    --lampion-top: 28px;
+    --lampion-offset: 2vw;
+  }
+
+  .header-lampion{
+    height: 300px;
+  }
+
+  /* 🔴 RING KHUSUS TABLET */
+  .header-lampion::before{
+    top: 17%;      /* sedikit turun dari desktop */
+    width:11px;
+    height:11px;
+    border-width:3px;
+  }
+}
+
+
 
 .hero{text-align:center;padding:70px 20px}
 .search-box input{
@@ -249,10 +398,11 @@ header img{width:42px}
   background:url("tam.png") center/contain no-repeat;
   z-index:6;
   pointer-events:none;
+
+  .badge-tam{
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,.6));
 }
 
-.badge-tam{
-  filter: drop-shadow(0 2px 6px rgba(0,0,0,.6));
 }
 
 
@@ -400,10 +550,32 @@ footer{
 <div class="bg-wrap"></div>
 <!-- ================================================= -->
  
-<header>
+<!-- ===== VIEWPORT LAYER (BENAR-BENAR TIDAK SCROLL) ===== -->
+<div class="lampion-layer">
+
+ <header>
+
+  <!-- LAMPION KIRI -->
+  <div class="header-lampion lampion-kiri">
+    <video autoplay muted playsinline loop preload="auto">
+  <source src="lampion.mp4" type="video/mp4">
+  <source src="lampion.webm" type="video/webm">
+</video>
+  </div>
+
   <img src="logo.png">
   <h3>Fendy Freelance Store</h3>
+
+  <!-- LAMPION KANAN -->
+  <div class="header-lampion lampion-kanan">
+    <video autoplay muted playsinline loop preload="auto">
+  <source src="lampion.mp4" type="video/mp4">
+  <source src="lampion.webm" type="video/webm">
+</video>
+  </div>
+
 </header>
+
 
 <section class="hero">
   <h2>SELAMAT DATANG</h2>
@@ -426,13 +598,11 @@ footer{
   </div>
 </div>
 
-
-
 </section>
 <!-- 🔴 PROMO / FLASH SALE (AUTO HIDE) -->
 <section id="promoSection" style="display:none">
   <div class="promo-box">
-    <div class="promo-title">🔥 PROMO TERBATAS 🔥</div>
+    <div class="promo-title">🔥 PROMO IMLEK SPESIAL 🔥</div>
     <div id="promoView" class="promo-grid"></div>
   </div>
 </section>
@@ -545,6 +715,37 @@ function restoreScroll(){
   },0);
 }
 
+/* ===== 🔥 FIX TOTAL: LAMPION TIDAK BERHENTI + SINKRON KIRI-KANAN ===== */
+function jagaLampionTetapMutar(){
+  const videos = document.querySelectorAll(".header-lampion video");
+
+  videos.forEach(v => {
+    v.muted = true;
+    v.loop = false;
+  });
+
+  function playAll(){
+    videos.forEach(v => {
+      v.currentTime = 0;
+      v.play().catch(()=>{});
+    });
+  }
+
+  setInterval(playAll, 6000);
+  playAll();
+}
+
+/* ===== PROTEKSI JIKA BROWSER PAUSE (TAB PINDAH / MINIMIZE) ===== */
+document.addEventListener("visibilitychange", ()=>{
+  if(!document.hidden){
+    document.querySelectorAll(".header-lampion video").forEach(v=>{
+      if(v.paused) v.play().catch(()=>{});
+    });
+  }
+});
+
+
+
 /* ================= END FIX SCROLL ================= */
 
 /* LOAD CSV */
@@ -637,7 +838,6 @@ function tampilProduk(id,nama){
 
     </div>`;
 });
-
 
   restoreScroll(); // ✅ BALIK KE POSISI TENGAH
 }
@@ -924,7 +1124,7 @@ function checkoutWA(){
 
   text += `TOTAL: Rp ${total.toLocaleString("id-ID")}`;
 
-  window.open(`https://wa.me/${WA_ADMIN}?text=${text}`, "_blank");
+  window.location.href = `https://wa.me/${WA_ADMIN}?text=${text}`;
 }
 
 
@@ -1016,6 +1216,11 @@ document.addEventListener("touchstart", function(e){
   e.stopImmediatePropagation();
   zoomFoto(img.src);
 }, { capture:true, passive:false });
+
+// ✅ START LAMPION SEKALI SAJA (POSISI PALING BAWAH)
+window.addEventListener("load", jagaLampionTetapMutar);
+</script>
+
 </script>
 
 </body>
