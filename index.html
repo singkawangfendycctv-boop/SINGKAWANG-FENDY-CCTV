@@ -3,9 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="format-detection" content="telephone=no">
 <title>Fendy Freelance Store</title>
 
 <style>
@@ -31,17 +28,6 @@ html, body {
   --text:#f1f5f9;
 }
 *{box-sizing:border-box}
-
-
-/* 🔥 TAMBAHKAN DI SINI */
-html, body{
-  -webkit-overflow-scrolling: touch;
-}
-
-html{
-  -webkit-text-size-adjust:100%;
-}
-
 body{
   margin:0;
   font-family:Segoe UI,Arial,sans-serif;
@@ -49,7 +35,7 @@ body{
   min-height:100vh;
   background:
     linear-gradient(rgba(2,6,23,.25), rgba(2,6,23,.9)),
-    url("bg.jpg") center/cover no-repeat;
+    url("bg.jpg") center/cover no-repeat fixed;
 }
 
 header{
@@ -557,10 +543,9 @@ footer{
 
   <!-- LAMPION KIRI -->
   <div class="header-lampion lampion-kiri">
-    <video autoplay muted playsinline loop>
-  <source src="lampion.webm" type="video/webm">
-  <source src="lampion.mp4" type="video/mp4">
-</video>
+    <video autoplay muted playsinline preload="auto">
+      <source src="lampion.webm" type="video/webm">
+    </video>
   </div>
 
   <img src="logo.png">
@@ -568,10 +553,9 @@ footer{
 
   <!-- LAMPION KANAN -->
   <div class="header-lampion lampion-kanan">
-    <video autoplay muted playsinline loop>
-  <source src="lampion.webm" type="video/webm">
-  <source src="lampion.mp4" type="video/mp4">
-</video>
+    <video autoplay muted playsinline preload="auto">
+      <source src="lampion.webm" type="video/webm">
+    </video>
   </div>
 
 </header>
@@ -1124,7 +1108,7 @@ function checkoutWA(){
 
   text += `TOTAL: Rp ${total.toLocaleString("id-ID")}`;
 
-  window.location.href = `https://wa.me/${WA_ADMIN}?text=${text}`;
+  window.open(`https://wa.me/${WA_ADMIN}?text=${text}`, "_blank");
 }
 
 
