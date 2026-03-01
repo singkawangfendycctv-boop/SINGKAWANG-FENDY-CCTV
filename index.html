@@ -1207,9 +1207,41 @@ document.addEventListener("touchstart", function(e){
 // ✅ START LAMPION SEKALI SAJA (POSISI PALING BAWAH)
 window.addEventListener("load", jagaLampionTetapMutar);
 
+
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js');
 }
+
+let deferredPrompt;
+let installBtn = document.createElement("button");
+
+installBtn.innerText = "📲 Install Aplikasi";
+installBtn.style.position = "fixed";
+installBtn.style.bottom = "90px";
+installBtn.style.right = "20px";
+installBtn.style.padding = "12px 18px";
+installBtn.style.border = "none";
+installBtn.style.borderRadius = "50px";
+installBtn.style.background = "#e11d48";
+installBtn.style.color = "#fff";
+installBtn.style.fontWeight = "bold";
+installBtn.style.display = "none";
+installBtn.style.zIndex = "9999";
+
+document.body.appendChild(installBtn);
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  installBtn.style.display = "block";
+});
+
+installBtn.addEventListener("click", async () => {
+  installBtn.style.display = "none";
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  deferredPrompt = null;
+});
 </script>
 
 </script>

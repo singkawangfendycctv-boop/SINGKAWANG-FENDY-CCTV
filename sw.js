@@ -1,4 +1,4 @@
-const CACHE_NAME = "fendy-store-v1";
+const CACHE_NAME = "fendy-store-v2";
 
 self.addEventListener("install", event => {
   self.skipWaiting();
