@@ -1,17 +1,60 @@
-const CACHE_NAME = "fendy-store-v2";
+const CACHE_STATIC = "fendy-static-v1";
+const CACHE_DYNAMIC = "fendy-dynamic-v1";
 
+const STATIC_FILES = [
+  "/",
+  "/index.html",
+  "/manifest.json",
+  "/logo.png",
+  "/bg.jpg",
+  "/lampion.webm",
+  "/kategori.csv",
+  "/brand.csv",
+  "/produk.csv"
+];
+
+// INSTALL
 self.addEventListener("install", event => {
+  event.waitUntil(
+    caches.open(CACHE_STATIC)
+      .then(cache => cache.addAll(STATIC_FILES))
+  );
   self.skipWaiting();
 });
 
+// ACTIVATE (hapus cache lama)
 self.addEventListener("activate", event => {
-  event.waitUntil(clients.claim());
+  event.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(
+        keys.map(key => {
+          if (key !== CACHE_STATIC && key !== CACHE_DYNAMIC) {
+            return caches.delete(key);
+          }
+        })
+      )
+    )
+  );
+  self.clients.claim();
 });
 
+// FETCH (Smart Cache System)
 self.addEventListener("fetch", event => {
   event.respondWith(
-    fetch(event.request).catch(() => {
-      return new Response("Offline mode aktif");
-    })
+    fetch(event.request)
+      .then(res => {
+        return caches.open(CACHE_DYNAMIC).then(cache => {
+          cache.put(event.request, res.clone());
+          return res;
+        });
+      })
+      .catch(() => {
+        return caches.match(event.request);
+      })
   );
+  self.addEventListener("message", event => {
+  if (event.data === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
+});
 });

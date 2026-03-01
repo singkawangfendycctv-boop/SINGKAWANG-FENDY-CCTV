@@ -1242,6 +1242,47 @@ installBtn.addEventListener("click", async () => {
   const { outcome } = await deferredPrompt.userChoice;
   deferredPrompt = null;
 });
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').then(reg => {
+
+    // cek update otomatis tiap 30 detik
+    setInterval(() => {
+      reg.update();
+    }, 30000);
+
+    // kalau ada versi baru
+    reg.onupdatefound = () => {
+      const newWorker = reg.installing;
+
+      newWorker.onstatechange = () => {
+        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+
+          const updateBar = document.createElement("div");
+          updateBar.innerText = "🔄 Versi baru tersedia - klik untuk update";
+          updateBar.style.position = "fixed";
+          updateBar.style.bottom = "0";
+          updateBar.style.left = "0";
+          updateBar.style.right = "0";
+          updateBar.style.background = "#facc15";
+          updateBar.style.padding = "14px";
+          updateBar.style.textAlign = "center";
+          updateBar.style.fontWeight = "bold";
+          updateBar.style.cursor = "pointer";
+          updateBar.style.zIndex = "9999";
+
+          document.body.appendChild(updateBar);
+
+          updateBar.onclick = () => {
+            newWorker.postMessage("SKIP_WAITING");
+            window.location.reload();
+          };
+        }
+      };
+    };
+
+  });
+}
 </script>
 
 </script>
