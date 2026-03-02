@@ -736,20 +736,26 @@ document.addEventListener("visibilitychange", ()=>{
 /* ================= END FIX SCROLL ================= */
 
 /* LOAD CSV */
-fetch("kategori.csv").then(r=>r.text()).then(t=>{
+fetch("kategori.csv?v=" + Date.now())
+.then(r=>r.text())
+.then(t=>{
   kategori=t.trim().split("\n").slice(1).map(r=>{
     const [id,nama,desk,foto]=r.split(",");
     return {id,nama,desk,foto};
   });
   tampilKategori();
 });
-fetch("brand.csv").then(r=>r.text()).then(t=>{
+
+fetch("brand.csv?v=" + Date.now())
+.then(r=>r.text())
+.then(t=>{
   brand=t.trim().split("\n").slice(1).map(r=>{
     const [id,nama,kategori,foto]=r.split(",");
     return {id,nama,kategori,foto};
   });
 });
-fetch("produk.csv")
+
+fetch("produk.csv?v=" + Date.now())
 .then(r=>r.text())
 .then(t=>{
   produk = t.trim().split("\n").slice(1).map(r=>{
