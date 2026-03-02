@@ -1,5 +1,5 @@
-const CACHE_STATIC = "fendy-static-v1";
-const CACHE_DYNAMIC = "fendy-dynamic-v1";
+const CACHE_STATIC = "fendy-static-v2";
+const CACHE_DYNAMIC = "fendy-dynamic-v2";
 
 const STATIC_FILES = [
   "/",
@@ -13,7 +13,7 @@ const STATIC_FILES = [
   "/produk.csv"
 ];
 
-// INSTALL
+// ================= INSTALL =================
 self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(CACHE_STATIC)
@@ -22,7 +22,7 @@ self.addEventListener("install", event => {
   self.skipWaiting();
 });
 
-// ACTIVATE (hapus cache lama)
+// ================= ACTIVATE =================
 self.addEventListener("activate", event => {
   event.waitUntil(
     caches.keys().then(keys =>
@@ -38,7 +38,7 @@ self.addEventListener("activate", event => {
   self.clients.claim();
 });
 
-// FETCH (Smart Cache System)
+// ================= FETCH =================
 self.addEventListener("fetch", event => {
   event.respondWith(
     fetch(event.request)
@@ -52,9 +52,11 @@ self.addEventListener("fetch", event => {
         return caches.match(event.request);
       })
   );
-  self.addEventListener("message", event => {
+});
+
+// ================= MESSAGE (AUTO UPDATE) =================
+self.addEventListener("message", event => {
   if (event.data === "SKIP_WAITING") {
     self.skipWaiting();
   }
-});
 });
