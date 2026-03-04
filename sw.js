@@ -1,5 +1,5 @@
-const CACHE_STATIC = "fendy-static-v2";
-const CACHE_DYNAMIC = "fendy-dynamic-v2";
+const CACHE_STATIC = "fendy-static-v3";
+const CACHE_DYNAMIC = "fendy-dynamic-v3";
 
 const STATIC_FILES = [
   "/",
@@ -7,7 +7,6 @@ const STATIC_FILES = [
   "/manifest.json",
   "/logo.png",
   "/bg.jpg",
-  "/lampion.webm",
   "/kategori.csv",
   "/brand.csv",
   "/produk.csv"
