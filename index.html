@@ -566,16 +566,17 @@ fetch("produk.csv")
 .then(r=>r.text())
 .then(t=>{
   produk = t.trim().split("\n").slice(1).map(r=>{
-    const [id,nama,harga,brand,foto,spek,harga_promo] = r.split(",");
+    const [id,nama,harga,brand,foto,spek,harga_promo,status] = r.split(",");
     return {
-      id,
-      nama,
-      harga:Number(harga),
-      brand,
-      foto,
-      spek,
-      harga_promo: harga_promo ? Number(harga_promo) : 0
-    };
+  id,
+  nama,
+  harga:Number(harga),
+  brand,
+  foto,
+  spek,
+  harga_promo: harga_promo ? Number(harga_promo) : 0,
+  status
+};
   });
 
   produkSiap = true;
@@ -619,7 +620,9 @@ function tampilProduk(id,nama){
   judul.innerText=nama;
   view.innerHTML=`<div class="back" onclick="navBack()">⬅ Kembali</div>`;
 
-  produk.filter(p=>p.brand===id).forEach(p=>{
+  produk
+.filter(p => p.brand === id && p.status !== "tidak dijual")
+.forEach(p=>{
   const isApple = id.toLowerCase().includes("apple");
 
   view.innerHTML+=`
@@ -646,7 +649,11 @@ function tampilProduk(id,nama){
 /* 🔴🔴🔴 PROMO FUNCTION START 🔴🔴🔴 */
 /* 🔴🔴🔴 PROMO FUNCTION START (BISA DIKLIK & HARGA PROMO) 🔴🔴🔴 */
 function tampilPromo(){
-  const promo = produk.filter(p => p.harga_promo > 0 && p.harga_promo < p.harga);
+  const promo = produk.filter(p => 
+  p.harga_promo > 0 &&
+  p.harga_promo < p.harga &&
+  p.status !== "tidak dijual"
+);
   const section = document.getElementById("promoSection");
   const pv = document.getElementById("promoView");
 
