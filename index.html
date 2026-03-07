@@ -621,7 +621,7 @@ function tampilProduk(id,nama){
   view.innerHTML=`<div class="back" onclick="navBack()">⬅ Kembali</div>`;
 
   produk
-.filter(p => p.brand === id && p.status !== "tidak dijual")
+.filter(p => p.brand === id && p.status?.trim().toLowerCase() !== "tidak dijual")
 .forEach(p=>{
   const isApple = id.toLowerCase().includes("apple");
 
