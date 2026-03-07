@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fendy Freelance Store</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#e11d48">
+<link rel="apple-touch-icon" href="logo.png">
 
 <style>
   html{
@@ -1014,6 +1017,83 @@ document.addEventListener("touchstart", function(e){
   e.stopImmediatePropagation();
   zoomFoto(img.src);
 }, { capture:true, passive:false });
+
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js');
+}
+
+let deferredPrompt;
+let installBtn = document.createElement("button");
+
+installBtn.innerText = "📲 Install Aplikasi";
+installBtn.style.position = "fixed";
+installBtn.style.bottom = "90px";
+installBtn.style.right = "20px";
+installBtn.style.padding = "12px 18px";
+installBtn.style.border = "none";
+installBtn.style.borderRadius = "50px";
+installBtn.style.background = "#e11d48";
+installBtn.style.color = "#fff";
+installBtn.style.fontWeight = "bold";
+installBtn.style.display = "none";
+installBtn.style.zIndex = "9999";
+
+document.body.appendChild(installBtn);
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  installBtn.style.display = "block";
+});
+
+installBtn.addEventListener("click", async () => {
+  installBtn.style.display = "none";
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  deferredPrompt = null;
+});
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').then(reg => {
+
+    // cek update otomatis tiap 30 detik
+    setInterval(() => {
+      reg.update();
+    }, 30000);
+
+    // kalau ada versi baru
+    reg.onupdatefound = () => {
+      const newWorker = reg.installing;
+
+      newWorker.onstatechange = () => {
+        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+
+          const updateBar = document.createElement("div");
+          updateBar.innerText = "🔄 Versi baru tersedia - klik untuk update";
+          updateBar.style.position = "fixed";
+          updateBar.style.bottom = "0";
+          updateBar.style.left = "0";
+          updateBar.style.right = "0";
+          updateBar.style.background = "#facc15";
+          updateBar.style.padding = "14px";
+          updateBar.style.textAlign = "center";
+          updateBar.style.fontWeight = "bold";
+          updateBar.style.cursor = "pointer";
+          updateBar.style.zIndex = "9999";
+
+          document.body.appendChild(updateBar);
+
+          updateBar.onclick = () => {
+            newWorker.postMessage("SKIP_WAITING");
+            window.location.reload();
+          };
+        }
+      };
+    };
+
+  });
+}
 </script>
 
 </body>
