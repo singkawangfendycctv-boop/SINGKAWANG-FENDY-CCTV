@@ -814,8 +814,10 @@ function renderSearchUlang(){
   view.innerHTML = `<div class="back" onclick="navBack()">⬅ Kembali</div>`;
 
   const hasil = produk.filter(p =>
-    p.nama && p.nama.toLowerCase().includes(searchState.keyword)
-  );
+  p.nama &&
+  p.nama.toLowerCase().includes(searchState.keyword) &&
+  p.status?.trim().toLowerCase() !== "tidak dijual"
+);
 
   if(hasil.length === 0){
     view.innerHTML += `<p style="text-align:center">Produk tidak ditemukan</p>`;
@@ -968,8 +970,10 @@ search.addEventListener("input", function () {
     view.innerHTML = `<div class="back" onclick="navBack()">⬅ Kembali</div>`;
 
     const hasil = produk.filter(p =>
-      p.nama && p.nama.toLowerCase().includes(k)
-    );
+  p.nama &&
+  p.nama.toLowerCase().includes(k) &&
+  p.status?.trim().toLowerCase() !== "tidak dijual"
+);
 
     if (hasil.length === 0) {
       view.innerHTML += `<p style="text-align:center">Produk tidak ditemukan</p>`;
