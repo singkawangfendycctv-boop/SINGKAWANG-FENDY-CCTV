@@ -433,7 +433,7 @@ footer{
 <!-- 🔴 PROMO / FLASH SALE (AUTO HIDE) -->
 <section id="promoSection" style="display:none">
   <div class="promo-box">
-    <div class="promo-title">🔥 PROMO TERBATAS 🔥</div>
+    <div class="promo-title">🔥 RAMADAN SALE-TERBATAS! 🔥</div>
     <div id="promoView" class="promo-grid"></div>
   </div>
 </section>
@@ -566,17 +566,16 @@ fetch("produk.csv")
 .then(r=>r.text())
 .then(t=>{
   produk = t.trim().split("\n").slice(1).map(r=>{
-    const [id,nama,harga,brand,foto,spek,harga_promo,status] = r.split(",");
+    const [id,nama,harga,brand,foto,spek,harga_promo] = r.split(",");
     return {
-  id,
-  nama,
-  harga:Number(harga),
-  brand,
-  foto,
-  spek,
-  harga_promo: harga_promo ? Number(harga_promo) : 0,
-  status
-};
+      id,
+      nama,
+      harga:Number(harga),
+      brand,
+      foto,
+      spek,
+      harga_promo: harga_promo ? Number(harga_promo) : 0
+    };
   });
 
   produkSiap = true;
@@ -620,9 +619,7 @@ function tampilProduk(id,nama){
   judul.innerText=nama;
   view.innerHTML=`<div class="back" onclick="navBack()">⬅ Kembali</div>`;
 
-  produk
-.filter(p => p.brand === id && p.status?.trim().toLowerCase() !== "tidak dijual")
-.forEach(p=>{
+  produk.filter(p=>p.brand===id).forEach(p=>{
   const isApple = id.toLowerCase().includes("apple");
 
   view.innerHTML+=`
@@ -649,11 +646,7 @@ function tampilProduk(id,nama){
 /* 🔴🔴🔴 PROMO FUNCTION START 🔴🔴🔴 */
 /* 🔴🔴🔴 PROMO FUNCTION START (BISA DIKLIK & HARGA PROMO) 🔴🔴🔴 */
 function tampilPromo(){
-  const promo = produk.filter(p => 
-  p.harga_promo > 0 &&
-  p.harga_promo < p.harga &&
-  p.status !== "tidak dijual"
-);
+  const promo = produk.filter(p => p.harga_promo > 0 && p.harga_promo < p.harga);
   const section = document.getElementById("promoSection");
   const pv = document.getElementById("promoView");
 
@@ -1024,6 +1017,7 @@ document.addEventListener("touchstart", function(e){
   e.stopImmediatePropagation();
   zoomFoto(img.src);
 }, { capture:true, passive:false });
+
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js');
