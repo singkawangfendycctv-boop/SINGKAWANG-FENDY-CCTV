@@ -51,7 +51,7 @@ body::before{
 
 body{
     font-family:'Poppins',sans-serif;
-    min-height:100vh;   /* ganti dari height:100vh */
+    height:100vh;
     background:
         radial-gradient(circle at 20% 20%, rgba(255,215,0,0.15), transparent 40%),
         radial-gradient(circle at 80% 80%, rgba(255,215,0,0.1), transparent 40%),
@@ -62,7 +62,7 @@ body{
     align-items:center;
     text-align:center;
     position:relative;
-    padding:60px 20px;
+    overflow:hidden;   /* penting supaya desktop gak panjang */
 }
 
 /* ======================
@@ -100,9 +100,9 @@ body{
 
 .mosque-img{
     position:absolute;
-    bottom:0;
-    right:0;
-    width:260px;   /* lebih pas */
+    bottom:20px;   /* masuk ke dalam garis */
+    right:20px;    /* masuk ke dalam garis */
+    width:240px;
     opacity:0.95;
     z-index:2;
     filter: drop-shadow(0 0 30px rgba(255,215,0,0.4));
@@ -169,8 +169,8 @@ h2{
 @media(max-width:768px){
 
     body{
-        padding:80px 15px 140px 15px;
         align-items:flex-start;
+        padding-top:70px;
     }
 
     h1{
@@ -188,23 +188,24 @@ h2{
 
     /* Ketupat turun dikit */
     .ketupat-img{
-        width:85px;
+        width:80px;
     }
 
     .kanan{
-        top:40px;   /* turun */
+        top:45px;
         right:15px;
     }
 
     .kiri{
-        top:40px;   /* turun */
+        top:45px;
         left:15px;
     }
 
-    /* Masjid lebih ke bawah & kecil */
+    /* Masjid NAIK dikit biar gak keluar garis */
     .mosque-img{
-        width:130px;
-        bottom:-20px;   /* turun lagi */
+        width:120px;
+        bottom:20px;   /* penting: jangan minus */
+        right:15px;
         opacity:0.85;
     }
 
