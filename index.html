@@ -1106,36 +1106,26 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-/* ================= BACK BUTTON ANDROID ================= */
-let lastBackTime = 0;
-
+/* ================= BACK BUTTON FINAL ================= */
 window.addEventListener("popstate", function () {
 
-  // 🔴 Kalau BUKAN di halaman utama → pakai navBack biasa
+  // 🔴 Kalau BUKAN di halaman utama → pakai alur normal
   if(nav.level !== "kategori"){
-    navBack();
+    navBack(); // detail → produk → brand → kategori
     history.pushState(null, null, location.href);
     return;
   }
 
-  // 🔴 Kalau di halaman utama
-  const now = new Date().getTime();
-
-  if(now - lastBackTime < 2000){
-    // ⬅ klik ke-2 dalam 2 detik → keluar
-    if(confirm("Keluar dari aplikasi?")){
-      window.close(); // PWA / APK / WebView bisa close
-    }
+  // 🔴 Kalau SUDAH di halaman utama → tampilkan notif keluar
+  if(confirm("Keluar dari aplikasi?")){
+    window.close();
   }else{
-    // ⬅ klik pertama → kasih notic
-    alert("Tekan sekali lagi untuk keluar");
-    lastBackTime = now;
     history.pushState(null, null, location.href);
   }
 
 });
 
-/* 🔴 WAJIB: supaya back button terdeteksi */
+/* 🔴 WAJIB supaya back bisa ditangkap */
 history.pushState(null, null, location.href);
 
 </script>
