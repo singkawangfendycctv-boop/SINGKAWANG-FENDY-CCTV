@@ -480,6 +480,9 @@ const judul=document.getElementById("judul");
 const zoom=document.getElementById("zoom");
 const zoomImg=document.getElementById("zoomImg");
 
+function pushState(level){
+  history.pushState({level: level}, "", "");
+}
 
 /* 🔴 TAMBAHAN: WA ADMIN (TIDAK DARI CSV) */
 const WA_ADMIN = "6282153719616";
@@ -601,7 +604,7 @@ function tampilKategori(){
 }
 
 function tampilBrand(id,nama){
-  pushState(); //
+  pushState("brand"); //
   saveScroll(); // 🔴 TAMBAH
   nav.level="brand";
   judul.innerText=nama;
@@ -617,7 +620,7 @@ function tampilBrand(id,nama){
 }
 
 function tampilProduk(id,nama){
-  pushState(); //
+  pushState("produk"); //
   nav.level="produk";
   judul.innerText=nama;
   view.innerHTML=`<div class="back" onclick="navBack()">⬅ Kembali</div>`;
@@ -701,7 +704,7 @@ function tampilDetail(id){
 
   // 🔴 SIMPAN POSISI SEBELUM MASUK DETAIL
   nav.scroll.detail = window.scrollY;
-  pushState(); //
+  pushState("detail"); //
   nav.level = "detail";
 
 
@@ -1113,38 +1116,14 @@ if ('serviceWorker' in navigator) {
 /* 🔴 BACK BUTTON ANDROID FIX 🔴 */
 /* ============================= */
 
-// setiap pindah halaman, push state
-function pushState(){
-  history.pushState({level: nav.level}, "", "");
-}
-
-// override semua navigasi
-const oldTampilBrand = tampilBrand;
-tampilBrand = function(...args){
-  pushState();
-  oldTampilBrand.apply(this, args);
-};
-
-const oldTampilProduk = tampilProduk;
-tampilProduk = function(...args){
-  pushState();
-  oldTampilProduk.apply(this, args);
-};
-
-const oldTampilDetail = tampilDetail;
-tampilDetail = function(...args){
-  pushState();
-  oldTampilDetail.apply(this, args);
-};
 
 // saat tombol back HP ditekan
 window.addEventListener("popstate", function () {
   if(nav.level === "kategori"){
-    // opsional: konfirmasi keluar
     if(confirm("Keluar dari aplikasi?")){
       history.back();
     } else {
-      pushState();
+      history.pushState({level:"kategori"}, "", "");
     }
   } else {
     navBack();
@@ -1152,7 +1131,6 @@ window.addEventListener("popstate", function () {
 });
 
 history.replaceState({level:"kategori"}, "", "");
-
 </script>
 
 </body>
