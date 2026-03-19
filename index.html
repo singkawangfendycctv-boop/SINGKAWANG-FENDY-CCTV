@@ -672,12 +672,7 @@ function tampilPromo(){
   const isApple = p.brand.toLowerCase().includes("apple");
 
   pv.innerHTML += `
-    <div class="card" onclick="
-  fromPromo=true;
-  nav.level='detail';
-  history.pushState({level:'detail'},'', '');
-  tampilDetail('${p.id}')
-"
+    <div class="card" onclick="fromPromo=true; tampilDetail('${p.id}')">
 
       ${isApple ? `<div class="badge-tam"></div>` : ``}
 
