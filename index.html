@@ -587,6 +587,8 @@ fetch("produk.csv")
 /* VIEW */
 function tampilKategori(){
   nav.level="kategori";
+  // 🔴 TAMBAHAN INI
+  history.pushState({level:"kategori"}, "", "");
   judul.innerText="Kategori Produk";
   view.innerHTML="";
   kategori.forEach(k=>{
@@ -1123,8 +1125,21 @@ window.addEventListener("popstate", function(){
   if(nav.level === "kategori"){
 
     if(!exitConfirm){
-      alert("Tekan kembali sekali lagi untuk keluar");
-      exitConfirm = true;
+      // versi lebih smooth (opsional)
+const toast = document.createElement("div");
+toast.innerText = "Tekan kembali sekali lagi untuk keluar";
+toast.style.position = "fixed";
+toast.style.bottom = "80px";
+toast.style.left = "50%";
+toast.style.transform = "translateX(-50%)";
+toast.style.background = "#000";
+toast.style.color = "#fff";
+toast.style.padding = "10px 16px";
+toast.style.borderRadius = "10px";
+toast.style.zIndex = "9999";
+
+document.body.appendChild(toast);
+setTimeout(()=>toast.remove(),2000);
 
       setTimeout(()=> exitConfirm = false, 2000);
 
