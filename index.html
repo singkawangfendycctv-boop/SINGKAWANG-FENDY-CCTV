@@ -468,7 +468,7 @@ let kategori=[], brand=[], produk=[], cart=[];
 let produkSiap = false;
 
 function pushHistory(){
-  history.pushState({ level: nav.level }, null, location.href);
+  history.pushState({ level: nav.level }, "", location.href);
 }
 // 🔴🔴🔴 TAMBAHAN ANTI LAG SEARCH
 let searchTimer = null;
@@ -703,12 +703,12 @@ function tampilPromo(){
 /* 🔴🔴🔴 PROMO FUNCTION END 🔴🔴🔴 */
 
 function tampilDetail(id){
-  pushHistory(); //
 
   // 🔴 SIMPAN POSISI SEBELUM MASUK DETAIL
   nav.scroll.detail = window.scrollY;
 
   nav.level = "detail";
+  pushHistory(); //
 
 
   // 🔴🔴🔴 JIKA DARI SEARCH, SIMPAN SCROLL SEARCH
@@ -1114,23 +1114,29 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-/* ================= BACK BUTTON FINAL FIX ================= */
-window.addEventListener("popstate", function () {
+/* ================= BACK ANDROID FINAL FIX ================= */
+window.addEventListener("popstate", function (e) {
 
-  // 🔴 Kalau masih bukan halaman utama → mundur normal
-  if(nav.level !== "kategori"){
+  // 🔴 Kalau ada state → berarti masih di dalam halaman
+  if(e.state && nav.level !== "kategori"){
     navBack();
     return;
   }
 
-  // 🔴 Kalau sudah di halaman utama → tampil notif
-  if(confirm("Keluar dari aplikasi?")){
-    window.close();
-  }else{
-    pushHistory(); // ⬅ tahan biar gak keluar
+  // 🔴 Kalau sudah di halaman utama
+  if(nav.level === "kategori"){
+    if(confirm("Keluar dari aplikasi?")){
+      window.close();
+    }else{
+      pushHistory(); // tahan biar gak keluar
+    }
   }
 
 });
+
+// 🔴 INIT WAJIB
+history.replaceState({ level: "kategori" }, "", location.href);
+pushHistory();
 
 </script>
 
