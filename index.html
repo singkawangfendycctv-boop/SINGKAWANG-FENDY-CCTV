@@ -1106,7 +1106,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-history.replaceState({level:"kategori"}, "", "");
 
 /* ============================= */
 /* 🔴 BACK BUTTON ANDROID FIX 🔴 */
@@ -1138,8 +1137,19 @@ tampilDetail = function(...args){
 
 // saat tombol back HP ditekan
 window.addEventListener("popstate", function () {
-  navBack();
+  if(nav.level === "kategori"){
+    // opsional: konfirmasi keluar
+    if(confirm("Keluar dari aplikasi?")){
+      history.back();
+    } else {
+      pushState();
+    }
+  } else {
+    navBack();
+  }
 });
+
+history.replaceState({level:"kategori"}, "", "");
 
 </script>
 
