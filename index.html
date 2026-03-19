@@ -603,6 +603,7 @@ function tampilKategori(){
 function tampilBrand(id,nama){
   saveScroll(); // 🔴 TAMBAH
   nav.level="brand";
+  history.pushState({level:"brand"}, "", "");
   judul.innerText=nama;
   view.innerHTML=`<div class="back" onclick="navBack()">⬅ Kembali</div>`;
   brand.filter(b=>b.kategori===id).forEach(b=>{
@@ -617,6 +618,7 @@ function tampilBrand(id,nama){
 
 function tampilProduk(id,nama){
   nav.level="produk";
+  history.pushState({level:"produk"}, "", "");
   judul.innerText=nama;
   view.innerHTML=`<div class="back" onclick="navBack()">⬅ Kembali</div>`;
 
@@ -670,7 +672,12 @@ function tampilPromo(){
   const isApple = p.brand.toLowerCase().includes("apple");
 
   pv.innerHTML += `
-    <div class="card" onclick="fromPromo=true; tampilDetail('${p.id}')">
+    <div class="card" onclick="
+  fromPromo=true;
+  nav.level='detail';
+  history.pushState({level:'detail'},'', '');
+  tampilDetail('${p.id}')
+"
 
       ${isApple ? `<div class="badge-tam"></div>` : ``}
 
@@ -701,6 +708,7 @@ function tampilDetail(id){
   nav.scroll.detail = window.scrollY;
 
   nav.level = "detail";
+  history.pushState({level:"detail"}, "", "");
 
 
   // 🔴🔴🔴 JIKA DARI SEARCH, SIMPAN SCROLL SEARCH
@@ -1107,66 +1115,30 @@ if ('serviceWorker' in navigator) {
 }
 
 
-/* ================= BACK ANDROID FULL SYSTEM ================= */
+/* ================= BACK ANDROID SIMPLE & AMAN ================= */
 
 let exitConfirm = false;
 
-/* dorong history awal */
-history.pushState({page:"home"}, "", "");
+/* initial state */
+history.replaceState({level:"kategori"}, "", "");
 
-/* setiap pindah halaman, push state */
-function pushHistory(){
-  history.pushState({page:nav.level}, "", "");
-}
-
-/* override fungsi yang sudah ada */
-const _tampilKategori = tampilKategori;
-tampilKategori = function(){
-  _tampilKategori();
-  pushHistory();
-};
-
-const _tampilBrand = tampilBrand;
-tampilBrand = function(id,nama){
-  _tampilBrand(id,nama);
-  pushHistory();
-};
-
-const _tampilProduk = tampilProduk;
-tampilProduk = function(id,nama){
-  _tampilProduk(id,nama);
-  pushHistory();
-};
-
-const _tampilDetail = tampilDetail;
-tampilDetail = function(id){
-  _tampilDetail(id);
-  pushHistory();
-};
-
-/* BACK ANDROID */
+/* HANDLE BACK ANDROID */
 window.addEventListener("popstate", function(){
 
-  /* kalau di halaman utama */
   if(nav.level === "kategori"){
 
     if(!exitConfirm){
       alert("Tekan kembali sekali lagi untuk keluar");
       exitConfirm = true;
 
-      setTimeout(()=>{
-        exitConfirm = false;
-      },2000);
+      setTimeout(()=> exitConfirm = false, 2000);
 
-      /* tahan supaya tidak keluar */
-      history.pushState({page:"home"}, "", "");
+      history.pushState({level:"kategori"}, "", "");
     }else{
-      /* keluar */
-      window.history.back();
+      history.back();
     }
 
   }else{
-    /* selain halaman utama → pakai sistem kamu */
     navBack();
   }
 
