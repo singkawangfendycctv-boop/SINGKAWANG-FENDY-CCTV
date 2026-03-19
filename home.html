@@ -1105,6 +1105,72 @@ if ('serviceWorker' in navigator) {
 
   });
 }
+
+/* ================= BACK ANDROID FULL SYSTEM ================= */
+
+let exitConfirm = false;
+
+/* dorong history awal */
+history.pushState({page:"home"}, "", "");
+
+/* setiap pindah halaman, push state */
+function pushHistory(){
+  history.pushState({page:nav.level}, "", "");
+}
+
+/* override fungsi yang sudah ada */
+const _tampilKategori = tampilKategori;
+tampilKategori = function(){
+  _tampilKategori();
+  pushHistory();
+};
+
+const _tampilBrand = tampilBrand;
+tampilBrand = function(id,nama){
+  _tampilBrand(id,nama);
+  pushHistory();
+};
+
+const _tampilProduk = tampilProduk;
+tampilProduk = function(id,nama){
+  _tampilProduk(id,nama);
+  pushHistory();
+};
+
+const _tampilDetail = tampilDetail;
+tampilDetail = function(id){
+  _tampilDetail(id);
+  pushHistory();
+};
+
+/* BACK ANDROID */
+window.addEventListener("popstate", function(){
+
+  /* kalau di halaman utama */
+  if(nav.level === "kategori"){
+
+    if(!exitConfirm){
+      alert("Tekan kembali sekali lagi untuk keluar");
+      exitConfirm = true;
+
+      setTimeout(()=>{
+        exitConfirm = false;
+      },2000);
+
+      /* tahan supaya tidak keluar */
+      history.pushState({page:"home"}, "", "");
+    }else{
+      /* keluar */
+      window.history.back();
+    }
+
+  }else{
+    /* selain halaman utama → pakai sistem kamu */
+    navBack();
+  }
+
+});
+
 </script>
 
 </body>
