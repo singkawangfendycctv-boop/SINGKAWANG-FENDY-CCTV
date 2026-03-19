@@ -466,6 +466,10 @@ footer{
 
 let kategori=[], brand=[], produk=[], cart=[];
 let produkSiap = false;
+
+function pushHistory(){
+  history.pushState({ level: nav.level }, null, location.href);
+}
 // 🔴🔴🔴 TAMBAHAN ANTI LAG SEARCH
 let searchTimer = null;
 let fromPromo = false;
@@ -586,6 +590,7 @@ fetch("produk.csv")
 
 /* VIEW */
 function tampilKategori(){
+  pushHistory(); //
   nav.level="kategori";
   judul.innerText="Kategori Produk";
   view.innerHTML="";
@@ -601,6 +606,7 @@ function tampilKategori(){
 }
 
 function tampilBrand(id,nama){
+  pushHistory(); //
   saveScroll(); // 🔴 TAMBAH
   nav.level="brand";
   judul.innerText=nama;
@@ -616,6 +622,7 @@ function tampilBrand(id,nama){
 }
 
 function tampilProduk(id,nama){
+  pushHistory(); //
   nav.level="produk";
   judul.innerText=nama;
   view.innerHTML=`<div class="back" onclick="navBack()">⬅ Kembali</div>`;
@@ -696,6 +703,7 @@ function tampilPromo(){
 /* 🔴🔴🔴 PROMO FUNCTION END 🔴🔴🔴 */
 
 function tampilDetail(id){
+  pushHistory(); //
 
   // 🔴 SIMPAN POSISI SEBELUM MASUK DETAIL
   nav.scroll.detail = window.scrollY;
@@ -1106,27 +1114,23 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-/* ================= BACK BUTTON FINAL ================= */
+/* ================= BACK BUTTON FINAL FIX ================= */
 window.addEventListener("popstate", function () {
 
-  // 🔴 Kalau BUKAN di halaman utama → pakai alur normal
+  // 🔴 Kalau masih bukan halaman utama → mundur normal
   if(nav.level !== "kategori"){
-    navBack(); // detail → produk → brand → kategori
-    history.pushState(null, null, location.href);
+    navBack();
     return;
   }
 
-  // 🔴 Kalau SUDAH di halaman utama → tampilkan notif keluar
+  // 🔴 Kalau sudah di halaman utama → tampil notif
   if(confirm("Keluar dari aplikasi?")){
     window.close();
   }else{
-    history.pushState(null, null, location.href);
+    pushHistory(); // ⬅ tahan biar gak keluar
   }
 
 });
-
-/* 🔴 WAJIB supaya back bisa ditangkap */
-history.pushState(null, null, location.href);
 
 </script>
 
