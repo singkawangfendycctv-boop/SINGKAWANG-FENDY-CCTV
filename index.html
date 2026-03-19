@@ -469,7 +469,6 @@ let produkSiap = false;
 
 // INIT HISTORY AWAL
 history.replaceState({ page: "kategori" }, "");
-history.pushState({ page: "kategori" }, ""); //
 
 
 // 🔴🔴🔴 TAMBAHAN ANTI LAG SEARCH
@@ -511,6 +510,10 @@ let nav={
 }
 
 };
+
+function addHistory(){
+  history.pushState({ page: nav.level }, "");
+}
 
 let searchState = {
   aktif: false,
@@ -607,6 +610,7 @@ function tampilKategori(){
 }
 
 function tampilBrand(id,nama){
+  addHistory(); //
   saveScroll(); // 🔴 TAMBAH
   nav.level="brand";
   judul.innerText=nama;
@@ -622,6 +626,7 @@ function tampilBrand(id,nama){
 }
 
 function tampilProduk(id,nama){
+  addHistory(); //
   nav.level="produk";
   judul.innerText=nama;
   view.innerHTML=`<div class="back" onclick="navBack()">⬅ Kembali</div>`;
@@ -702,6 +707,7 @@ function tampilPromo(){
 /* 🔴🔴🔴 PROMO FUNCTION END 🔴🔴🔴 */
 
 function tampilDetail(id){
+  addHistory(); //
 
   // 🔴 SIMPAN POSISI SEBELUM MASUK DETAIL
   nav.scroll.detail = window.scrollY;
@@ -1115,10 +1121,8 @@ if ('serviceWorker' in navigator) {
 // ⬅️ AKTIFKAN TOMBOL BACK HP
 window.addEventListener("popstate", function () {
   navBack();
-
-  // ⬅ ISI LAGI HISTORY BIAR TIDAK KELUAR
-  history.pushState({ page: nav.level }, "");
 });
+
 </script>
 
 </body>
