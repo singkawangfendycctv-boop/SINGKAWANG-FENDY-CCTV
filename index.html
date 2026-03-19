@@ -466,6 +466,11 @@ footer{
 
 let kategori=[], brand=[], produk=[], cart=[];
 let produkSiap = false;
+
+// INIT HISTORY AWAL
+history.replaceState({ page: "kategori" }, "");
+
+
 // 🔴🔴🔴 TAMBAHAN ANTI LAG SEARCH
 let searchTimer = null;
 let fromPromo = false;
@@ -601,6 +606,7 @@ function tampilKategori(){
 }
 
 function tampilBrand(id,nama){
+  pushHistory(); //
   saveScroll(); // 🔴 TAMBAH
   nav.level="brand";
   judul.innerText=nama;
@@ -616,6 +622,7 @@ function tampilBrand(id,nama){
 }
 
 function tampilProduk(id,nama){
+  pushHistory(); //
   nav.level="produk";
   judul.innerText=nama;
   view.innerHTML=`<div class="back" onclick="navBack()">⬅ Kembali</div>`;
@@ -696,6 +703,7 @@ function tampilPromo(){
 /* 🔴🔴🔴 PROMO FUNCTION END 🔴🔴🔴 */
 
 function tampilDetail(id){
+  pushHistory(); //
 
   // 🔴 SIMPAN POSISI SEBELUM MASUK DETAIL
   nav.scroll.detail = window.scrollY;
@@ -1106,12 +1114,15 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-history.pushState(null, "", location.href);
-
+// ⬅️ AKTIFKAN TOMBOL BACK HP
 window.addEventListener("popstate", function () {
-  navBack();
-  history.pushState(null, "", location.href);
+  navBack(); // pakai fungsi back milikmu
 });
+
+// setiap pindah halaman, tambahkan history
+function pushHistory() {
+  history.pushState({ page: nav.level }, "");
+}
 </script>
 
 </body>
