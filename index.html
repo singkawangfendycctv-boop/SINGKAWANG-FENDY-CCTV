@@ -601,6 +601,7 @@ function tampilKategori(){
 }
 
 function tampilBrand(id,nama){
+  pushState(); //
   saveScroll(); // 🔴 TAMBAH
   nav.level="brand";
   judul.innerText=nama;
@@ -616,6 +617,7 @@ function tampilBrand(id,nama){
 }
 
 function tampilProduk(id,nama){
+  pushState(); //
   nav.level="produk";
   judul.innerText=nama;
   view.innerHTML=`<div class="back" onclick="navBack()">⬅ Kembali</div>`;
@@ -699,7 +701,7 @@ function tampilDetail(id){
 
   // 🔴 SIMPAN POSISI SEBELUM MASUK DETAIL
   nav.scroll.detail = window.scrollY;
-
+  pushState(); //
   nav.level = "detail";
 
 
