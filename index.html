@@ -468,7 +468,11 @@ let kategori=[], brand=[], produk=[], cart=[];
 let produkSiap = false;
 
 // INIT HISTORY AWAL
-history.replaceState({ page: "kategori" }, "");
+history.replaceState({
+  page: "kategori",
+  kategori: null,
+  brand: null
+}, "");
 
 
 // 🔴🔴🔴 TAMBAHAN ANTI LAG SEARCH
@@ -512,7 +516,11 @@ let nav={
 };
 
 function addHistory(){
-  history.pushState({ page: nav.level }, "");
+  history.pushState({
+    page: nav.level,
+    kategori: nav.kategori,
+    brand: nav.brand
+  }, "");
 }
 
 let searchState = {
@@ -610,9 +618,9 @@ function tampilKategori(){
 }
 
 function tampilBrand(id,nama){
-  addHistory(); //
   saveScroll(); // 🔴 TAMBAH
   nav.level="brand";
+  addHistory(); //
   judul.innerText=nama;
   view.innerHTML=`<div class="back" onclick="navBack()">⬅ Kembali</div>`;
   brand.filter(b=>b.kategori===id).forEach(b=>{
@@ -626,8 +634,8 @@ function tampilBrand(id,nama){
 }
 
 function tampilProduk(id,nama){
-  addHistory(); //
   nav.level="produk";
+  addHistory(); //
   judul.innerText=nama;
   view.innerHTML=`<div class="back" onclick="navBack()">⬅ Kembali</div>`;
 
@@ -707,12 +715,12 @@ function tampilPromo(){
 /* 🔴🔴🔴 PROMO FUNCTION END 🔴🔴🔴 */
 
 function tampilDetail(id){
-  addHistory(); //
 
   // 🔴 SIMPAN POSISI SEBELUM MASUK DETAIL
   nav.scroll.detail = window.scrollY;
 
   nav.level = "detail";
+  addHistory(); //
 
 
   // 🔴🔴🔴 JIKA DARI SEARCH, SIMPAN SCROLL SEARCH
@@ -1119,8 +1127,27 @@ if ('serviceWorker' in navigator) {
 }
 
 // ⬅️ AKTIFKAN TOMBOL BACK HP
-window.addEventListener("popstate", function () {
-  navBack();
+window.addEventListener("popstate", function (e) {
+  if(!e.state) return;
+
+  const s = e.state;
+
+  nav.level = s.page;
+  nav.kategori = s.kategori;
+  nav.brand = s.brand;
+
+  if(s.page === "kategori"){
+    tampilKategori();
+  }
+  else if(s.page === "brand"){
+    tampilBrand(nav.kategori, "");
+  }
+  else if(s.page === "produk"){
+    tampilProduk(nav.brand, "");
+  }
+  else if(s.page === "detail"){
+    navBack(); // biar balik ke produk
+  }
 });
 
 </script>
