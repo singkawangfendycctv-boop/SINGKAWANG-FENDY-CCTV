@@ -1105,39 +1105,6 @@ if ('serviceWorker' in navigator) {
 
   });
 }
-
-/* ================= BACK BUTTON ANDROID ================= */
-let lastBackTime = 0;
-
-window.addEventListener("popstate", function () {
-
-  // 🔴 Kalau BUKAN di halaman utama → pakai navBack biasa
-  if(nav.level !== "kategori"){
-    navBack();
-    history.pushState(null, null, location.href);
-    return;
-  }
-
-  // 🔴 Kalau di halaman utama
-  const now = new Date().getTime();
-
-  if(now - lastBackTime < 2000){
-    // ⬅ klik ke-2 dalam 2 detik → keluar
-    if(confirm("Keluar dari aplikasi?")){
-      window.close(); // PWA / APK / WebView bisa close
-    }
-  }else{
-    // ⬅ klik pertama → kasih notic
-    alert("Tekan sekali lagi untuk keluar");
-    lastBackTime = now;
-    history.pushState(null, null, location.href);
-  }
-
-});
-
-/* 🔴 WAJIB: supaya back button terdeteksi */
-history.pushState(null, null, location.href);
-
 </script>
 
 </body>
