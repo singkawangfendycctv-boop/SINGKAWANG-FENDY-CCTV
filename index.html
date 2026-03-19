@@ -472,6 +472,50 @@ let fromPromo = false;
 // 🔴 TAMBAHAN: SIMPAN POSISI KLIK PRODUK
 let lastProductScroll = 0;
 
+// ===== HANDLE BACK ANDROID =====
+let isBackHandled = false;
+
+function handleBack() {
+  if (nav.level === "detail") {
+    // Dari detail ke produk
+    nav.level = "produk";
+    tampilProduk(nav.brand, "");
+    setTimeout(() => {
+      window.scrollTo({
+        top: lastProductScroll,
+        behavior: "auto"
+      });
+    }, 0);
+    return true; // Back ditangani
+  }
+  else if (nav.level === "produk") {
+    // Dari produk ke brand
+    nav.level = "brand";
+    tampilBrand(nav.kategori, "");
+    restoreScroll();
+    return true; // Back ditangani
+  }
+  else if (nav.level === "brand") {
+    // Dari brand ke kategori
+    nav.level = "kategori";
+    tampilKategori();
+    restoreScroll();
+    return true; // Back ditangani
+  }
+  else if (nav.level === "search" && searchState.aktif) {
+    // Dari search ke kategori
+    resetSearch();
+    nav.level = "kategori";
+    tampilKategori();
+    restoreScroll();
+    return true; // Back ditangani
+  }
+  else {
+    // Di halaman utama (kategori) -> biarkan keluar
+    return false; // Back tidak ditangani
+  }
+}
+
 // 🔴 WAJIB: GLOBAL SEARCH
 const search = document.getElementById("search");
 
@@ -1107,20 +1151,21 @@ if ('serviceWorker' in navigator) {
 }
 
 // ===== HANDLE TOMBOL BACK ANDROID =====
-window.addEventListener('popstate', function (event) {
-  // Cegah perilaku default (keluar dari halaman)
+// Event listener untuk tombol back Android
+window.addEventListener('popstate', function(event) {
   event.preventDefault();
-
-  // Panggil fungsi back yang sudah ada
-  if (typeof navBack === 'function') {
-    navBack();
+  
+  if (handleBack()) {
+    // Kalau back ditangani, push state lagi
+    history.pushState(null, null, location.href);
+  } else {
+    // Kalau di halaman utama, biarkan keluar
+    window.removeEventListener('popstate', this);
+    history.back();
   }
-
-  // Push state lagi agar back berikutnya tetap memanggil popstate
-  history.pushState(null, null, location.href);
 });
 
-// Inisialisasi: push state pertama kali agar popstate aktif
+// Push state pertama kali
 history.pushState(null, null, location.href);
 
 </script>
