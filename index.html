@@ -590,7 +590,7 @@ fetch("produk.csv")
 
 /* VIEW */
 function tampilKategori(){
-  pushHistory(); //
+  history.pushState({level:"kategori"}, "", "");
   nav.level="kategori";
   judul.innerText="Kategori Produk";
   view.innerHTML="";
@@ -1115,28 +1115,67 @@ if ('serviceWorker' in navigator) {
 }
 
 /* ================= BACK ANDROID FINAL FIX ================= */
-window.addEventListener("popstate", function (e) {
+window.addEventListener("popstate", function(e){
 
-  // 🔴 Kalau ada state → berarti masih di dalam halaman
-  if(e.state && nav.level !== "kategori"){
-    navBack();
+  const state = e.state;
+
+  if(!state){
+    tampilKategori();
     return;
   }
 
-  // 🔴 Kalau sudah di halaman utama
-  if(nav.level === "kategori"){
-    if(confirm("Keluar dari aplikasi?")){
-      window.close();
-    }else{
-      pushHistory(); // tahan biar gak keluar
-    }
+  // 🔥 HANDLE BERDASARKAN HISTORY
+  if(state.level === "kategori"){
+    tampilKategori();
+  }
+  else if(state.level === "brand"){
+    tampilBrand(nav.kategori, "");
+  }
+  else if(state.level === "produk"){
+    tampilProduk(nav.brand, "");
+  }
+  else if(state.level === "detail"){
+    // tidak perlu handle (sudah lewat)
   }
 
 });
 
-// 🔴 INIT WAJIB
-history.replaceState({ level: "kategori" }, "", location.href);
-pushHistory();
+let lastBackTime = 0;
+
+window.addEventListener("popstate", function(e){
+
+  if(nav.level === "kategori"){
+
+    const now = Date.now();
+
+    if(now - lastBackTime < 2000){
+      // keluar
+      window.close(); // PWA / Android
+    }else{
+      lastBackTime = now;
+
+      // toast
+      const toast = document.createElement("div");
+      toast.innerText = "Tekan kembali sekali lagi untuk keluar";
+      toast.style.position = "fixed";
+      toast.style.bottom = "80px";
+      toast.style.left = "50%";
+      toast.style.transform = "translateX(-50%)";
+      toast.style.background = "#000";
+      toast.style.color = "#fff";
+      toast.style.padding = "10px 16px";
+      toast.style.borderRadius = "10px";
+      toast.style.zIndex = "9999";
+
+      document.body.appendChild(toast);
+      setTimeout(()=>toast.remove(),2000);
+
+      history.pushState({level:"kategori"}, "", "");
+    }
+
+  }
+
+});
 
 </script>
 
