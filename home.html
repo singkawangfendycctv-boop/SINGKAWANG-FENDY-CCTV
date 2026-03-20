@@ -471,6 +471,7 @@ let searchTimer = null;
 let fromPromo = false;
 // 🔴 TAMBAHAN: SIMPAN POSISI KLIK PRODUK
 let lastProductScroll = 0;
+let lockScroll = false;
 
 // 🔴 WAJIB: GLOBAL SEARCH
 const search = document.getElementById("search");
@@ -526,6 +527,8 @@ function saveScroll(){
 }
 
 function restoreScroll(){
+  if(lockScroll) return;
+
   let y = 0;
 
   if(nav.level==="kategori"){
@@ -541,9 +544,12 @@ function restoreScroll(){
     y = nav.scroll.detail || 0;
   }
 
-  requestAnimationFrame(()=>{
+  lockScroll = true;
+
+  setTimeout(()=>{
     window.scrollTo(0, y);
-  });
+    lockScroll = false;
+  }, 30);
 }
 
 /* ================= END FIX SCROLL ================= */
@@ -617,13 +623,17 @@ function tampilBrand(id,nama){
       </div>`;
   });
 
+  setTimeout(()=>{
   restoreScroll();
+}, 50);
 }
 
 function tampilProduk(id,nama){
 
   // 🔥 SIMPAN POSISI BRAND SEBELUM MASUK PRODUK
+  requestAnimationFrame(()=>{
   nav.scroll.brand[nav.kategori] = window.scrollY;
+});
 
   nav.level="produk";
   judul.innerText=nama;
@@ -805,8 +815,14 @@ function navBack(){
 }
 
   else if(nav.level==="produk"){
+  const lastScroll = nav.scroll.brand[nav.kategori] || 0;
+
   nav.level="brand";
   tampilBrand(nav.kategori,"");
+
+  setTimeout(()=>{
+    window.scrollTo(0, lastScroll);
+  }, 80);
 }
 
   else{
