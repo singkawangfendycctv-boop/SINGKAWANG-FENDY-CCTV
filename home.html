@@ -617,12 +617,20 @@ function tampilBrand(id,nama){
       </div>`;
   });
 
-  restoreScroll();
+  // 🔥 DOUBLE RESTORE (ANTI KETIMPA GAMBAR)
+  const y = nav.scroll.brand[nav.kategori] || 0;
+
+  setTimeout(()=>{
+    window.scrollTo(0, y);
+  }, 0);
+
+  setTimeout(()=>{
+    window.scrollTo(0, y);
+  }, 120); // ⬅ ini kunci utamanya
 }
 
 function tampilProduk(id,nama){
 
-  // 🔥 SIMPAN POSISI BRAND SEBELUM MASUK PRODUK
   nav.level="produk";
   judul.innerText=nama;
   view.innerHTML=`<div class="back" onclick="navBack()">⬅ Kembali</div>`;
@@ -704,17 +712,21 @@ function tampilPromo(){
 
 function tampilDetail(id){
 
-  // 🔴 SIMPAN SCROLL SEBELUM GANTI LEVEL
+  // 🔴 SIMPAN POSISI SEBELUM MASUK DETAIL
+  nav.scroll.detail = window.scrollY;
+
+  nav.level = "detail";
+
+
+  // 🔴🔴🔴 JIKA DARI SEARCH, SIMPAN SCROLL SEARCH
   if(searchState.aktif){
     searchState.scroll = window.scrollY;
   }else{
-    saveScroll(); // ✅ sekarang masih di produk (AMAN)
+    saveScroll(); // default kategori / brand 
   }
 
-  nav.scroll.detail = window.scrollY;
-  nav.level = "detail";
-
-  const p = produk.find(x=>x.id===id);
+  nav.level="detail";
+  const p=produk.find(x=>x.id===id);
   judul.innerText=p.nama;
   view.innerHTML=`
     <div class="back" onclick="navBack()">⬅ Kembali</div>
@@ -788,14 +800,21 @@ function navBack(){
   if(nav.level==="detail"){
   nav.level="produk";
   tampilProduk(nav.brand,"");
-  return; // ⬅ WAJIB TAMBAH INI
+
+  // 🔴 BALIK KE POSISI SAAT KLIK PRODUK
+  setTimeout(()=>{
+    window.scrollTo({
+      top: lastProductScroll,
+      behavior: "auto"
+    });
+  },0);
 }
 
   else if(nav.level==="produk"){
-  nav.level="brand";
-  tampilBrand(nav.kategori,"");
-}
-
+    nav.level="brand";
+    tampilBrand(nav.kategori,"");
+  }
+  
   else{
     nav.level="kategori";
     tampilKategori();
@@ -1101,32 +1120,6 @@ if ('serviceWorker' in navigator) {
 
   });
 }
-/* ================= BACK ANDROID SIMPLE ================= */
-
-// push 1 state biar bisa ditahan
-history.pushState(null, "", "");
-
-window.addEventListener("popstate", function () {
-
-  // 🔴 kalau belum di kategori → pakai navBack
-  if(nav.level !== "kategori"){
-    navBack();
-
-    // tahan supaya tidak keluar
-    history.pushState(null, "", "");
-    return;
-  }
-
-  // 🔴 kalau sudah di kategori → konfirmasi keluar
-  const keluar = confirm("Keluar dari aplikasi?");
-
-  if(keluar){
-    history.back(); // keluar
-  }else{
-    history.pushState(null, "", ""); // tetap di halaman
-  }
-
-});
 </script>
 
 </body>
