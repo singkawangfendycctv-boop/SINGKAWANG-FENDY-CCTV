@@ -471,7 +471,6 @@ let searchTimer = null;
 let fromPromo = false;
 // 🔴 TAMBAHAN: SIMPAN POSISI KLIK PRODUK
 let lastProductScroll = 0;
-let cacheBrandHTML = {};
 
 // 🔴 WAJIB: GLOBAL SEARCH
 const search = document.getElementById("search");
@@ -547,23 +546,6 @@ function restoreScroll(){
   },0);
 }
 
-function restoreScrollSmooth(getY){
-  let retry = 0;
-
-  function tryScroll(){
-    const y = getY();
-
-    window.scrollTo(0, y);
-
-    if(Math.abs(window.scrollY - y) > 5 && retry < 10){
-      retry++;
-      requestAnimationFrame(tryScroll);
-    }
-  }
-
-  requestAnimationFrame(tryScroll);
-}
-
 /* ================= END FIX SCROLL ================= */
 
 /* LOAD CSV */
@@ -621,20 +603,6 @@ function tampilKategori(){
 function tampilBrand(id,nama){
   nav.level="brand";
   judul.innerText=nama;
-
-  // 🔥 JIKA SUDAH PERNAH DIBUKA → PAKAI CACHE
-  if(cacheBrandHTML[id]){
-    view.innerHTML = cacheBrandHTML[id];
-
-    // 🔥 BALIK SCROLL TANPA GANGGU
-    requestAnimationFrame(()=>{
-      window.scrollTo(0, nav.scroll.brand[id] || 0);
-    });
-
-    return;
-  }
-
-  // 🔴 RENDER BARU (PERTAMA KALI)
   view.innerHTML=`<div class="back" onclick="navBack()">⬅ Kembali</div>`;
 
   brand.filter(b=>b.kategori===id).forEach(b=>{
@@ -648,8 +616,16 @@ function tampilBrand(id,nama){
       </div>`;
   });
 
-  // 🔥 SIMPAN KE CACHE
-  cacheBrandHTML[id] = view.innerHTML;
+  // 🔥 DOUBLE RESTORE (ANTI KETIMPA GAMBAR)
+  const y = nav.scroll.brand[nav.kategori] || 0;
+
+  setTimeout(()=>{
+    window.scrollTo(0, y);
+  }, 0);
+
+  setTimeout(()=>{
+    window.scrollTo(0, y);
+  }, 120); // ⬅ ini kunci utamanya
 }
 
 function tampilProduk(id,nama){
@@ -738,11 +714,6 @@ function tampilPromo(){
 
 function tampilDetail(id){
 
-// 🔴 SIMPAN POSISI BRAND SAAT MASUK DETAIL
-if(nav.level === "produk"){
-  nav.scroll.brand[nav.kategori] = window.scrollY;
-}
-
   // 🔴 SIMPAN POSISI SEBELUM MASUK DETAIL
   nav.scroll.detail = window.scrollY;
 
@@ -752,6 +723,8 @@ if(nav.level === "produk"){
   // 🔴🔴🔴 JIKA DARI SEARCH, SIMPAN SCROLL SEARCH
   if(searchState.aktif){
     searchState.scroll = window.scrollY;
+  }else{
+    saveScroll(); // default kategori / brand 
   }
 
   nav.level="detail";
@@ -842,11 +815,6 @@ function navBack(){
   else if(nav.level==="produk"){
   nav.level="brand";
   tampilBrand(nav.kategori,"");
-
-  // 🔥 PAKSA BALIK SCROLL (SUPER STABIL)
-  requestAnimationFrame(()=>{
-    window.scrollTo(0, nav.scroll.brand[nav.kategori] || 0);
-  });
 }
 
   else{
