@@ -601,22 +601,28 @@ function tampilKategori(){
 }
 
 function tampilBrand(id,nama){
-  saveScroll(); // 🔴 TAMBAH
+  saveScroll(); 
   nav.level="brand";
   judul.innerText=nama;
   view.innerHTML=`<div class="back" onclick="navBack()">⬅ Kembali</div>`;
+
   brand.filter(b=>b.kategori===id).forEach(b=>{
     view.innerHTML+=`
-      <div class="card" onclick="saveScroll();nav.brand='${b.id}';tampilProduk('${b.id}','${b.nama}')">
+      <div class="card" onclick="
+        nav.level='brand';   // 🔴 TAMBAH INI
+        saveScroll();        // 🔴 PINDAH KE SINI
+        nav.brand='${b.id}';
+        tampilProduk('${b.id}','${b.nama}')
+      ">
         <img src="${b.foto}">
         <h3>${b.nama}</h3>
       </div>`;
   });
+
   restoreScroll();
 }
 
 function tampilProduk(id,nama){
-  saveScroll(); // 🔴 TAMBAH INI (WAJIB)
   nav.level="produk";
   judul.innerText=nama;
   view.innerHTML=`<div class="back" onclick="navBack()">⬅ Kembali</div>`;
