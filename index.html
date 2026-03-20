@@ -602,7 +602,6 @@ function tampilKategori(){
 
 function tampilBrand(id,nama){
   nav.level="brand";
-  pushState(); //
   judul.innerText=nama;
   view.innerHTML=`<div class="back" onclick="navBack()">⬅ Kembali</div>`;
 
@@ -625,7 +624,6 @@ function tampilProduk(id,nama){
 
   // 🔥 SIMPAN POSISI BRAND SEBELUM MASUK PRODUK
   nav.level="produk";
-  pushState(); //
   judul.innerText=nama;
   view.innerHTML=`<div class="back" onclick="navBack()">⬅ Kembali</div>`;
 
@@ -715,7 +713,6 @@ function tampilDetail(id){
 
   nav.scroll.detail = window.scrollY;
   nav.level = "detail";
-  pushState(); //
 
   const p = produk.find(x=>x.id===id);
   judul.innerText=p.nama;
@@ -762,9 +759,6 @@ function resetSearch(){
   searchState.scroll = 0;
 }
 
-function pushState(){
-  history.pushState({ level: nav.level }, "", "");
-}
 
 /* NAV BACK */
 function navBack(){
@@ -967,7 +961,6 @@ search.addEventListener("input", function () {
     searchState.aktif = true;
     searchState.keyword = k;
     nav.level = "search";
-    pushState(); //
 
     judul.innerText = "Hasil Pencarian";
     view.innerHTML = `<div class="back" onclick="navBack()">⬅ Kembali</div>`;
@@ -1108,39 +1101,40 @@ if ('serviceWorker' in navigator) {
 
   });
 }
+/* ================= BACK ANDROID FINAL FIX ================= */
 
-/* ================= ANDROID BACK BUTTON STEP BY STEP ================= */
+// isi history terus (biar tidak habis)
+function lockBack(){
+  history.pushState({ lock:true }, "", "");
+}
 
+// saat pertama load
+window.addEventListener("load", () => {
+  lockBack();
+});
+
+// handle tombol back HP
 window.addEventListener("popstate", function () {
 
-  // 🔴 STEP BACK SESUAI LEVEL
-  if(nav.level === "detail"){
-    navBack(); // ke produk
-    return;
-  }
-
-  if(nav.level === "produk"){
-    navBack(); // ke brand
-    return;
-  }
-
-  if(nav.level === "brand"){
-    navBack(); // ke kategori
-    return;
-  }
-
-  if(nav.level === "search"){
+  // 🔴 kalau bukan di kategori → pakai sistem kamu
+  if(nav.level !== "kategori"){
     navBack();
+
+    // isi lagi history (biar bisa back terus)
+    lockBack();
     return;
   }
 
-  // 🔴 SUDAH DI KATEGORI → KONFIRMASI
+  // 🔴 kalau sudah di kategori → konfirmasi keluar
   const keluar = confirm("Keluar dari aplikasi?");
 
   if(keluar){
-    history.go(-1); // keluar
+    // benar-benar keluar (biarkan 1x lolos)
+    window.removeEventListener("popstate", arguments.callee);
+    history.back();
   }else{
-    pushState(); // tahan di halaman
+    // tetap di app
+    lockBack();
   }
 
 });
