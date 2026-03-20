@@ -1101,6 +1101,32 @@ if ('serviceWorker' in navigator) {
 
   });
 }
+
+/* ================= ANDROID BACK BUTTON ================= */
+
+// push state pertama (biar tombol back bisa ditangkap)
+window.addEventListener("load", () => {
+  history.pushState({ page: "home" }, "", "");
+});
+
+// setiap user klik tombol back HP
+window.addEventListener("popstate", function (e) {
+
+  // kalau masih di dalam app (bukan keluar)
+  if(nav.level !== "kategori"){
+    
+    // jalankan fungsi back kamu
+    navBack();
+
+    // push lagi biar tidak keluar app
+    history.pushState({ page: "stay" }, "", "");
+  }
+  else{
+    // kalau sudah di halaman paling awal → boleh keluar
+    // (biarkan default behavior)
+  }
+
+});
 </script>
 
 </body>
