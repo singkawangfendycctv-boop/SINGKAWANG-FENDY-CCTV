@@ -714,6 +714,10 @@ function tampilPromo(){
 
 function tampilDetail(id){
 
+// 🔥 SIMPAN SCROLL PRODUK & BRAND SEBELUM MASUK DETAIL
+nav.scroll.produk[nav.brand] = window.scrollY;
+nav.scroll.brand[nav.kategori] = nav.scroll.brand[nav.kategori] || window.scrollY;
+
   // 🔴 SIMPAN POSISI SEBELUM MASUK DETAIL
   nav.scroll.detail = window.scrollY;
 
@@ -803,13 +807,13 @@ function navBack(){
   nav.level="produk";
   tampilProduk(nav.brand,"");
 
-  // 🔴 BALIK KE POSISI SAAT KLIK PRODUK
+  // 🔥 BALIK KE POSISI PRODUK YANG BENAR
   setTimeout(()=>{
     window.scrollTo({
-      top: lastProductScroll,
+      top: nav.scroll.produk[nav.brand] || 0,
       behavior: "auto"
     });
-  },0);
+  },50);
 }
 
   else if(nav.level==="produk"){
