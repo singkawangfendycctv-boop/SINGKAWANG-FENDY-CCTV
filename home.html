@@ -623,6 +623,8 @@ function tampilBrand(id,nama){
 }
 
 function tampilProduk(id,nama){
+  // 🔴 SIMPAN POSISI BRAND SEBELUM MASUK PRODUK
+  nav.scroll.brand[nav.kategori] = window.scrollY;
   nav.level="produk";
   judul.innerText=nama;
   view.innerHTML=`<div class="back" onclick="navBack()">⬅ Kembali</div>`;
