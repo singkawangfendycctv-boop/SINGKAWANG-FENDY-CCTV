@@ -626,6 +626,10 @@ function tampilBrand(id,nama){
   setTimeout(()=>{
     window.scrollTo(0, y);
   }, 120); // ⬅ ini kunci utamanya
+
+  requestAnimationFrame(()=>{
+  window.scrollTo(0, nav.scroll.brand[nav.kategori] || 0);
+});
 }
 
 function tampilProduk(id,nama){
@@ -728,8 +732,6 @@ if(nav.level === "produk"){
   // 🔴🔴🔴 JIKA DARI SEARCH, SIMPAN SCROLL SEARCH
   if(searchState.aktif){
     searchState.scroll = window.scrollY;
-  }else{
-    saveScroll(); // default kategori / brand 
   }
 
   nav.level="detail";
