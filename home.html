@@ -541,9 +541,9 @@ function restoreScroll(){
     y = nav.scroll.detail || 0;
   }
 
-  setTimeout(()=>{
-    window.scrollTo({ top:y, behavior:"auto" });
-  },0);
+  requestAnimationFrame(()=>{
+    window.scrollTo(0, y);
+  });
 }
 
 /* ================= END FIX SCROLL ================= */
@@ -608,24 +608,16 @@ function tampilBrand(id,nama){
   brand.filter(b=>b.kategori===id).forEach(b=>{
     view.innerHTML+=`
       <div class="card" onclick="
-        nav.brand='${b.id}';
-        tampilProduk('${b.id}','${b.nama}')
-      ">
+  saveScroll();
+  nav.brand='${b.id}';
+  tampilProduk('${b.id}','${b.nama}')
+">
         <img src="${b.foto}">
         <h3>${b.nama}</h3>
       </div>`;
   });
 
-  // 🔥 DOUBLE RESTORE (ANTI KETIMPA GAMBAR)
-  const y = nav.scroll.brand[nav.kategori] || 0;
-
-  setTimeout(()=>{
-    window.scrollTo(0, y);
-  }, 0);
-
-  setTimeout(()=>{
-    window.scrollTo(0, y);
-  }, 120); // ⬅ ini kunci utamanya
+  restoreScroll();
 }
 
 function tampilProduk(id,nama){
