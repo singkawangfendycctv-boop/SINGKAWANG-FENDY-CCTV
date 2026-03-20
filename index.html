@@ -602,6 +602,7 @@ function tampilKategori(){
 
 function tampilBrand(id,nama){
   nav.level="brand";
+  pushState(); //
   judul.innerText=nama;
   view.innerHTML=`<div class="back" onclick="navBack()">⬅ Kembali</div>`;
 
@@ -624,6 +625,7 @@ function tampilProduk(id,nama){
 
   // 🔥 SIMPAN POSISI BRAND SEBELUM MASUK PRODUK
   nav.level="produk";
+  pushState(); //
   judul.innerText=nama;
   view.innerHTML=`<div class="back" onclick="navBack()">⬅ Kembali</div>`;
 
@@ -713,6 +715,7 @@ function tampilDetail(id){
 
   nav.scroll.detail = window.scrollY;
   nav.level = "detail";
+  pushState(); //
 
   const p = produk.find(x=>x.id===id);
   judul.innerText=p.nama;
@@ -759,6 +762,9 @@ function resetSearch(){
   searchState.scroll = 0;
 }
 
+function pushState(){
+  history.pushState({ level: nav.level }, "", "");
+}
 
 /* NAV BACK */
 function navBack(){
@@ -961,6 +967,7 @@ search.addEventListener("input", function () {
     searchState.aktif = true;
     searchState.keyword = k;
     nav.level = "search";
+    pushState(); //
 
     judul.innerText = "Hasil Pencarian";
     view.innerHTML = `<div class="back" onclick="navBack()">⬅ Kembali</div>`;
@@ -1104,30 +1111,36 @@ if ('serviceWorker' in navigator) {
 
 /* ================= ANDROID BACK BUTTON STEP BY STEP ================= */
 
-window.addEventListener("load", () => {
-  history.pushState({ page: "app" }, "", "");
-});
-
 window.addEventListener("popstate", function () {
 
-  // 🔴 JIKA MASIH BUKAN HALAMAN KATEGORI → LANJUT NAVBACK
-  if(nav.level !== "kategori"){
-    navBack();
-
-    // tahan supaya tidak keluar
-    history.pushState({ page: "app" }, "", "");
+  // 🔴 STEP BACK SESUAI LEVEL
+  if(nav.level === "detail"){
+    navBack(); // ke produk
     return;
   }
 
-  // 🔴 JIKA SUDAH DI KATEGORI → KONFIRMASI KELUAR
+  if(nav.level === "produk"){
+    navBack(); // ke brand
+    return;
+  }
+
+  if(nav.level === "brand"){
+    navBack(); // ke kategori
+    return;
+  }
+
+  if(nav.level === "search"){
+    navBack();
+    return;
+  }
+
+  // 🔴 SUDAH DI KATEGORI → KONFIRMASI
   const keluar = confirm("Keluar dari aplikasi?");
 
   if(keluar){
-    // benar-benar keluar
-    history.back();
+    history.go(-1); // keluar
   }else{
-    // batal keluar → tetap di app
-    history.pushState({ page: "app" }, "", "");
+    pushState(); // tahan di halaman
   }
 
 });
