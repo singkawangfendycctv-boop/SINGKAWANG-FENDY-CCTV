@@ -1101,43 +1101,31 @@ if ('serviceWorker' in navigator) {
 
   });
 }
-/* ================= BACK ANDROID FINAL FIX ================= */
+/* ================= BACK ANDROID SUPER SIMPLE ================= */
 
-// isi history terus (biar tidak habis)
-function lockBack(){
-  history.pushState({ lock:true }, "", "");
-}
+// selalu ada history (biar tidak keluar)
+history.pushState(null, "", "");
 
-// saat pertama load
-window.addEventListener("load", () => {
-  lockBack();
-});
+window.onpopstate = function () {
 
-// handle tombol back HP
-window.addEventListener("popstate", function () {
-
-  // 🔴 kalau bukan di kategori → pakai sistem kamu
+  // 🔴 SELAMA MASIH ADA HALAMAN SEBELUMNYA → JANGAN KELUAR
   if(nav.level !== "kategori"){
-    navBack();
-
-    // isi lagi history (biar bisa back terus)
-    lockBack();
+    
+    navBack(); // ⬅ PAKAI FUNGSI KAMU
+    
+    // isi lagi history supaya tidak exit
+    history.pushState(null, "", "");
     return;
   }
 
-  // 🔴 kalau sudah di kategori → konfirmasi keluar
+  // 🔴 SUDAH PALING AWAL → BARU BOLEH KELUAR
   const keluar = confirm("Keluar dari aplikasi?");
 
-  if(keluar){
-    // benar-benar keluar (biarkan 1x lolos)
-    window.removeEventListener("popstate", arguments.callee);
-    history.back();
-  }else{
-    // tetap di app
-    lockBack();
+  if(!keluar){
+    history.pushState(null, "", ""); // tahan tetap di app
   }
 
-});
+};
 </script>
 
 </body>
