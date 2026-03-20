@@ -471,6 +471,7 @@ let searchTimer = null;
 let fromPromo = false;
 // 🔴 TAMBAHAN: SIMPAN POSISI KLIK PRODUK
 let lastProductScroll = 0;
+let lastBrandScroll = 0;
 
 // 🔴 WAJIB: GLOBAL SEARCH
 const search = document.getElementById("search");
@@ -608,30 +609,18 @@ function tampilBrand(id,nama){
   brand.filter(b=>b.kategori===id).forEach(b=>{
     view.innerHTML+=`
       <div class="card" onclick="
-        nav.brand='${b.id}';
-        tampilProduk('${b.id}','${b.nama}')
-      ">
+  lastBrandScroll = window.scrollY;
+  nav.brand='${b.id}';
+  tampilProduk('${b.id}','${b.nama}')
+">
         <img src="${b.foto}">
         <h3>${b.nama}</h3>
       </div>`;
   });
+  }
 
-  // 🔥 DOUBLE RESTORE (ANTI KETIMPA GAMBAR)
-  const y = nav.scroll.brand[nav.kategori] || 0;
-
-  setTimeout(()=>{
-    window.scrollTo(0, y);
-  }, 0);
-
-  setTimeout(()=>{
-    window.scrollTo(0, y);
-  }, 120); // ⬅ ini kunci utamanya
-}
 
 function tampilProduk(id,nama){
-
-  // 🔥 SIMPAN POSISI BRAND SEBELUM MASUK PRODUK
-  nav.scroll.brand[nav.kategori] = window.scrollY;
 
   nav.level="produk";
   judul.innerText=nama;
@@ -713,9 +702,6 @@ function tampilPromo(){
 /* 🔴🔴🔴 PROMO FUNCTION END 🔴🔴🔴 */
 
 function tampilDetail(id){
-
-// 🔥 SIMPAN SCROLL PRODUK & BRAND SEBELUM MASUK DETAIL
-nav.scroll.produk[nav.brand] = window.scrollY;
 
   // 🔴 SIMPAN POSISI SEBELUM MASUK DETAIL
   nav.scroll.detail = window.scrollY;
@@ -819,15 +805,19 @@ function navBack(){
   nav.level="brand";
   tampilBrand(nav.kategori,"");
 
-  const y = nav.scroll.brand[nav.kategori] || 0;
+  setTimeout(()=>{
+    window.scrollTo({
+      top: lastBrandScroll,
+      behavior:"auto"
+    });
+  },100);
 
   setTimeout(()=>{
-    window.scrollTo(0, y);
-  }, 50);
-
-  setTimeout(()=>{
-    window.scrollTo(0, y);
-  }, 150);
+    window.scrollTo({
+      top: lastBrandScroll,
+      behavior:"auto"
+    });
+  },200);
 }
 
   else{
