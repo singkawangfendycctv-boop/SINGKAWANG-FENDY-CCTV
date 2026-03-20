@@ -803,10 +803,18 @@ function navBack(){
 }
 
   else if(nav.level==="produk"){
-    nav.level="brand";
-    tampilBrand(nav.kategori,"");
-    restoreScroll();
-  }
+  nav.level="brand";
+  tampilBrand(nav.kategori,"");
+
+  // 🔴 PAKSA BALIK POSISI BRAND (ANTI GAGAL)
+  setTimeout(()=>{
+    window.scrollTo({
+      top: nav.scroll.brand[nav.kategori] || 0,
+      behavior: "auto"
+    });
+  }, 50); // ⬅ delay kecil biar DOM siap
+}
+
   else{
     nav.level="kategori";
     tampilKategori();
