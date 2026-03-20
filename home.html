@@ -782,13 +782,21 @@ function navBack(){
     return;
   }
 
-if(nav.level==="detail"){
+  if(nav.level==="detail"){
   nav.level="produk";
 
   // 🔴 MASUKKAN INI (PENTING)
   nav.scroll.produk[nav.brand] = lastProductScroll;
 
   tampilProduk(nav.brand,"");
+
+  // 🔴 BALIK KE POSISI SAAT KLIK PRODUK
+  setTimeout(()=>{
+    window.scrollTo({
+      top: lastProductScroll,
+      behavior: "auto"
+    });
+  },0);
 }
 
   else if(nav.level==="produk"){
