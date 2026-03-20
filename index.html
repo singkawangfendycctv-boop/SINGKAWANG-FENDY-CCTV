@@ -1102,28 +1102,32 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-/* ================= ANDROID BACK BUTTON ================= */
+/* ================= ANDROID BACK BUTTON STEP BY STEP ================= */
 
-// push state pertama (biar tombol back bisa ditangkap)
 window.addEventListener("load", () => {
-  history.pushState({ page: "home" }, "", "");
+  history.pushState({ page: "app" }, "", "");
 });
 
-// setiap user klik tombol back HP
-window.addEventListener("popstate", function (e) {
+window.addEventListener("popstate", function () {
 
-  // kalau masih di dalam app (bukan keluar)
+  // 🔴 JIKA MASIH BUKAN HALAMAN KATEGORI → LANJUT NAVBACK
   if(nav.level !== "kategori"){
-    
-    // jalankan fungsi back kamu
     navBack();
 
-    // push lagi biar tidak keluar app
-    history.pushState({ page: "stay" }, "", "");
+    // tahan supaya tidak keluar
+    history.pushState({ page: "app" }, "", "");
+    return;
   }
-  else{
-    // kalau sudah di halaman paling awal → boleh keluar
-    // (biarkan default behavior)
+
+  // 🔴 JIKA SUDAH DI KATEGORI → KONFIRMASI KELUAR
+  const keluar = confirm("Keluar dari aplikasi?");
+
+  if(keluar){
+    // benar-benar keluar
+    history.back();
+  }else{
+    // batal keluar → tetap di app
+    history.pushState({ page: "app" }, "", "");
   }
 
 });
