@@ -471,7 +471,6 @@ let searchTimer = null;
 let fromPromo = false;
 // 🔴 TAMBAHAN: SIMPAN POSISI KLIK PRODUK
 let lastProductScroll = 0;
-let lastBrandScroll = 0;
 
 // 🔴 WAJIB: GLOBAL SEARCH
 const search = document.getElementById("search");
@@ -609,18 +608,30 @@ function tampilBrand(id,nama){
   brand.filter(b=>b.kategori===id).forEach(b=>{
     view.innerHTML+=`
       <div class="card" onclick="
-  lastBrandScroll = window.scrollY;
-  nav.brand='${b.id}';
-  tampilProduk('${b.id}','${b.nama}')
-">
+        nav.brand='${b.id}';
+        tampilProduk('${b.id}','${b.nama}')
+      ">
         <img src="${b.foto}">
         <h3>${b.nama}</h3>
       </div>`;
   });
-  }
 
+  // 🔥 DOUBLE RESTORE (ANTI KETIMPA GAMBAR)
+  const y = nav.scroll.brand[nav.kategori] || 0;
+
+  setTimeout(()=>{
+    window.scrollTo(0, y);
+  }, 0);
+
+  setTimeout(()=>{
+    window.scrollTo(0, y);
+  }, 120); // ⬅ ini kunci utamanya
+}
 
 function tampilProduk(id,nama){
+
+  // 🔥 SIMPAN POSISI BRAND SEBELUM MASUK PRODUK
+  nav.scroll.brand[nav.kategori] = window.scrollY;
 
   nav.level="produk";
   judul.innerText=nama;
@@ -702,6 +713,11 @@ function tampilPromo(){
 /* 🔴🔴🔴 PROMO FUNCTION END 🔴🔴🔴 */
 
 function tampilDetail(id){
+
+// 🔴 SIMPAN POSISI BRAND SAAT MASUK DETAIL
+if(nav.level === "produk"){
+  nav.scroll.brand[nav.kategori] = window.scrollY;
+}
 
   // 🔴 SIMPAN POSISI SEBELUM MASUK DETAIL
   nav.scroll.detail = window.scrollY;
@@ -792,32 +808,24 @@ function navBack(){
   nav.level="produk";
   tampilProduk(nav.brand,"");
 
-  // 🔥 BALIK KE POSISI PRODUK YANG BENAR
+  // 🔴 BALIK KE POSISI SAAT KLIK PRODUK
   setTimeout(()=>{
     window.scrollTo({
-      top: nav.scroll.produk[nav.brand] || 0,
+      top: lastProductScroll,
       behavior: "auto"
     });
-  },50);
+  },0);
 }
 
   else if(nav.level==="produk"){
   nav.level="brand";
   tampilBrand(nav.kategori,"");
 
-  setTimeout(()=>{
-    window.scrollTo({
-      top: lastBrandScroll,
-      behavior:"auto"
-    });
-  },100);
+  // 🔥 TAMBAHAN WAJIB (ANTI LOMPAT)
+  const y = nav.scroll.brand[nav.kategori] || 0;
 
-  setTimeout(()=>{
-    window.scrollTo({
-      top: lastBrandScroll,
-      behavior:"auto"
-    });
-  },200);
+  setTimeout(()=>window.scrollTo(0,y),0);
+  setTimeout(()=>window.scrollTo(0,y),120);
 }
 
   else{
