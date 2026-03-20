@@ -705,24 +705,17 @@ function tampilPromo(){
 
 function tampilDetail(id){
 
-  // 🔴 SIMPAN POSISI SEBELUM MASUK DETAIL
-  nav.scroll.detail = window.scrollY;
-
-  nav.level = "detail";
-
-
-  // 🔴🔴🔴 JIKA DARI SEARCH, SIMPAN SCROLL SEARCH
+  // 🔴 SIMPAN SCROLL SEBELUM GANTI LEVEL
   if(searchState.aktif){
     searchState.scroll = window.scrollY;
   }else{
-  // ✅ hanya simpan scroll produk, JANGAN sentuh brand
-  if(nav.level === "produk"){
-    nav.scroll.produk[nav.brand] = window.scrollY;
+    saveScroll(); // ✅ sekarang masih di produk (AMAN)
   }
-}
 
-  nav.level="detail";
-  const p=produk.find(x=>x.id===id);
+  nav.scroll.detail = window.scrollY;
+  nav.level = "detail";
+
+  const p = produk.find(x=>x.id===id);
   judul.innerText=p.nama;
   view.innerHTML=`
     <div class="back" onclick="navBack()">⬅ Kembali</div>
@@ -796,14 +789,7 @@ function navBack(){
   if(nav.level==="detail"){
   nav.level="produk";
   tampilProduk(nav.brand,"");
-
-  // 🔴 BALIK KE POSISI SAAT KLIK PRODUK
-  setTimeout(()=>{
-    window.scrollTo({
-      top: lastProductScroll,
-      behavior: "auto"
-    });
-  },0);
+  return; // ⬅ WAJIB TAMBAH INI
 }
 
   else if(nav.level==="produk"){
