@@ -616,16 +616,7 @@ function tampilBrand(id,nama){
       </div>`;
   });
 
-  // 🔥 DOUBLE RESTORE (ANTI KETIMPA GAMBAR)
-  const y = nav.scroll.brand[nav.kategori] || 0;
-
-  setTimeout(()=>{
-    window.scrollTo(0, y);
-  }, 0);
-
-  setTimeout(()=>{
-    window.scrollTo(0, y);
-  }, 120); // ⬅ ini kunci utamanya
+  restoreScroll();
 }
 
 function tampilProduk(id,nama){
@@ -724,8 +715,11 @@ function tampilDetail(id){
   if(searchState.aktif){
     searchState.scroll = window.scrollY;
   }else{
-    saveScroll(); // default kategori / brand 
+  // ✅ hanya simpan scroll produk, JANGAN sentuh brand
+  if(nav.level === "produk"){
+    nav.scroll.produk[nav.brand] = window.scrollY;
   }
+}
 
   nav.level="detail";
   const p=produk.find(x=>x.id===id);
