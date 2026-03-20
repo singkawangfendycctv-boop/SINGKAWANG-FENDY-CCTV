@@ -601,7 +601,6 @@ function tampilKategori(){
 }
 
 function tampilBrand(id,nama){
-  saveScroll(); 
   nav.level="brand";
   judul.innerText=nama;
   view.innerHTML=`<div class="back" onclick="navBack()">⬅ Kembali</div>`;
@@ -609,8 +608,6 @@ function tampilBrand(id,nama){
   brand.filter(b=>b.kategori===id).forEach(b=>{
     view.innerHTML+=`
       <div class="card" onclick="
-        nav.level='brand';   // 🔴 TAMBAH INI
-        saveScroll();        // 🔴 PINDAH KE SINI
         nav.brand='${b.id}';
         tampilProduk('${b.id}','${b.nama}')
       ">
@@ -619,12 +616,23 @@ function tampilBrand(id,nama){
       </div>`;
   });
 
-  restoreScroll();
+  // 🔥 DOUBLE RESTORE (ANTI KETIMPA GAMBAR)
+  const y = nav.scroll.brand[nav.kategori] || 0;
+
+  setTimeout(()=>{
+    window.scrollTo(0, y);
+  }, 0);
+
+  setTimeout(()=>{
+    window.scrollTo(0, y);
+  }, 120); // ⬅ ini kunci utamanya
 }
 
 function tampilProduk(id,nama){
-  // 🔴 SIMPAN POSISI BRAND SEBELUM MASUK PRODUK
+
+  // 🔥 SIMPAN POSISI BRAND SEBELUM MASUK PRODUK
   nav.scroll.brand[nav.kategori] = window.scrollY;
+
   nav.level="produk";
   judul.innerText=nama;
   view.innerHTML=`<div class="back" onclick="navBack()">⬅ Kembali</div>`;
@@ -807,14 +815,6 @@ function navBack(){
   else if(nav.level==="produk"){
   nav.level="brand";
   tampilBrand(nav.kategori,"");
-
-  // 🔴 PAKSA BALIK POSISI BRAND (ANTI GAGAL)
-  setTimeout(()=>{
-    window.scrollTo({
-      top: nav.scroll.brand[nav.kategori] || 0,
-      behavior: "auto"
-    });
-  }, 50); // ⬅ delay kecil biar DOM siap
 }
 
   else{
