@@ -616,6 +616,7 @@ function tampilBrand(id,nama){
 }
 
 function tampilProduk(id,nama){
+  saveScroll(); // 🔴 TAMBAH INI (WAJIB)
   nav.level="produk";
   judul.innerText=nama;
   view.innerHTML=`<div class="back" onclick="navBack()">⬅ Kembali</div>`;
@@ -784,10 +785,6 @@ function navBack(){
 
   if(nav.level==="detail"){
   nav.level="produk";
-
-  // 🔴 MASUKKAN INI (PENTING)
-  nav.scroll.produk[nav.brand] = lastProductScroll;
-
   tampilProduk(nav.brand,"");
 
   // 🔴 BALIK KE POSISI SAAT KLIK PRODUK
