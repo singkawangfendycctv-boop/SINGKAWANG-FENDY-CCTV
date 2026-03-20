@@ -3,276 +3,1126 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Libur Idul Fitri 2026 - Fendy Freelance Store</title>
+<title>Fendy Freelance Store</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#e11d48">
+<link rel="apple-touch-icon" href="logo.png">
 
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+  html{
+  background:#020617;
+  overscroll-behavior: none;
 }
 
+:root{
+  --primary:#e11d48;
+  --card:rgba(2,6,23,.75);
+  --text:#f1f5f9;
+}
+*{box-sizing:border-box}
 body{
-    font-family:'Poppins',sans-serif;
-    min-height:100vh; /* pakai min-height, bukan height */
-    background:
-        radial-gradient(circle at 20% 20%, rgba(255,215,0,0.15), transparent 40%),
-        radial-gradient(circle at 80% 80%, rgba(255,215,0,0.1), transparent 40%),
-        linear-gradient(to bottom, #0f2b25, #000);
-    color:#f5e6c4;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    text-align:center;
-    position:relative;
-    padding:60px 20px; /* biar ada ruang atas bawah */
+  margin:0;
+  font-family:Segoe UI,Arial,sans-serif;
+  color:var(--text);
+  min-height:100vh;
+  background:
+    linear-gradient(rgba(2,6,23,.25), rgba(2,6,23,.9)),
+    url("bg.jpg") center/cover no-repeat fixed;
 }
 
-/* Gold Frame */
-body::before{
-    content:"";
-    position:absolute;
-    inset:20px;
-    border:2px solid gold;
-    border-radius:20px;
-    pointer-events:none;
-    z-index:1;
+header{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:18px 30px;
+  background:rgba(2,6,23,.85);
+}
+header img{width:42px}
+
+.hero{text-align:center;padding:70px 20px}
+.search-box input{
+  width:100%;
+  max-width:420px;
+  padding:14px 18px;
+  border-radius:14px;
+  border:none;
 }
 
-/* Sparkle */
-@keyframes sparkle{
-    0%{opacity:0.3}
-    50%{opacity:1}
-    100%{opacity:0.3}
+/* ===== RUNNING TEXT FINAL (ANTI LOMPAT & ANTI KETIMPAK) ===== */
+.running-text{
+  margin:18px auto 0;
+  max-width:520px;
+  overflow:hidden;
+  background:rgba(225,29,72,.15);
+  border:1px solid rgba(225,29,72,.4);
+  border-radius:12px;
+  padding:10px 0;
 }
 
-body{
-    font-family:'Poppins',sans-serif;
-    min-height:100vh;   /* ganti dari height:100vh */
-    background:
-        radial-gradient(circle at 20% 20%, rgba(255,215,0,0.15), transparent 40%),
-        radial-gradient(circle at 80% 80%, rgba(255,215,0,0.1), transparent 40%),
-        linear-gradient(to bottom, #0f2b25, #000);
-    color:#f5e6c4;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    text-align:center;
-    position:relative;
-    padding:60px 20px;
+.marquee{
+  display:flex;
+  width:max-content;
+  overflow:hidden;
 }
 
-/* ======================
-   KETUPAT
-====================== */
-
-.ketupat-img{
-    position:absolute;
-    width:170px;
-    z-index:2;
-    animation:float 5s ease-in-out infinite;
-    filter: drop-shadow(0 0 20px rgba(255,215,0,0.5));
+.marquee__group{
+  display:flex;
+  white-space:nowrap;
+  animation: scroll 32s linear infinite;
 }
 
-.kanan{
-    top:30px;
-    right:40px;
+.marquee__group span{
+  padding-right:60px;
+  color:#facc15;
+  font-weight:600;
+  font-size:22px;
 }
 
-.kiri{
-    top:30px;
-    left:40px;
-    transform:scaleX(-1);
-}
-
-@keyframes float{
-    0%{ transform:translateY(0px); }
-    50%{ transform:translateY(-15px); }
-    100%{ transform:translateY(0px); }
-}
-
-/* ======================
-   MASJID KANAN BAWAH (STATIC)
-====================== */
-
-.mosque-img{
-    position:absolute;
-    bottom:0;
-    right:0;
-    width:260px;   /* lebih pas */
-    opacity:0.95;
-    z-index:2;
-    filter: drop-shadow(0 0 30px rgba(255,215,0,0.4));
+@keyframes scroll{
+  from{
+    transform: translateX(0);
+  }
+  to{
+    transform: translateX(-100%);
+  }
 }
 
 
-.ucapan {
-    font-family: 'Great Vibes', cursive;
-    font-size: 22px;
-    color: #ffd700;
-    margin-bottom: 10px;
-    letter-spacing: 2px;
+
+/* 🔴🔴🔴 PROMO STYLE START (SMALL + RICH) 🔴🔴🔴 */
+.promo-box{
+  margin:20px auto;
+  max-width:1100px;
+  padding:16px;
+  background:linear-gradient(135deg,#020617,#1e293b);
+  border-radius:18px;
+  border:2px solid #facc15;
+  position:relative;
+  overflow:hidden;
 }
 
+/* efek kilap jalan */
+.promo-box::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    120deg,
+    transparent 0%,
+    rgba(250,204,21,.25) 50%,
+    transparent 100%
+  );
+  animation:shine 4s infinite;
+}
+
+@keyframes shine{
+  from{transform:translateX(-100%)}
+  to{transform:translateX(100%)}
+}
+
+.promo-title{
+  text-align:center;
+  font-size:20px;
+  font-weight:800;
+  margin-bottom:14px;
+  color:#facc15;
+  letter-spacing:1px;
+}
+
+/* 🔴 FIX KOLOM PROMO JADI LEBIH KECIL */
+/* 🔴🔴🔴 PROMO SCROLL KE SAMPING (KANAN ↔ KIRI) 🔴🔴🔴 */
+.promo-grid{
+  display:flex;              /* ⬅ bukan grid */
+  gap:14px;
+  overflow-x:auto;           /* ⬅ scroll kanan kiri */
+  padding-bottom:10px;
+  scroll-snap-type:x mandatory;
+}
+
+/* sembunyikan scrollbar tapi tetap bisa scroll */
+.promo-grid::-webkit-scrollbar{
+  height:6px;
+}
+.promo-grid::-webkit-scrollbar-thumb{
+  background:#facc15;
+  border-radius:10px;
+}
+
+/* 🔴 SETIAP CARD PROMO */
+.promo-grid .card{
+  min-width:180px;           /* ⬅ ukuran card */
+  flex-shrink:0;             /* ⬅ jangan mengecil */
+  scroll-snap-align:start;
+}
+
+
+.promo-grid .card{
+  padding:14px;
+  position:relative;
+  border:1px solid rgba(250,204,21,.4);
+}
+/* 🔴 PERKECIL CARD PROMO */
+.promo-grid .card{
+  padding:12px;
+  border-radius:14px;
+}
+
+
+/* badge promo */
+.promo-grid .card::after{
+  content:"PROMO";
+  position:absolute;
+  top:10px;
+  right:10px;
+  background:#dc2626;
+  color:#fff;
+  font-size:11px;
+  font-weight:700;
+  padding:4px 8px;
+  border-radius:999px;
+  animation:blink 1.6s infinite;
+}
+
+@keyframes blink{
+  0%,100%{opacity:1}
+  50%{opacity:.5}
+}
+
+/* 🔴 KHUSUS GAMBAR PROMO */
+.promo-grid img{
+  height:110px;
+  object-fit:contain;
+}
 .container{
-    width:100%;
-    max-width:800px;
-    padding:40px;
-    position:relative;
-    z-index:3;
+  padding:30px;
+}
+/* 🔴 TEKS PROMO LEBIH KECIL */
+.promo-grid h3{
+  font-size:14px;
+  margin:6px 0;
 }
 
-.logo{
-    width:110px;
-    margin-bottom:20px;
+.price-promo{
+  font-size:16px;
 }
 
-h1{
-    font-family: 'Playfair Display', serif;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-shadow: 0 0 10px rgba(255,215,0,0.6),
-                 0 0 20px rgba(255,215,0,0.4);
+.price-normal{
+  font-size:12px;
+}
+
+.price-normal{
+  text-decoration:line-through;
+  color:#94a3b8;
+  font-size:13px;
+}
+
+.price-promo{
+  font-size:18px;
+  font-weight:800;
+  color:#22c55e;
+}
+/* 🔴🔴🔴 PROMO STYLE END 🔴🔴🔴 */
+
+
+.container{padding:30px}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:22px;
+
+  /* 🔴 TAMBAHAN ANTI LAG */
+  will-change: contents;
+}
+.card{
+  background:var(--card);
+  border-radius:18px;
+  padding:18px;
+  cursor:pointer;
+  transition:.3s;
+  position:relative; /* ✅ sudah benar */
+}
+
+/* ===== BADGE GARANSI TAM (LEBIH GEDE & TURUN) ===== */
+.badge-tam{
+  position:absolute;
+  top:44px;              /* ⬅ TURUN, AMAN DARI PROMO */
+  right:12px;
+  width:54px;            /* ⬅ LEBIH GEDE */
+  height:54px;
+  background:url("tam.png") center/contain no-repeat;
+  z-index:6;
+  pointer-events:none;
+}
+
+.badge-tam{
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,.6));
 }
 
 
-h2{
-    font-family:'Cinzel',serif;
-    font-size:22px;
-    margin-bottom:30px;
-    opacity:0.9;
+
+/* TENGAHKAN TEKS KATEGORI, BRAND, PRODUK */
+.card h3,
+.card h2,
+.card p,
+.price,
+#judul {
+  text-align: center;
 }
 
-.gold-box{
-    border:1px solid gold;
-    padding:25px;
-    margin:30px 0;
-    border-radius:15px;
-    background:rgba(255,215,0,0.05);
-    backdrop-filter:blur(4px);
+/* DETAIL PRODUK */
+.card ul {
+  text-align: left;        /* biar spesifikasi tetap rapi */
+  margin: 12px auto;
+  padding-left: 20px;
 }
 
-.highlight{
-    font-weight:600;
-    font-size:20px;
-    color:#ffd700;
-    margin:8px 0;
+.card img {
+  display: block;
+  margin: 0 auto;
 }
 
-.footer{
-    margin-top:25px;
-    font-size:14px;
-    opacity:0.9;
+.card:hover{transform:translateY(-5px)}
+.card img{width:100%;height:140px;object-fit:contain}
+.img-produk{cursor:zoom-in}
+.price{color:var(--primary);font-weight:bold}
+.back{grid-column:1/-1;cursor:pointer;color:#93c5fd;font-weight:600}
+
+.btn-cart{
+  margin-top:12px;
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:16px;
+  background:#facc15;
+  font-weight:bold;
+}
+.btn-wa{
+  margin-top:12px;
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:16px;
+  background:#25D366;
+  font-weight:bold;
 }
 
-.btn-masuk{
-    display:block;              /* ⬅ penting biar turun ke bawah */
-    margin:25px auto 0;         /* ⬅ auto = tengah */
-    width:fit-content;          /* ⬅ biar ga full lebar */
-    padding:14px 30px;
-    background:linear-gradient(45deg, gold, #ffd700);
-    color:#000;
-    font-weight:600;
-    border-radius:30px;
-    text-decoration:none;
-    box-shadow:0 0 15px rgba(255,215,0,0.5);
-    transition:0.3s;
-    text-align:center;
+/* CART */
+.cart-float{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#25D366;
+  color:#000;
+  padding:14px 18px;
+  border-radius:50px;
+  font-weight:bold;
+  cursor:pointer;
+  z-index:999;
+}
+.cart-box{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.85);
+  display:none;
+  z-index:9999;
+}
+.cart-content{
+  background:#020617;
+  max-width:420px;
+  margin:60px auto;
+  padding:20px;
+  border-radius:18px;
+}
+.cart-item{
+  display:flex;
+  justify-content:space-between;
+  margin:8px 0;
+}
+.cart-total{margin-top:14px;font-weight:bold}
+
+/* ZOOM */
+.zoom{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.9);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+}
+.zoom img{max-width:95%;max-height:95%}
+
+/* ===== DETAIL SPESIFIKASI RAPI ===== */
+.spek-list{
+  list-style:none;
+  padding:0;
+  margin:18px 0;
+
+  background:rgba(255,255,255,.03);
+  padding:12px;
+  border-radius:12px;
 }
 
-@media(max-width:600px){
-    h1{font-size:34px;}
-    .container{padding:25px;}
-    .ketupat-img{width:120px;}
-    .mosque-img{width:180px;}
+.spek-list li{
+  display:flex;
+  justify-content:space-between;
+  padding:8px 0;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  font-size:14px;
 }
 
-@media(max-width:768px){
-
-    body{
-        padding:80px 15px 140px 15px;
-        align-items:flex-start;
-    }
-
-    h1{
-        font-size:26px;
-    }
-
-    h2{
-        font-size:16px;
-        margin-bottom:18px;
-    }
-
-    .gold-box{
-        padding:18px;
-    }
-
-    /* Ketupat turun dikit */
-    .ketupat-img{
-        width:85px;
-    }
-
-    .kanan{
-        top:40px;   /* turun */
-        right:15px;
-    }
-
-    .kiri{
-        top:40px;   /* turun */
-        left:15px;
-    }
-
-    /* Masjid lebih ke bawah & kecil */
-    .mosque-img{
-        width:130px;
-        bottom:-20px;   /* turun lagi */
-        opacity:0.85;
-    }
-
+.spek-label{
+  color:#94a3b8;
+  font-weight:600;
+  min-width:90px;
 }
 
+.spek-value{
+  text-align:right;
+  font-weight:500;
+}
+
+/* FOOTER */
+footer{
+  text-align:center;
+  padding:20px 10px;
+  font-size:14px;
+  color:#cbd5f5;
+  background:rgba(2,6,23,.85);
+}
 </style>
 </head>
 
 <body>
 
-<!-- Ketupat -->
-<img src="ketupat.png" class="ketupat-img kanan" alt="Ketupat">
-<img src="ketupat.png" class="ketupat-img kiri" alt="Ketupat">
+  <!-- ================================================= -->
+<!-- 🔴🔴🔴 OPSI PRO – DIV BACKGROUND (WAJIB ADA) -->
+<!-- ================================================= -->
+<div class="bg-wrap"></div>
+<!-- ================================================= -->
+ 
+<header>
+  <img src="logo.png">
+  <h3>Fendy Freelance Store</h3>
+</header>
 
-<div class="container">
+<section class="hero">
+  <h2>SELAMAT DATANG</h2>
+  <p>Komputer • Laptop • CCTV • Smartphone • Service • Dll</p>
+  <div class="search-box">
+    <input id="search" placeholder="Cari produk... (contoh: axioo)">
+  </div>
 
-    <img src="logo.png" class="logo" alt="Fendy Freelance Store">
-
-    <h2>Fendy Freelance Store</h2>
-    <div class="ucapan">Mengucapkan</div>
-    <h1>SELAMAT HARI RAYA</h1>
-    <h1>IDUL FITRI 2026</h1>
-
-    <div class="gold-box">
-        <p>Dalam rangka Hari Raya Idul Fitri 2026,</p>
-        <p class="highlight">Store kami libur mulai 19 Maret 2026</p>
-        <p>dan akan dibuka kembali pada</p>
-        <p class="highlight">Rabu, 25 Maret 2026</p>
+  <!-- 🔴 TAMBAHAN: RUNNING TEXT -->
+<div class="running-text">
+  <div class="marquee">
+    <div class="marquee__group">
+      <span>⚠️ HATI-HATI PENIPUAN! TRANSAKSI HANYA MELALUI WA ADMIN RESMI FENDY FREELANCE STORE • WA RESMI HANYA 0821-5371-9616 • FREE ONGKIR AREA SINGKAWANG DAN SEKITARNYA • KETERSEDIAAN STOK TIDAK SELALU READY •
+      HARGA DAPAT BERUBAH SEWAKTU-WAKTU TANPA PEMBERITAHUAN •</span>
     </div>
-
-    <p>Terima kasih atas dukungan dan kepercayaan Anda selama ini.</p>
-    <p>Semoga Idul Fitri membawa kebahagiaan, kedamaian, dan keberkahan untuk Anda dan keluarga.</p>
-
-    <div class="footer">
-        Mohon maaf lahir & batin.
+    <div class="marquee__group">
+      <span>⚠️ HATI-HATI PENIPUAN! TRANSAKSI HANYA MELALUI WA ADMIN RESMI FENDY FREELANCE STORE • WA RESMI HANYA 0821-5371-9616 • FREE ONGKIR AREA SINGKAWANG DAN SEKITARNYA • KETERSEDIAAN STOK TIDAK SELALU READY •
+      HARGA DAPAT BERUBAH SEWAKTU-WAKTU TANPA PEMBERITAHUAN •</span>
     </div>
-
-    <a href="home.html" class="btn-masuk">Masuk ke Website</a>
-
+  </div>
 </div>
 
-<!-- Masjid -->
-<img src="mesjid.png" class="mosque-img" alt="Masjid">
+
+
+</section>
+<!-- 🔴 PROMO / FLASH SALE (AUTO HIDE) -->
+<section id="promoSection" style="display:none">
+  <div class="promo-box">
+    <div class="promo-title">🔥 RAMADAN SALE-TERBATAS! 🔥</div>
+    <div id="promoView" class="promo-grid"></div>
+  </div>
+</section>
+
+<section class="container">
+  <h2 id="judul">Kategori Produk</h2>
+  <div id="view" class="grid"></div>
+</section>
+
+<!-- CART -->
+<div class="cart-float" onclick="openCart()">
+  🛒 Keranjang (<span id="cartCount">0</span>)
+</div>
+
+<div class="cart-box" id="cartBox">
+  <div class="cart-content">
+    <h3>Keranjang Belanja</h3>
+    <div id="cartList"></div>
+    <div class="cart-total" id="cartTotal"></div>
+    <button class="btn-wa" onclick="checkoutWA()">Kirim Total ke WhatsApp</button>
+    <button class="btn-wa" style="background:#64748b" onclick="closeCart()">Tutup</button>
+  </div>
+</div>
+
+<div class="zoom" id="zoom"><img id="zoomImg"></div>
+
+<footer>© 2026 Fendy Freelance Store</footer>
+
+<script>
+
+let kategori=[], brand=[], produk=[], cart=[];
+let produkSiap = false;
+// 🔴🔴🔴 TAMBAHAN ANTI LAG SEARCH
+let searchTimer = null;
+let fromPromo = false;
+// 🔴 TAMBAHAN: SIMPAN POSISI KLIK PRODUK
+let lastProductScroll = 0;
+
+// 🔴 WAJIB: GLOBAL SEARCH
+const search = document.getElementById("search");
+
+const view=document.getElementById("view");
+const judul=document.getElementById("judul");
+const zoom=document.getElementById("zoom");
+const zoomImg=document.getElementById("zoomImg");
+
+
+/* 🔴 TAMBAHAN: WA ADMIN (TIDAK DARI CSV) */
+const WA_ADMIN = "6282153719616";
+/* 🔴 HARGA AKTIF (PROMO / NORMAL) */
+function hargaAktif(p){
+  if(p.harga_promo && p.harga_promo > 0 && p.harga_promo < p.harga){
+    return p.harga_promo;
+  }
+  return p.harga;
+}
+
+/* NAV STATE */
+/* ================= FIX SCROLL (TANPA GANGGU KODING LAIN) ================= */
+let nav={
+  level:"kategori",
+  kategori:null,
+  brand:null,
+  scroll:{
+  kategori:0,
+  brand:{},
+  produk:{},
+  detail:0 // 🔴 TAMBAHAN
+}
+
+};
+
+let searchState = {
+  aktif: false,
+  keyword: "",
+  scroll: 0        //
+};
+
+
+function saveScroll(){
+  if(nav.level==="kategori"){
+    nav.scroll.kategori = window.scrollY;
+  }
+  else if(nav.level==="brand"){
+    nav.scroll.brand[nav.kategori] = window.scrollY;
+  }
+  else if(nav.level==="produk"){
+    nav.scroll.produk[nav.brand] = window.scrollY;
+  }
+}
+
+function restoreScroll(){
+  let y = 0;
+
+  if(nav.level==="kategori"){
+    y = nav.scroll.kategori || 0;
+  }
+  else if(nav.level==="brand"){
+    y = nav.scroll.brand[nav.kategori] || 0;
+  }
+  else if(nav.level==="produk"){
+    y = nav.scroll.produk[nav.brand] || 0;
+  }
+  else if(nav.level==="detail"){
+    y = nav.scroll.detail || 0;
+  }
+
+  setTimeout(()=>{
+    window.scrollTo({ top:y, behavior:"auto" });
+  },0);
+}
+
+/* ================= END FIX SCROLL ================= */
+
+/* LOAD CSV */
+fetch("kategori.csv").then(r=>r.text()).then(t=>{
+  kategori=t.trim().split("\n").slice(1).map(r=>{
+    const [id,nama,desk,foto]=r.split(",");
+    return {id,nama,desk,foto};
+  });
+  tampilKategori();
+});
+fetch("brand.csv").then(r=>r.text()).then(t=>{
+  brand=t.trim().split("\n").slice(1).map(r=>{
+    const [id,nama,kategori,foto]=r.split(",");
+    return {id,nama,kategori,foto};
+  });
+});
+fetch("produk.csv")
+.then(r=>r.text())
+.then(t=>{
+  produk = t.trim().split("\n").slice(1).map(r=>{
+    const [id,nama,harga,brand,foto,spek,harga_promo,status] = r.split(",");
+    return {
+  id,
+  nama,
+  harga:Number(harga),
+  brand,
+  foto,
+  spek,
+  harga_promo: harga_promo ? Number(harga_promo) : 0,
+  status
+};
+  });
+
+  produkSiap = true;
+  tampilPromo(); // 🔴 PANGGIL PROMO
+});
+
+
+/* VIEW */
+function tampilKategori(){
+  nav.level="kategori";
+  judul.innerText="Kategori Produk";
+  view.innerHTML="";
+  kategori.forEach(k=>{
+    view.innerHTML+=`
+      <div class="card" onclick="saveScroll();nav.kategori='${k.id}';tampilBrand('${k.id}','${k.nama}')">
+        <img src="${k.foto}">
+        <h3>${k.nama}</h3>
+        <p>${k.desk}</p>
+      </div>`;
+  });
+  restoreScroll();
+}
+
+function tampilBrand(id,nama){
+  nav.level="brand";
+  judul.innerText=nama;
+  view.innerHTML=`<div class="back" onclick="navBack()">⬅ Kembali</div>`;
+
+  brand.filter(b=>b.kategori===id).forEach(b=>{
+    view.innerHTML+=`
+      <div class="card" onclick="
+        nav.brand='${b.id}';
+        tampilProduk('${b.id}','${b.nama}')
+      ">
+        <img src="${b.foto}">
+        <h3>${b.nama}</h3>
+      </div>`;
+  });
+
+  // 🔥 DOUBLE RESTORE (ANTI KETIMPA GAMBAR)
+  const y = nav.scroll.brand[nav.kategori] || 0;
+
+  setTimeout(()=>{
+    window.scrollTo(0, y);
+  }, 0);
+
+  setTimeout(()=>{
+    window.scrollTo(0, y);
+  }, 120); // ⬅ ini kunci utamanya
+}
+
+function tampilProduk(id,nama){
+
+  // 🔥 SIMPAN POSISI BRAND SEBELUM MASUK PRODUK
+  nav.scroll.brand[nav.kategori] = window.scrollY;
+
+  nav.level="produk";
+  judul.innerText=nama;
+  view.innerHTML=`<div class="back" onclick="navBack()">⬅ Kembali</div>`;
+
+  produk
+.filter(p => p.brand === id && p.status?.trim().toLowerCase() !== "tidak dijual")
+.forEach(p=>{
+  const isApple = id.toLowerCase().includes("apple");
+
+  view.innerHTML+=`
+    <div class="card" onclick="
+      lastProductScroll = window.scrollY;
+      tampilDetail('${p.id}')
+    ">
+
+      ${isApple ? `<div class="badge-tam"></div>` : ``}
+
+      <img src="${p.foto}" class="img-produk">
+      <h3>${p.nama}</h3>
+      <div class="price">
+        Rp ${hargaAktif(p).toLocaleString("id-ID")}
+      </div>
+
+    </div>`;
+});
+
+
+  restoreScroll(); // ✅ BALIK KE POSISI TENGAH
+}
+
+/* 🔴🔴🔴 PROMO FUNCTION START 🔴🔴🔴 */
+/* 🔴🔴🔴 PROMO FUNCTION START (BISA DIKLIK & HARGA PROMO) 🔴🔴🔴 */
+function tampilPromo(){
+  const promo = produk.filter(p => 
+  p.harga_promo > 0 &&
+  p.harga_promo < p.harga &&
+  p.status !== "tidak dijual"
+);
+  const section = document.getElementById("promoSection");
+  const pv = document.getElementById("promoView");
+
+  if(promo.length === 0){
+    section.style.display = "none";
+    return;
+  }
+
+  section.style.display = "block";
+  pv.innerHTML = "";
+
+  promo.forEach(p=>{
+  const diskon = Math.round(((p.harga - p.harga_promo) / p.harga) * 100);
+  const isApple = p.brand.toLowerCase().includes("apple");
+
+  pv.innerHTML += `
+    <div class="card" onclick="fromPromo=true; tampilDetail('${p.id}')">
+
+      ${isApple ? `<div class="badge-tam"></div>` : ``}
+
+      <img src="${p.foto}">
+      <h3>${p.nama}</h3>
+
+      <div class="price-normal">
+        Rp ${p.harga.toLocaleString("id-ID")}
+      </div>
+
+      <div class="price-promo">
+        Rp ${p.harga_promo.toLocaleString("id-ID")}
+      </div>
+
+      <div style="font-size:12px;color:#facc15">
+        Hemat ${diskon}%
+      </div>
+    </div>
+  `;
+});
+
+}
+/* 🔴🔴🔴 PROMO FUNCTION END 🔴🔴🔴 */
+
+function tampilDetail(id){
+
+  // 🔴 SIMPAN POSISI SEBELUM MASUK DETAIL
+  nav.scroll.detail = window.scrollY;
+
+  nav.level = "detail";
+
+
+  // 🔴🔴🔴 JIKA DARI SEARCH, SIMPAN SCROLL SEARCH
+  if(searchState.aktif){
+    searchState.scroll = window.scrollY;
+  }else{
+    saveScroll(); // default kategori / brand 
+  }
+
+  nav.level="detail";
+  const p=produk.find(x=>x.id===id);
+  judul.innerText=p.nama;
+  view.innerHTML=`
+    <div class="back" onclick="navBack()">⬅ Kembali</div>
+    <div class="card">
+      <img src="${p.foto}" class="img-produk">
+      <h2>${p.nama}</h2>
+      <!-- 🔴 PERBAIKAN -->
+<div class="price">Rp ${hargaAktif(p).toLocaleString("id-ID")}</div>
+
+      <ul class="spek-list">
+  ${
+    p.spek.split(";").map(s=>{
+      const parts = s.split(":");
+      if(parts.length === 2){
+        return `
+          <li>
+            <span class="spek-label">${parts[0]}</span>
+            <span class="spek-value">${parts[1]}</span>
+          </li>
+        `;
+      }else{
+        return `<li>${s}</li>`;
+      }
+    }).join("")
+  }
+</ul>
+
+      <!-- TAMBAHAN QTY + - -->
+<div style="display:flex;gap:10px;justify-content:center;margin-top:10px">
+  <button class="btn-cart" onclick="ubahQty('${p.id}',-1)">−</button>
+  <div id="qty-${p.id}" style="font-size:18px;font-weight:bold;line-height:48px">0</div>
+  <button class="btn-cart" onclick="ubahQty('${p.id}',1)">+</button>
+</div>
+    </div>`;
+}
+
+/* 🔴 RESET SEARCH INPUT */
+function resetSearch(){
+  search.value = "";          // kosongkan input
+  searchState.aktif = false;
+  searchState.keyword = "";
+  searchState.scroll = 0;
+}
+
+
+/* NAV BACK */
+function navBack(){
+  /* 🔴 JIKA DARI SEARCH & KEMBALI KE KATEGORI */
+  if(nav.level === "search"){
+    resetSearch();          // ⬅ AUTO HILANGKAN TEKS SEARCH
+    nav.level = "kategori";
+    tampilKategori();
+    restoreScroll();
+    return;
+  }
+
+  if(nav.level==="detail" && searchState.aktif){
+    nav.level="search";
+    renderSearchUlang();
+    return;
+  }
+
+  if(nav.level==="detail" && fromPromo){
+    fromPromo=false;
+    nav.level="kategori";
+    tampilKategori();
+    restoreScroll();
+    return;
+  }
+
+  if(nav.level==="detail"){
+  nav.level="produk";
+  tampilProduk(nav.brand,"");
+
+  // 🔴 BALIK KE POSISI SAAT KLIK PRODUK
+  setTimeout(()=>{
+    window.scrollTo({
+      top: lastProductScroll,
+      behavior: "auto"
+    });
+  },0);
+}
+
+  else if(nav.level==="produk"){
+    nav.level="brand";
+    tampilBrand(nav.kategori,"");
+  }
+  
+  else{
+    nav.level="kategori";
+    tampilKategori();
+    restoreScroll();
+  }
+}
+
+
+/* ================= RESTORE SEARCH TANPA REFRESH ================= */
+function renderSearchUlang(){
+  judul.innerText = "Hasil Pencarian";
+  view.innerHTML = `<div class="back" onclick="navBack()">⬅ Kembali</div>`;
+
+  const hasil = produk.filter(p =>
+  p.nama &&
+  p.nama.toLowerCase().includes(searchState.keyword) &&
+  p.status?.trim().toLowerCase() !== "tidak dijual"
+);
+
+  if(hasil.length === 0){
+    view.innerHTML += `<p style="text-align:center">Produk tidak ditemukan</p>`;
+    return;
+  }
+
+  hasil.forEach(p=>{
+    view.innerHTML += `
+      <div class="card" onclick="tampilDetail('${p.id}')">
+        <img src="${p.foto}" class="img-produk">
+        <h3>${p.nama}</h3>
+        <div class="price">Rp ${Number(p.harga).toLocaleString("id-ID")}</div>
+      </div>`;
+  });
+
+  // 🔴🔴🔴 BALIK KE POSISI SAAT PRODUK DIKLIK
+  setTimeout(()=>{
+    window.scrollTo({top:searchState.scroll,behavior:"auto"});
+  },0);
+}
+
+
+/* CART */
+function addCart(p){
+  const i=cart.find(x=>x.id===p.id);
+  i?i.qty++:cart.push({...p,qty:1});
+ updateCart();
+}
+
+
+/* TAMBAHAN */
+/* 🔴🔴🔴 QTY + - (PAKAI HARGA PROMO) 🔴🔴🔴 */
+function ubahQty(id, delta){
+  const p = produk.find(x => x.id === id);
+  let item = cart.find(x => x.id === id);
+
+  if(!item && delta > 0){
+    cart.push({
+      id: p.id,
+      qty: 1
+    });
+    item = cart.find(x => x.id === id);
+  }
+  else if(item){
+    item.qty += delta;
+    if(item.qty <= 0){
+      cart = cart.filter(x => x.id !== id);
+      item = null;
+    }
+  }
+
+  const el = document.getElementById("qty-" + id);
+  if(el) el.innerText = item ? item.qty : 0;
+
+  updateCart();
+}
+
+function updateCart(){
+cartCount.innerText=cart.reduce((a,b)=>a+b.qty,0);
+}
+
+
+/* 🔴🔴🔴 OPEN CART (HARGA PROMO) 🔴🔴🔴 */
+function openCart(){
+  cartBox.style.display = "block";
+  cartList.innerHTML = "";
+  let total = 0;
+
+  cart.forEach(item=>{
+    const p = produk.find(x => x.id === item.id);
+    const harga = hargaAktif(p); // 🔴 PROMO MASUK
+    const sub = harga * item.qty;
+    total += sub;
+
+    cartList.innerHTML += `
+      <div class="cart-item">
+        <div>${p.nama} (${item.qty})</div>
+        <div>Rp ${sub.toLocaleString("id-ID")}</div>
+      </div>
+    `;
+  });
+
+  cartTotal.innerText = "TOTAL: Rp " + total.toLocaleString("id-ID");
+}
+
+/* 🔴 FIX TOMBOL TUTUP KERANJANG */
+function closeCart(){
+  cartBox.style.display = "none";
+}
+
+
+/* ===== INI SATU-SATUNYA BAGIAN YANG DIPERBAIKI ===== */
+/* 🔴🔴🔴 CHECKOUT WA (HARGA PROMO MASUK) 🔴🔴🔴 */
+function checkoutWA(){
+  if(cart.length === 0){
+    alert("Keranjang masih kosong");
+    return;
+  }
+
+  let text = "Halo, saya mau order:%0A%0A";
+  let total = 0;
+
+  cart.forEach((item,i)=>{
+    const p = produk.find(x => x.id === item.id);
+    const harga = hargaAktif(p); // 🔴 PROMO DIPAKAI
+    const sub = harga * item.qty;
+    total += sub;
+
+    text += `${i+1}. ${p.nama}%0A`;
+    text += `Harga: Rp ${harga.toLocaleString("id-ID")}%0A`;
+    text += `Qty: ${item.qty}%0A`;
+    text += `Subtotal: Rp ${sub.toLocaleString("id-ID")}%0A%0A`;
+  });
+
+  text += `TOTAL: Rp ${total.toLocaleString("id-ID")}`;
+
+  window.open(`https://wa.me/${WA_ADMIN}?text=${text}`, "_blank");
+}
+
+
+/* ================================================ */
+
+/* SEARCH */
+/* ================= SEARCH FIX PALING AMAN ================= */
+/* ================= SEARCH FINAL (ANTI LAG) ================= */
+search.addEventListener("input", function () {
+  if (!produkSiap) return;
+
+  // 🔴 HENTIKAN PROSES SEBELUMNYA
+  clearTimeout(searchTimer);
+
+  // 🔴 TUNGGU USER SELESAI NGETIK
+  searchTimer = setTimeout(() => {
+
+    const k = search.value.trim().toLowerCase();
+
+    // 🔴 JIKA KURANG DARI 2 HURUF → BALIK KATEGORI
+    if (k.length < 2) {
+      searchState.aktif = false;
+      nav.level = "kategori";
+      tampilKategori();
+      return;
+    }
+
+    searchState.aktif = true;
+    searchState.keyword = k;
+    nav.level = "search";
+
+    judul.innerText = "Hasil Pencarian";
+    view.innerHTML = `<div class="back" onclick="navBack()">⬅ Kembali</div>`;
+
+    const hasil = produk.filter(p =>
+  p.nama &&
+  p.nama.toLowerCase().includes(k) &&
+  p.status?.trim().toLowerCase() !== "tidak dijual"
+);
+
+    if (hasil.length === 0) {
+      view.innerHTML += `<p style="text-align:center">Produk tidak ditemukan</p>`;
+      return;
+    }
+
+    hasil.forEach(p=>{
+      view.innerHTML += `
+        <div class="card" onclick="tampilDetail('${p.id}')">
+          <img src="${p.foto}" class="img-produk">
+          <h3>${p.nama}</h3>
+          <div class="price">Rp ${Number(p.harga).toLocaleString("id-ID")}</div>
+        </div>`;
+    });
+
+  }, 300); // ⏱️ 300ms = HALUS
+});
+/* =========================================================== */
+
+/* ZOOM */
+function zoomFoto(src){
+  zoomImg.src=src;
+  zoom.style.display="flex";
+}
+zoom.onclick=()=>zoom.style.display="none";
+
+/* ================================================= */
+/* ===== FIX FOTO PRODUK (PC & MOBILE, TANPA UBAH HTML) ===== */
+/* ================================================= */
+/* ===== ZOOM FOTO AKTIF HANYA DI HALAMAN DETAIL ===== */
+document.addEventListener("click", function(e){
+  const img = e.target.closest(".img-produk");
+  if(!img) return;
+
+  // ❌ selain halaman detail → MATI
+  if(nav.level !== "detail") return;
+
+  e.preventDefault();
+  e.stopPropagation();
+  e.stopImmediatePropagation();
+  zoomFoto(img.src);
+}, true);
+
+document.addEventListener("touchstart", function(e){
+  const img = e.target.closest(".img-produk");
+  if(!img) return;
+
+  if(nav.level !== "detail") return;
+
+  e.preventDefault();
+  e.stopPropagation();
+  e.stopImmediatePropagation();
+  zoomFoto(img.src);
+}, { capture:true, passive:false });
+
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js');
+}
+
+let deferredPrompt;
+let installBtn = document.createElement("button");
+
+installBtn.innerText = "📲 Install Aplikasi";
+installBtn.style.position = "fixed";
+installBtn.style.bottom = "90px";
+installBtn.style.right = "20px";
+installBtn.style.padding = "12px 18px";
+installBtn.style.border = "none";
+installBtn.style.borderRadius = "50px";
+installBtn.style.background = "#e11d48";
+installBtn.style.color = "#fff";
+installBtn.style.fontWeight = "bold";
+installBtn.style.display = "none";
+installBtn.style.zIndex = "9999";
+
+document.body.appendChild(installBtn);
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  installBtn.style.display = "block";
+});
+
+installBtn.addEventListener("click", async () => {
+  installBtn.style.display = "none";
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  deferredPrompt = null;
+});
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').then(reg => {
+
+    // cek update otomatis tiap 30 detik
+    setInterval(() => {
+      reg.update();
+    }, 30000);
+
+    // kalau ada versi baru
+    reg.onupdatefound = () => {
+      const newWorker = reg.installing;
+
+      newWorker.onstatechange = () => {
+        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+
+          const updateBar = document.createElement("div");
+          updateBar.innerText = "🔄 Versi baru tersedia - klik untuk update";
+          updateBar.style.position = "fixed";
+          updateBar.style.bottom = "0";
+          updateBar.style.left = "0";
+          updateBar.style.right = "0";
+          updateBar.style.background = "#facc15";
+          updateBar.style.padding = "14px";
+          updateBar.style.textAlign = "center";
+          updateBar.style.fontWeight = "bold";
+          updateBar.style.cursor = "pointer";
+          updateBar.style.zIndex = "9999";
+
+          document.body.appendChild(updateBar);
+
+          updateBar.onclick = () => {
+            newWorker.postMessage("SKIP_WAITING");
+            window.location.reload();
+          };
+        }
+      };
+    };
+
+  });
+}
+</script>
 
 </body>
 </html>
