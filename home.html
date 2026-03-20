@@ -716,7 +716,6 @@ function tampilDetail(id){
 
 // 🔥 SIMPAN SCROLL PRODUK & BRAND SEBELUM MASUK DETAIL
 nav.scroll.produk[nav.brand] = window.scrollY;
-nav.scroll.brand[nav.kategori] = nav.scroll.brand[nav.kategori] || window.scrollY;
 
   // 🔴 SIMPAN POSISI SEBELUM MASUK DETAIL
   nav.scroll.detail = window.scrollY;
@@ -819,6 +818,16 @@ function navBack(){
   else if(nav.level==="produk"){
   nav.level="brand";
   tampilBrand(nav.kategori,"");
+
+  const y = nav.scroll.brand[nav.kategori] || 0;
+
+  setTimeout(()=>{
+    window.scrollTo(0, y);
+  }, 50);
+
+  setTimeout(()=>{
+    window.scrollTo(0, y);
+  }, 150);
 }
 
   else{
