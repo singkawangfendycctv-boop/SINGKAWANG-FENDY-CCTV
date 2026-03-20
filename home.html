@@ -471,6 +471,7 @@ let searchTimer = null;
 let fromPromo = false;
 // 🔴 TAMBAHAN: SIMPAN POSISI KLIK PRODUK
 let lastProductScroll = 0;
+let cacheBrandHTML = {};
 
 // 🔴 WAJIB: GLOBAL SEARCH
 const search = document.getElementById("search");
@@ -620,6 +621,20 @@ function tampilKategori(){
 function tampilBrand(id,nama){
   nav.level="brand";
   judul.innerText=nama;
+
+  // 🔥 JIKA SUDAH PERNAH DIBUKA → PAKAI CACHE
+  if(cacheBrandHTML[id]){
+    view.innerHTML = cacheBrandHTML[id];
+
+    // 🔥 BALIK SCROLL TANPA GANGGU
+    requestAnimationFrame(()=>{
+      window.scrollTo(0, nav.scroll.brand[id] || 0);
+    });
+
+    return;
+  }
+
+  // 🔴 RENDER BARU (PERTAMA KALI)
   view.innerHTML=`<div class="back" onclick="navBack()">⬅ Kembali</div>`;
 
   brand.filter(b=>b.kategori===id).forEach(b=>{
@@ -633,7 +648,8 @@ function tampilBrand(id,nama){
       </div>`;
   });
 
-  restoreScrollSmooth(() => nav.scroll.brand[nav.kategori] || 0);
+  // 🔥 SIMPAN KE CACHE
+  cacheBrandHTML[id] = view.innerHTML;
 }
 
 function tampilProduk(id,nama){
@@ -827,11 +843,10 @@ function navBack(){
   nav.level="brand";
   tampilBrand(nav.kategori,"");
 
-  // 🔥 TAMBAHAN WAJIB (ANTI LOMPAT)
-  const y = nav.scroll.brand[nav.kategori] || 0;
-
-  setTimeout(()=>window.scrollTo(0,y),0);
-  setTimeout(()=>window.scrollTo(0,y),120);
+  // 🔥 PAKSA BALIK SCROLL (SUPER STABIL)
+  requestAnimationFrame(()=>{
+    window.scrollTo(0, nav.scroll.brand[nav.kategori] || 0);
+  });
 }
 
   else{
