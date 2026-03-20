@@ -493,17 +493,16 @@ function hargaAktif(p){
 
 /* NAV STATE */
 /* ================= FIX SCROLL (TANPA GANGGU KODING LAIN) ================= */
-let nav={
-  level:"kategori",
-  kategori:null,
-  brand:null,
-  scroll:{
-  kategori:0,
-  brand:{},
-  produk:{},
-  detail:0 // 🔴 TAMBAHAN
-}
-
+let nav = {
+  level: "kategori",
+  kategori: null,
+  brand: null,
+  scroll: {
+    kategori: 0,
+    brand: {},  // Ini akan menyimpan scroll per kategori
+    produk: {},
+    detail: 0
+  }
 };
 
 let searchState = {
@@ -528,22 +527,22 @@ function saveScroll(){
 function restoreScroll(){
   let y = 0;
 
-  if(nav.level==="kategori"){
+  if(nav.level === "kategori"){
     y = nav.scroll.kategori || 0;
   }
-  else if(nav.level==="brand"){
+  else if(nav.level === "brand"){
     y = nav.scroll.brand[nav.kategori] || 0;
   }
-  else if(nav.level==="produk"){
+  else if(nav.level === "produk"){
     y = nav.scroll.produk[nav.brand] || 0;
   }
-  else if(nav.level==="detail"){
+  else if(nav.level === "detail"){
     y = nav.scroll.detail || 0;
   }
 
-  setTimeout(()=>{
-    window.scrollTo({ top:y, behavior:"auto" });
-  },0);
+  setTimeout(() => {
+    window.scrollTo({ top: y, behavior: "auto" });
+  }, 50); // timeout sedikit lebih lama untuk keamanan
 }
 
 /* ================= END FIX SCROLL ================= */
@@ -600,10 +599,15 @@ function tampilKategori(){
   restoreScroll();
 }
 
-function tampilBrand(id, nama){
+function tampilBrand(id, nama, restorePosition = true){
   nav.level = "brand";
   judul.innerText = nama;
   view.innerHTML = `<div class="back" onclick="navBack()">⬅ Kembali</div>`;
+
+  // SIMPAN SCROLL SEBELUM RENDER ULANG
+  if (restorePosition) {
+    nav.scroll.brand[nav.kategori] = window.scrollY;
+  }
 
   brand.filter(b => b.kategori === id).forEach(b => {
     view.innerHTML += `
@@ -616,49 +620,36 @@ function tampilBrand(id, nama){
       </div>`;
   });
 
-  // 🔴 PERBAIKAN: DOUBLE RESTORE DENGAN DELAY BERTINGKAT
-  const y = nav.scroll.brand[nav.kategori] || 0;
-  
+  // PULIHKAN POSISI
   setTimeout(() => {
-    window.scrollTo(0, y);
-  }, 0);
-  
-  setTimeout(() => {
-    window.scrollTo(0, y);
-  }, 150); // DELAY LEBIH LAMA
+    const y = nav.scroll.brand[nav.kategori] || 0;
+    window.scrollTo({ top: y, behavior: "auto" });
+  }, 50);
 }
 
-function tampilProduk(id,nama){
-
+function tampilProduk(id, nama){
   // 🔥 SIMPAN POSISI BRAND SEBELUM MASUK PRODUK
   nav.scroll.brand[nav.kategori] = window.scrollY;
 
-  nav.level="produk";
-  judul.innerText=nama;
-  view.innerHTML=`<div class="back" onclick="navBack()">⬅ Kembali</div>`;
+  nav.level = "produk";
+  judul.innerText = nama;
+  view.innerHTML = `<div class="back" onclick="navBack()">⬅ Kembali</div>`;
 
   produk
-.filter(p => p.brand === id && p.status?.trim().toLowerCase() !== "tidak dijual")
-.forEach(p=>{
-  const isApple = id.toLowerCase().includes("apple");
-
-  view.innerHTML+=`
-    <div class="card" onclick="
-      lastProductScroll = window.scrollY;
-      tampilDetail('${p.id}')
-    ">
-
-      ${isApple ? `<div class="badge-tam"></div>` : ``}
-
-      <img src="${p.foto}" class="img-produk">
-      <h3>${p.nama}</h3>
-      <div class="price">
-        Rp ${hargaAktif(p).toLocaleString("id-ID")}
-      </div>
-
-    </div>`;
-});
-
+    .filter(p => p.brand === id && p.status?.trim().toLowerCase() !== "tidak dijual")
+    .forEach(p => {
+      const isApple = id.toLowerCase().includes("apple");
+      view.innerHTML += `
+        <div class="card" onclick="
+          lastProductScroll = window.scrollY;
+          tampilDetail('${p.id}')
+        ">
+          ${isApple ? `<div class="badge-tam"></div>` : ``}
+          <img src="${p.foto}" class="img-produk">
+          <h3>${p.nama}</h3>
+          <div class="price">Rp ${hargaAktif(p).toLocaleString("id-ID")}</div>
+        </div>`;
+    });
 
   restoreScroll(); // ✅ BALIK KE POSISI TENGAH
 }
@@ -775,9 +766,8 @@ function resetSearch(){
 
 
 /* NAV BACK */
-/* NAV BACK - FIXED */
 function navBack(){
-  // 🔴 JIKA DARI SEARCH & KEMBALI KE KATEGORI
+  /* 🔴 JIKA DARI SEARCH & KEMBALI KE KATEGORI */
   if(nav.level === "search"){
     resetSearch();
     nav.level = "kategori";
@@ -800,41 +790,25 @@ function navBack(){
     return;
   }
 
-  // 🔴🔴🔴 PERBAIKAN UTAMA: DARI DETAIL KEMBALI KE PRODUK
   if(nav.level === "detail"){
-    // SIMPAN POSISI SCROLL PRODUK SEBELUM PINDAH KE DETAIL
-    nav.scroll.produk[nav.brand] = lastProductScroll;
+    // 🔥 PENTING: Simpan posisi detail sebelum kembali
+    nav.scroll.detail = window.scrollY;
     
     nav.level = "produk";
     tampilProduk(nav.brand, "");
-    
-    // RESTORE POSISI PRODUK
+
+    // 🔥 BALIK KE POSISI SAAT KLIK PRODUK
     setTimeout(() => {
       window.scrollTo({
-        top: nav.scroll.produk[nav.brand] || 0,
+        top: lastProductScroll,
         behavior: "auto"
       });
-    }, 50);
+    }, 100);
   }
-  
-  // 🔴🔴🔴 PERBAIKAN: DARI PRODUK KEMBALI KE BRAND
   else if(nav.level === "produk"){
-    // SIMPAN POSISI SCROLL BRAND SAAT INI
-    nav.scroll.brand[nav.kategori] = window.scrollY;
-    
     nav.level = "brand";
-    tampilBrand(nav.kategori, "");
-    
-    // RESTORE POSISI BRAND
-    setTimeout(() => {
-      window.scrollTo({
-        top: nav.scroll.brand[nav.kategori] || 0,
-        behavior: "auto"
-      });
-    }, 100); // DELAY LEBIH LAMA UNTUK BRAND
+    tampilBrand(nav.kategori, "", true); // parameter restore=true
   }
-  
-  // KEMBALI KE KATEGORI
   else{
     nav.level = "kategori";
     tampilKategori();
