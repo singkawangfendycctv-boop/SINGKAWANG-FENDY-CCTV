@@ -471,6 +471,7 @@ let searchTimer = null;
 let fromPromo = false;
 // 🔴 TAMBAHAN: SIMPAN POSISI KLIK PRODUK
 let lastProductScroll = 0;
+let lastBackTime = 0;
 
 // 🔴 WAJIB: GLOBAL SEARCH
 const search = document.getElementById("search");
@@ -601,6 +602,7 @@ function tampilKategori(){
 }
 
 function tampilBrand(id,nama){
+  pushNav(); // ⬅ TAMBAH INI
   nav.level="brand";
   judul.innerText=nama;
   view.innerHTML=`<div class="back" onclick="navBack()">⬅ Kembali</div>`;
@@ -617,20 +619,13 @@ function tampilBrand(id,nama){
       </div>`;
   });
 
-  // 🔥 DOUBLE RESTORE (ANTI KETIMPA GAMBAR)
-  const y = nav.scroll.brand[nav.kategori] || 0;
-
-  setTimeout(()=>{
-    window.scrollTo(0, y);
-  }, 0);
-
-  setTimeout(()=>{
-    window.scrollTo(0, y);
-  }, 120); // ⬅ ini kunci utamanya
+  restoreScroll();
 }
 
 function tampilProduk(id,nama){
+  pushNav(); // ⬅ TAMBAH INI
 
+  // 🔥 SIMPAN POSISI BRAND SEBELUM MASUK PRODUK
   nav.level="produk";
   judul.innerText=nama;
   view.innerHTML=`<div class="back" onclick="navBack()">⬅ Kembali</div>`;
@@ -711,22 +706,19 @@ function tampilPromo(){
 /* 🔴🔴🔴 PROMO FUNCTION END 🔴🔴🔴 */
 
 function tampilDetail(id){
+  pushNav(); // ⬅ TAMBAH INI
 
-  // 🔴 SIMPAN POSISI SEBELUM MASUK DETAIL
-  nav.scroll.detail = window.scrollY;
-
-  nav.level = "detail";
-
-
-  // 🔴🔴🔴 JIKA DARI SEARCH, SIMPAN SCROLL SEARCH
+  // 🔴 SIMPAN SCROLL SEBELUM GANTI LEVEL
   if(searchState.aktif){
     searchState.scroll = window.scrollY;
   }else{
-    saveScroll(); // default kategori / brand 
+    saveScroll(); // ✅ sekarang masih di produk (AMAN)
   }
 
-  nav.level="detail";
-  const p=produk.find(x=>x.id===id);
+  nav.scroll.detail = window.scrollY;
+  nav.level = "detail";
+
+  const p = produk.find(x=>x.id===id);
   judul.innerText=p.nama;
   view.innerHTML=`
     <div class="back" onclick="navBack()">⬅ Kembali</div>
@@ -785,6 +777,7 @@ function navBack(){
 
   if(nav.level==="detail" && searchState.aktif){
     nav.level="search";
+    pushNav(); // ⬅ TAMBAH INI
     renderSearchUlang();
     return;
   }
@@ -800,21 +793,14 @@ function navBack(){
   if(nav.level==="detail"){
   nav.level="produk";
   tampilProduk(nav.brand,"");
-
-  // 🔴 BALIK KE POSISI SAAT KLIK PRODUK
-  setTimeout(()=>{
-    window.scrollTo({
-      top: lastProductScroll,
-      behavior: "auto"
-    });
-  },0);
+  return; // ⬅ WAJIB TAMBAH INI
 }
 
   else if(nav.level==="produk"){
-    nav.level="brand";
-    tampilBrand(nav.kategori,"");
-  }
-  
+  nav.level="brand";
+  tampilBrand(nav.kategori,"");
+}
+
   else{
     nav.level="kategori";
     tampilKategori();
@@ -1045,6 +1031,28 @@ document.addEventListener("touchstart", function(e){
 }, { capture:true, passive:false });
 
 
+function showToast(msg){
+  const t = document.createElement("div");
+  t.innerText = msg;
+
+  t.style.position = "fixed";
+  t.style.bottom = "40px";
+  t.style.left = "50%";
+  t.style.transform = "translateX(-50%)";
+  t.style.background = "rgba(0,0,0,0.8)";
+  t.style.color = "#fff";
+  t.style.padding = "12px 18px";
+  t.style.borderRadius = "10px";
+  t.style.fontSize = "14px";
+  t.style.zIndex = "9999";
+
+  document.body.appendChild(t);
+
+  setTimeout(()=>{
+    t.remove();
+  },1500);
+}
+
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js');
 }
@@ -1120,6 +1128,33 @@ if ('serviceWorker' in navigator) {
 
   });
 }
+
+/* ================= DOUBLE TAP BACK EXIT ================= */
+window.addEventListener("popstate", function(e){
+
+  // kalau masih di dalam halaman (bukan home)
+  if(nav.level !== "kategori"){
+    navBack();
+    return;
+  }
+
+  // kalau di halaman utama → double tap logic
+  const now = Date.now();
+
+  if(now - lastBackTime < 2000){
+    // tekan 2x → keluar app
+    window.history.back();
+  }else{
+    lastBackTime = now;
+
+    // tampilkan notifikasi
+    showToast("Tekan sekali lagi untuk keluar");
+    
+    // push lagi biar gak langsung keluar
+    window.history.pushState({page:"home"}, "");
+  }
+
+});
 </script>
 
 </body>
