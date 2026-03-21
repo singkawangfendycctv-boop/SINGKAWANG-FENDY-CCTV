@@ -492,6 +492,10 @@ function hargaAktif(p){
   return p.harga;
 }
 
+function pushNav(){
+  window.history.pushState({page: nav.level}, "");
+}
+
 /* NAV STATE */
 /* ================= FIX SCROLL (TANPA GANGGU KODING LAIN) ================= */
 let nav={
@@ -1134,29 +1138,29 @@ if ('serviceWorker' in navigator) {
 /* ================= DOUBLE TAP BACK EXIT ================= */
 window.addEventListener("popstate", function(e){
 
-  // kalau masih di dalam halaman (bukan home)
+  // kalau bukan di halaman utama → balik normal
   if(nav.level !== "kategori"){
     navBack();
     return;
   }
 
-  // kalau di halaman utama → double tap logic
+  // double tap exit
   const now = Date.now();
 
   if(now - lastBackTime < 2000){
-    // tekan 2x → keluar app
-    window.history.back();
-  }else{
-    lastBackTime = now;
-
-    // tampilkan notifikasi
-    showToast("Tekan sekali lagi untuk keluar");
-    
-    // push lagi biar gak langsung keluar
-    window.history.pushState({page:"home"}, "");
+    // keluar app (biarin default)
+    return;
   }
 
+  lastBackTime = now;
+  showToast("Tekan sekali lagi untuk keluar");
+
+  // tahan biar gak keluar
+  window.history.pushState({page:"home"}, "");
 });
+
+// INIT STATE BIAR BACK ANDROID KEDETECT
+window.history.replaceState({page:"home"}, "");
 </script>
 
 </body>
