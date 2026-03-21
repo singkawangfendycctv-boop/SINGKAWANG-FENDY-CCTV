@@ -587,6 +587,7 @@ fetch("produk.csv")
 
 /* VIEW */
 function tampilKategori(){
+resetSearch(); // 🔥 paksa kosong saat kembali home
   nav.level="kategori";
   judul.innerText="Kategori Produk";
   view.innerHTML="";
@@ -767,10 +768,11 @@ function goTo(page, data = {}){
 
   // 🔴 push halaman baru
   history.pushState({
-    page,
-    data,
-    scroll: 0
-  }, "", "#" + page);
+  page,
+  data,
+  scroll: window.scrollY,
+  keyword: searchState.keyword // 🔥 simpan keyword
+}, "", "#" + page);
 
   render(page, data);
 
@@ -802,15 +804,21 @@ function render(page, data){
   }
 
   else if(page === "search"){
-    searchState.keyword = data.keyword;
-    renderSearchUlang();
-  }
+  searchState.keyword = data.keyword;
+
+  // 🔥 WAJIB: sinkron input
+  search.value = data.keyword;
+
+  renderSearchUlang();
+}
 
 }
 
 
 /* ================= RESTORE SEARCH TANPA REFRESH ================= */
 function renderSearchUlang(){
+// 🔥 WAJIB: samakan input dengan keyword state
+search.value = searchState.keyword || "";
   judul.innerText = "Hasil Pencarian";
   view.innerHTML = `<div class="back" onclick="history.back()">⬅ Kembali</div>`;
 
@@ -1083,6 +1091,7 @@ if ('serviceWorker' in navigator) {
 window.addEventListener("popstate", function(e){
 
   // 🔴 RESET SEARCH kalau keluar dari halaman search
+// 🔥 kalau bukan search → reset total
 if(e.state?.page !== "search"){
   resetSearch();
 }
@@ -1092,6 +1101,10 @@ if(e.state?.page !== "search"){
     window.scrollTo({top:0});
     return;
   }
+
+  if(e.state?.page === "search"){
+  searchState.keyword = e.state.keyword || "";
+}
 
   render(e.state.page, e.state.data);
 
