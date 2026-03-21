@@ -471,7 +471,6 @@ let searchTimer = null;
 let fromPromo = false;
 // 🔴 TAMBAHAN: SIMPAN POSISI KLIK PRODUK
 let lastProductScroll = 0;
-let lastBackTime = 0;
 
 // 🔴 WAJIB: GLOBAL SEARCH
 const search = document.getElementById("search");
@@ -490,10 +489,6 @@ function hargaAktif(p){
     return p.harga_promo;
   }
   return p.harga;
-}
-
-function pushNav(){
-  window.history.pushState({page: nav.level}, "");
 }
 
 /* NAV STATE */
@@ -559,7 +554,8 @@ fetch("kategori.csv").then(r=>r.text()).then(t=>{
     const [id,nama,desk,foto]=r.split(",");
     return {id,nama,desk,foto};
   });
-  tampilKategori();
+  history.replaceState({page:"kategori"}, "", "#kategori");
+render("kategori");
 });
 fetch("brand.csv").then(r=>r.text()).then(t=>{
   brand=t.trim().split("\n").slice(1).map(r=>{
@@ -596,7 +592,7 @@ function tampilKategori(){
   view.innerHTML="";
   kategori.forEach(k=>{
     view.innerHTML+=`
-      <div class="card" onclick="saveScroll();nav.kategori='${k.id}';tampilBrand('${k.id}','${k.nama}')">
+      <div class="card" onclick="goTo('brand',{kategori:'${k.id}',nama:'${k.nama}'})">
         <img src="${k.foto}">
         <h3>${k.nama}</h3>
         <p>${k.desk}</p>
@@ -608,31 +604,25 @@ function tampilKategori(){
 function tampilBrand(id,nama){
   nav.level="brand";
   judul.innerText=nama;
-  view.innerHTML=`<div class="back" onclick="navBack()">⬅ Kembali</div>`;
+  view.innerHTML=`<div class="back" onclick="history.back()">⬅ Kembali</div>`;
 
   brand.filter(b=>b.kategori===id).forEach(b=>{
     view.innerHTML+=`
-      <div class="card" onclick="
-  saveScroll(); // 🔴 TAMBAH INI
-  nav.brand='${b.id}';
-  tampilProduk('${b.id}','${b.nama}')
-">
+      <div class="card" onclick="goTo('produk',{brand:'${b.id}',nama:'${b.nama}'})">
         <img src="${b.foto}">
         <h3>${b.nama}</h3>
       </div>`;
   });
 
   restoreScroll();
-
-  pushNav(); // ⬅ TAMBAH INI
 }
 
 function tampilProduk(id,nama){
-  
+
   // 🔥 SIMPAN POSISI BRAND SEBELUM MASUK PRODUK
   nav.level="produk";
   judul.innerText=nama;
-  view.innerHTML=`<div class="back" onclick="navBack()">⬅ Kembali</div>`;
+  view.innerHTML=`<div class="back" onclick="history.back()">⬅ Kembali</div>`;
 
   produk
 .filter(p => p.brand === id && p.status?.trim().toLowerCase() !== "tidak dijual")
@@ -640,10 +630,7 @@ function tampilProduk(id,nama){
   const isApple = id.toLowerCase().includes("apple");
 
   view.innerHTML+=`
-    <div class="card" onclick="
-      lastProductScroll = window.scrollY;
-      tampilDetail('${p.id}')
-    ">
+    <div class="card" onclick="goTo('detail',{id:'${p.id}'})">
 
       ${isApple ? `<div class="badge-tam"></div>` : ``}
 
@@ -658,8 +645,6 @@ function tampilProduk(id,nama){
 
 
   restoreScroll(); // ✅ BALIK KE POSISI TENGAH
-
-  pushNav(); // ⬅ TAMBAH INI
 }
 
 /* 🔴🔴🔴 PROMO FUNCTION START 🔴🔴🔴 */
@@ -686,7 +671,7 @@ function tampilPromo(){
   const isApple = p.brand.toLowerCase().includes("apple");
 
   pv.innerHTML += `
-    <div class="card" onclick="fromPromo=true; tampilDetail('${p.id}')">
+    <div class="card" onclick="goTo('detail',{id:'${p.id}'})">
 
       ${isApple ? `<div class="badge-tam"></div>` : ``}
 
@@ -726,7 +711,7 @@ function tampilDetail(id){
   const p = produk.find(x=>x.id===id);
   judul.innerText=p.nama;
   view.innerHTML=`
-    <div class="back" onclick="navBack()">⬅ Kembali</div>
+    <div class="back" onclick="history.back()">⬅ Kembali</div>
     <div class="card">
       <img src="${p.foto}" class="img-produk">
       <h2>${p.nama}</h2>
@@ -758,8 +743,6 @@ function tampilDetail(id){
   <button class="btn-cart" onclick="ubahQty('${p.id}',1)">+</button>
 </div>
     </div>`;
-
-    pushNav(); // ⬅ TAMBAH INI
 }
 
 /* 🔴 RESET SEARCH INPUT */
@@ -771,60 +754,73 @@ function resetSearch(){
 }
 
 
-/* NAV BACK */
-function navBack(){
-  /* 🔴 JIKA DARI SEARCH & KEMBALI KE KATEGORI */
-  if(nav.level === "search"){
-    resetSearch();          // ⬅ AUTO HILANGKAN TEKS SEARCH
-    nav.level = "kategori";
+function goTo(page, data = {}){
+
+  // 🔴 simpan scroll sekarang ke state sebelumnya
+  const currentState = history.state || {};
+  const scrollY = window.scrollY;
+
+  history.replaceState({
+    ...currentState,
+    scroll: scrollY
+  }, "");
+
+  // 🔴 push halaman baru
+  history.pushState({
+    page,
+    data,
+    scroll: 0
+  }, "", "#" + page);
+
+  render(page, data);
+
+// 🔴 navigasi biasa selalu mulai dari atas
+window.scrollTo({top:0});
+
+}
+
+function render(page, data){
+
+  nav.level = page;
+
+  if(page === "kategori"){
     tampilKategori();
-    restoreScroll();
-    return;
   }
 
-  if(nav.level==="detail" && searchState.aktif){
-    nav.level="search";
+  else if(page === "brand"){
+    nav.kategori = data.kategori;
+    tampilBrand(data.kategori, data.nama);
+  }
+
+  else if(page === "produk"){
+    nav.brand = data.brand;
+    tampilProduk(data.brand, data.nama);
+  }
+
+  else if(page === "detail"){
+    tampilDetail(data.id);
+  }
+
+  else if(page === "search"){
+    searchState.keyword = data.keyword;
     renderSearchUlang();
-    return;
   }
 
-  if(nav.level==="detail" && fromPromo){
-    fromPromo=false;
-    nav.level="kategori";
-    tampilKategori();
-    restoreScroll();
-    return;
-  }
-
-  if(nav.level==="detail"){
-  nav.level="produk";
-  tampilProduk(nav.brand,"");
-  return; // ⬅ WAJIB TAMBAH INI
-}
-
-  else if(nav.level==="produk"){
-  nav.level="brand";
-  tampilBrand(nav.kategori,"");
-}
-
-  else{
-    nav.level="kategori";
-    tampilKategori();
-    restoreScroll();
-  }
 }
 
 
 /* ================= RESTORE SEARCH TANPA REFRESH ================= */
 function renderSearchUlang(){
   judul.innerText = "Hasil Pencarian";
-  view.innerHTML = `<div class="back" onclick="navBack()">⬅ Kembali</div>`;
+  view.innerHTML = `<div class="back" onclick="history.back()">⬅ Kembali</div>`;
+
+  const keyword = searchState.keyword?.toLowerCase() || "";
 
   const hasil = produk.filter(p =>
-  p.nama &&
-  p.nama.toLowerCase().includes(searchState.keyword) &&
-  p.status?.trim().toLowerCase() !== "tidak dijual"
-);
+    p.nama &&
+    p.nama.toLowerCase().includes(keyword) &&
+    p.status?.trim().toLowerCase() !== "tidak dijual"
+  );
 
   if(hasil.length === 0){
     view.innerHTML += `<p style="text-align:center">Produk tidak ditemukan</p>`;
@@ -833,17 +829,12 @@ function renderSearchUlang(){
 
   hasil.forEach(p=>{
     view.innerHTML += `
-      <div class="card" onclick="tampilDetail('${p.id}')">
+      <div class="card" onclick="goTo('detail',{id:'${p.id}'})">
         <img src="${p.foto}" class="img-produk">
         <h3>${p.nama}</h3>
         <div class="price">Rp ${Number(p.harga).toLocaleString("id-ID")}</div>
       </div>`;
   });
-
-  // 🔴🔴🔴 BALIK KE POSISI SAAT PRODUK DIKLIK
-  setTimeout(()=>{
-    window.scrollTo({top:searchState.scroll,behavior:"auto"});
-  },0);
 }
 
 
@@ -953,15 +944,12 @@ function checkoutWA(){
 search.addEventListener("input", function () {
   if (!produkSiap) return;
 
-  // 🔴 HENTIKAN PROSES SEBELUMNYA
   clearTimeout(searchTimer);
 
-  // 🔴 TUNGGU USER SELESAI NGETIK
   searchTimer = setTimeout(() => {
 
     const k = search.value.trim().toLowerCase();
 
-    // 🔴 JIKA KURANG DARI 2 HURUF → BALIK KATEGORI
     if (k.length < 2) {
       searchState.aktif = false;
       nav.level = "kategori";
@@ -971,32 +959,11 @@ search.addEventListener("input", function () {
 
     searchState.aktif = true;
     searchState.keyword = k;
-    nav.level = "search";
 
-    judul.innerText = "Hasil Pencarian";
-    view.innerHTML = `<div class="back" onclick="navBack()">⬅ Kembali</div>`;
+    // ✅ WAJIB: masuk ke history + render via sistem
+    goTo("search", { keyword: k });
 
-    const hasil = produk.filter(p =>
-  p.nama &&
-  p.nama.toLowerCase().includes(k) &&
-  p.status?.trim().toLowerCase() !== "tidak dijual"
-);
-
-    if (hasil.length === 0) {
-      view.innerHTML += `<p style="text-align:center">Produk tidak ditemukan</p>`;
-      return;
-    }
-
-    hasil.forEach(p=>{
-      view.innerHTML += `
-        <div class="card" onclick="tampilDetail('${p.id}')">
-          <img src="${p.foto}" class="img-produk">
-          <h3>${p.nama}</h3>
-          <div class="price">Rp ${Number(p.harga).toLocaleString("id-ID")}</div>
-        </div>`;
-    });
-
-  }, 300); // ⏱️ 300ms = HALUS
+  }, 300);
 });
 /* =========================================================== */
 
@@ -1036,28 +1003,6 @@ document.addEventListener("touchstart", function(e){
   zoomFoto(img.src);
 }, { capture:true, passive:false });
 
-
-function showToast(msg){
-  const t = document.createElement("div");
-  t.innerText = msg;
-
-  t.style.position = "fixed";
-  t.style.bottom = "40px";
-  t.style.left = "50%";
-  t.style.transform = "translateX(-50%)";
-  t.style.background = "rgba(0,0,0,0.8)";
-  t.style.color = "#fff";
-  t.style.padding = "12px 18px";
-  t.style.borderRadius = "10px";
-  t.style.fontSize = "14px";
-  t.style.zIndex = "9999";
-
-  document.body.appendChild(t);
-
-  setTimeout(()=>{
-    t.remove();
-  },1500);
-}
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js');
@@ -1135,32 +1080,29 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-/* ================= DOUBLE TAP BACK EXIT ================= */
 window.addEventListener("popstate", function(e){
 
-  // kalau bukan di halaman utama → balik normal
-  if(nav.level !== "kategori"){
-    navBack();
+  // 🔴 RESET SEARCH kalau keluar dari halaman search
+if(e.state?.page !== "search"){
+  resetSearch();
+}
+
+  if(!e.state){
+    render("kategori");
+    window.scrollTo({top:0});
     return;
   }
 
-  // double tap exit
-  const now = Date.now();
+  render(e.state.page, e.state.data);
 
-  if(now - lastBackTime < 2000){
-    // keluar app (biarin default)
-    return;
-  }
-
-  lastBackTime = now;
-  showToast("Tekan sekali lagi untuk keluar");
-
-  // tahan biar gak keluar
-  window.history.pushState({page:"home"}, "");
+  // 🔴 hanya saat BACK
+  setTimeout(()=>{
+    window.scrollTo({
+      top: e.state.scroll ?? 0, // ✅ pakai ?? biar 0 tetap valid
+      behavior: "auto"
+    });
+  },0);
 });
-
-// INIT STATE BIAR BACK ANDROID KEDETECT
-window.history.replaceState({page:"home"}, "");
 </script>
 
 </body>
