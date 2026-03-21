@@ -602,7 +602,6 @@ function tampilKategori(){
 }
 
 function tampilBrand(id,nama){
-  pushNav(); // ⬅ TAMBAH INI
   nav.level="brand";
   judul.innerText=nama;
   view.innerHTML=`<div class="back" onclick="navBack()">⬅ Kembali</div>`;
@@ -620,11 +619,12 @@ function tampilBrand(id,nama){
   });
 
   restoreScroll();
+
+  pushNav(); // ⬅ TAMBAH INI
 }
 
 function tampilProduk(id,nama){
-  pushNav(); // ⬅ TAMBAH INI
-
+  
   // 🔥 SIMPAN POSISI BRAND SEBELUM MASUK PRODUK
   nav.level="produk";
   judul.innerText=nama;
@@ -654,6 +654,8 @@ function tampilProduk(id,nama){
 
 
   restoreScroll(); // ✅ BALIK KE POSISI TENGAH
+
+  pushNav(); // ⬅ TAMBAH INI
 }
 
 /* 🔴🔴🔴 PROMO FUNCTION START 🔴🔴🔴 */
@@ -706,7 +708,6 @@ function tampilPromo(){
 /* 🔴🔴🔴 PROMO FUNCTION END 🔴🔴🔴 */
 
 function tampilDetail(id){
-  pushNav(); // ⬅ TAMBAH INI
 
   // 🔴 SIMPAN SCROLL SEBELUM GANTI LEVEL
   if(searchState.aktif){
@@ -753,6 +754,8 @@ function tampilDetail(id){
   <button class="btn-cart" onclick="ubahQty('${p.id}',1)">+</button>
 </div>
     </div>`;
+
+    pushNav(); // ⬅ TAMBAH INI
 }
 
 /* 🔴 RESET SEARCH INPUT */
@@ -777,7 +780,6 @@ function navBack(){
 
   if(nav.level==="detail" && searchState.aktif){
     nav.level="search";
-    pushNav(); // ⬅ TAMBAH INI
     renderSearchUlang();
     return;
   }
