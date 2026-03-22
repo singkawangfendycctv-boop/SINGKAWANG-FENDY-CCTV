@@ -820,28 +820,29 @@ function renderSearchUlang(){
   isRendering = true;
 
   judul.innerText = "Hasil Pencarian";
-  view.innerHTML = `<div class="back" onclick="history.back()">⬅ Kembali</div>`;
 
   const keyword = searchState.keyword?.toLowerCase() || "";
 
   const hasil = produk.filter(p =>
     p.nama &&
-    p.nama && p.nama.toLowerCase().indexOf(keyword) !== -1 &&
+    p.nama.toLowerCase().indexOf(keyword) !== -1 &&
     p.status?.trim().toLowerCase() !== "tidak dijual"
   );
 
+  let html = `<div class="back" onclick="history.back()">⬅ Kembali</div>`;
+
   if(hasil.length === 0){
-  view.innerHTML += `<p style="text-align:center">Produk tidak ditemukan</p>`;
+    html += `<p style="text-align:center">Produk tidak ditemukan</p>`;
+    
+    view.innerHTML = html;
 
-  setTimeout(() => {
-    isRendering = false;
-  }, 0);
+    setTimeout(() => { isRendering = false; }, 0);
+    return;
+  }
 
-  return;
-}
-
+  // 🔥 batasi + gabung dulu (JANGAN langsung +=)
   hasil.slice(0, 20).forEach(p=>{
-    view.innerHTML += `
+    html += `
       <div class="card" onclick="goTo('detail',{id:'${p.id}'})">
         <img src="${p.foto}" class="img-produk">
         <h3>${p.nama}</h3>
@@ -849,10 +850,12 @@ function renderSearchUlang(){
       </div>`;
   });
 
-  setTimeout(() => {
-  isRendering = false;
-}, 0);
+  // 🔥 sekali render
+  view.innerHTML = html;
 
+  setTimeout(() => {
+    isRendering = false;
+  }, 0);
 }
 
 
