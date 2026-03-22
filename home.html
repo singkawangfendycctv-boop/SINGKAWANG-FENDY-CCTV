@@ -961,15 +961,18 @@ function checkoutWA(){
 /* ================= SEARCH FINAL (ANTI LAG) ================= */
 search.addEventListener("input", function () {
   if (!produkSiap) return;
-
-  // 🔴 kalau lagi render → JANGAN proses
   if (isRendering) return;
 
   clearTimeout(searchTimer);
 
+  const currentValue = search.value; // 🔥 ambil snapshot
+
   searchTimer = setTimeout(() => {
 
-    const k = search.value.trim().toLowerCase();
+    // 🔥 kalau input sudah berubah → batal
+    if (currentValue !== search.value) return;
+
+    const k = currentValue.trim().toLowerCase();
 
     if (k.length === 0) {
       searchState.aktif = false;
@@ -982,7 +985,7 @@ search.addEventListener("input", function () {
     searchState.aktif = true;
     searchState.keyword = k;
 
-    // 🔥 FIX: jangan spam history
+    // 🔥 history aman (tidak numpuk)
     if (!history.state || history.state.page !== "search") {
       history.pushState({
         page: "search",
@@ -997,7 +1000,7 @@ search.addEventListener("input", function () {
 
     renderSearchUlang();
 
-  }, 250);
+  }, 150);
 });
 /* =========================================================== */
 
