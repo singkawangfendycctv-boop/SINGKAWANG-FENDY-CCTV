@@ -955,23 +955,19 @@ search.addEventListener("input", function () {
 
   clearTimeout(searchTimer);
 
-  const currentValue = search.value; // 🔥 ambil snapshot
+  const currentValue = search.value;
 
   searchTimer = setTimeout(() => {
 
-    // 🔥 kalau input sudah berubah → batal
     if (currentValue !== search.value) return;
 
     const k = currentValue.trim().toLowerCase();
 
-    if (k.length < 2) {
-  return; // 🔥 JANGAN reset halaman
-}
+    if (k.length < 2) return; // 🔥 jangan reset halaman
 
     searchState.aktif = true;
     searchState.keyword = k;
 
-    // 🔥 history aman (tidak numpuk)
     if (!history.state || history.state.page !== "search") {
       history.pushState({
         page: "search",
@@ -986,7 +982,7 @@ search.addEventListener("input", function () {
 
     renderSearchUlang();
 
-  }, 120);
+  }, 200);
 });
 /* =========================================================== */
 
@@ -1105,11 +1101,12 @@ if ('serviceWorker' in navigator) {
 
 window.addEventListener("popstate", function(e){
 
-  // 🔴 RESET SEARCH kalau keluar dari halaman search
-// 🔥 kalau bukan search → reset total
-if(e.state?.page !== "search"){
-  resetSearch();
-}
+  // 🔥 kalau keluar dari halaman search → kosongkan input
+  if(e.state?.page !== "search"){
+    searchState.aktif = false;
+    searchState.keyword = "";
+    search.value = ""; // ✅ AMAN di sini saja
+  }
 
   if(!e.state){
     render("kategori");
@@ -1118,15 +1115,14 @@ if(e.state?.page !== "search"){
   }
 
   if(e.state?.page === "search"){
-  searchState.keyword = e.state.keyword || "";
-}
+    searchState.keyword = e.state.keyword || "";
+  }
 
   render(e.state.page, e.state.data);
 
-  // 🔴 hanya saat BACK
   setTimeout(()=>{
     window.scrollTo({
-      top: e.state.scroll ?? 0, // ✅ pakai ?? biar 0 tetap valid
+      top: e.state.scroll ?? 0,
       behavior: "auto"
     });
   },0);
