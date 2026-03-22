@@ -826,7 +826,7 @@ function renderSearchUlang(){
 
   const hasil = produk.filter(p =>
     p.nama &&
-    p.nama.toLowerCase().includes(keyword) &&
+    p.nama && p.nama.toLowerCase().indexOf(keyword) !== -1 &&
     p.status?.trim().toLowerCase() !== "tidak dijual"
   );
 
@@ -840,7 +840,7 @@ function renderSearchUlang(){
   return;
 }
 
-  hasil.forEach(p=>{
+  hasil.slice(0, 20).forEach(p=>{
     view.innerHTML += `
       <div class="card" onclick="goTo('detail',{id:'${p.id}'})">
         <img src="${p.foto}" class="img-produk">
@@ -974,13 +974,16 @@ search.addEventListener("input", function () {
 
     const k = currentValue.trim().toLowerCase();
 
-    if (k.length === 0) {
-      searchState.aktif = false;
+    if (k.length < 2) {
+  searchState.aktif = false;
 
-      history.replaceState({ page:"kategori" }, "", "#kategori");
-      tampilKategori();
-      return;
-    }
+  // 🔥 JANGAN render ulang halaman
+  // cukup kosongkan hasil saja
+  judul.innerText = "Kategori Produk";
+  view.innerHTML = "";
+
+  return;
+}
 
     searchState.aktif = true;
     searchState.keyword = k;
@@ -1000,7 +1003,7 @@ search.addEventListener("input", function () {
 
     renderSearchUlang();
 
-  }, 150);
+  }, 120);
 });
 /* =========================================================== */
 
