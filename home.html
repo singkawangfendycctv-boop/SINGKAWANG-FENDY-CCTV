@@ -471,7 +471,7 @@ let searchTimer = null;
 let fromPromo = false;
 // 🔴 TAMBAHAN: SIMPAN POSISI KLIK PRODUK
 let lastProductScroll = 0;
-let isRendering = false;
+let lastRender = "";
 
 // 🔴 WAJIB: GLOBAL SEARCH
 const search = document.getElementById("search");
@@ -752,7 +752,6 @@ function resetSearch(){
   searchState.aktif = false;
   searchState.keyword = "";
   searchState.scroll = 0;
-  search.value = "";
 }
 
 
@@ -817,45 +816,34 @@ function render(page, data){
 /* ================= RESTORE SEARCH TANPA REFRESH ================= */
 function renderSearchUlang(){
 
-  isRendering = true;
+  const keyword = searchState.keyword?.toLowerCase() || "";
+
+  // 🔥 cegah render sama berulang (biang blank)
+  if(keyword === lastRender) return;
+  lastRender = keyword;
 
   judul.innerText = "Hasil Pencarian";
-
-  const keyword = searchState.keyword?.toLowerCase() || "";
+  view.innerHTML = `<div class="back" onclick="history.back()">⬅ Kembali</div>`;
 
   const hasil = produk.filter(p =>
     p.nama &&
-    p.nama.toLowerCase().indexOf(keyword) !== -1 &&
+    p.nama.toLowerCase().includes(keyword) &&
     p.status?.trim().toLowerCase() !== "tidak dijual"
   );
 
-  let html = `<div class="back" onclick="history.back()">⬅ Kembali</div>`;
-
   if(hasil.length === 0){
-    html += `<p style="text-align:center">Produk tidak ditemukan</p>`;
-    
-    view.innerHTML = html;
-
-    setTimeout(() => { isRendering = false; }, 0);
+    view.innerHTML += `<p style="text-align:center">Produk tidak ditemukan</p>`;
     return;
   }
 
-  // 🔥 batasi + gabung dulu (JANGAN langsung +=)
-  hasil.slice(0, 20).forEach(p=>{
-    html += `
+  hasil.slice(0,20).forEach(p=>{
+    view.innerHTML += `
       <div class="card" onclick="goTo('detail',{id:'${p.id}'})">
-        <img src="${p.foto}" class="img-produk">
+        <img src="${p.foto}">
         <h3>${p.nama}</h3>
         <div class="price">Rp ${Number(p.harga).toLocaleString("id-ID")}</div>
       </div>`;
   });
-
-  // 🔥 sekali render
-  view.innerHTML = html;
-
-  setTimeout(() => {
-    isRendering = false;
-  }, 0);
 }
 
 
@@ -964,7 +952,6 @@ function checkoutWA(){
 /* ================= SEARCH FINAL (ANTI LAG) ================= */
 search.addEventListener("input", function () {
   if (!produkSiap) return;
-  if (isRendering) return;
 
   clearTimeout(searchTimer);
 
@@ -978,14 +965,7 @@ search.addEventListener("input", function () {
     const k = currentValue.trim().toLowerCase();
 
     if (k.length < 2) {
-  searchState.aktif = false;
-
-  // 🔥 JANGAN render ulang halaman
-  // cukup kosongkan hasil saja
-  judul.innerText = "Kategori Produk";
-  view.innerHTML = "";
-
-  return;
+  return; // 🔥 JANGAN reset halaman
 }
 
     searchState.aktif = true;
