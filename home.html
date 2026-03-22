@@ -471,6 +471,7 @@ let searchTimer = null;
 let fromPromo = false;
 // 🔴 TAMBAHAN: SIMPAN POSISI KLIK PRODUK
 let lastProductScroll = 0;
+let isRendering = false;
 
 // 🔴 WAJIB: GLOBAL SEARCH
 const search = document.getElementById("search");
@@ -748,10 +749,10 @@ function tampilDetail(id){
 
 /* 🔴 RESET SEARCH INPUT */
 function resetSearch(){
-  search.value = "";          // kosongkan input
   searchState.aktif = false;
   searchState.keyword = "";
   searchState.scroll = 0;
+  search.value = "";
 }
 
 
@@ -806,8 +807,6 @@ function render(page, data){
   else if(page === "search"){
   searchState.keyword = data.keyword;
 
-  // 🔥 WAJIB: sinkron input
-  search.value = data.keyword;
 
   renderSearchUlang();
 }
@@ -817,8 +816,9 @@ function render(page, data){
 
 /* ================= RESTORE SEARCH TANPA REFRESH ================= */
 function renderSearchUlang(){
-// 🔥 WAJIB: samakan input dengan keyword state
-search.value = searchState.keyword || "";
+
+  isRendering = true;
+
   judul.innerText = "Hasil Pencarian";
   view.innerHTML = `<div class="back" onclick="history.back()">⬅ Kembali</div>`;
 
@@ -831,9 +831,14 @@ search.value = searchState.keyword || "";
   );
 
   if(hasil.length === 0){
-    view.innerHTML += `<p style="text-align:center">Produk tidak ditemukan</p>`;
-    return;
-  }
+  view.innerHTML += `<p style="text-align:center">Produk tidak ditemukan</p>`;
+
+  setTimeout(() => {
+    isRendering = false;
+  }, 0);
+
+  return;
+}
 
   hasil.forEach(p=>{
     view.innerHTML += `
@@ -843,6 +848,11 @@ search.value = searchState.keyword || "";
         <div class="price">Rp ${Number(p.harga).toLocaleString("id-ID")}</div>
       </div>`;
   });
+
+  setTimeout(() => {
+  isRendering = false;
+}, 0);
+
 }
 
 
@@ -952,15 +962,19 @@ function checkoutWA(){
 search.addEventListener("input", function () {
   if (!produkSiap) return;
 
+  // 🔴 kalau lagi render → JANGAN proses
+  if (isRendering) return;
+
   clearTimeout(searchTimer);
 
   searchTimer = setTimeout(() => {
 
     const k = search.value.trim().toLowerCase();
 
-    if (k.length < 2) {
+    if (k.length === 0) {
       searchState.aktif = false;
-      nav.level = "kategori";
+
+      history.replaceState({ page:"kategori" }, "", "#kategori");
       tampilKategori();
       return;
     }
@@ -968,10 +982,22 @@ search.addEventListener("input", function () {
     searchState.aktif = true;
     searchState.keyword = k;
 
-    // ✅ WAJIB: masuk ke history + render via sistem
-    goTo("search", { keyword: k });
+    // 🔥 FIX: jangan spam history
+    if (!history.state || history.state.page !== "search") {
+      history.pushState({
+        page: "search",
+        data: { keyword: k }
+      }, "", "#search");
+    } else {
+      history.replaceState({
+        page: "search",
+        data: { keyword: k }
+      }, "", "#search");
+    }
 
-  }, 300);
+    renderSearchUlang();
+
+  }, 250);
 });
 /* =========================================================== */
 
