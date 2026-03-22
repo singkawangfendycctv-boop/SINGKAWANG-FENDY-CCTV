@@ -805,7 +805,14 @@ function render(page, data){
 
   else if(page === "search"){
   searchState.keyword = data.keyword;
+  renderSearchUlang();
 
+  setTimeout(()=>{
+    window.scrollTo({
+      top: searchState.scroll || 0,
+      behavior: "auto"
+    });
+  },0);
 
   renderSearchUlang();
 }
@@ -817,10 +824,6 @@ function render(page, data){
 function renderSearchUlang(){
 
   const keyword = searchState.keyword?.toLowerCase() || "";
-
-  // 🔥 cegah render sama berulang (biang blank)
-  if(keyword === lastRender) return;
-  lastRender = keyword;
 
   judul.innerText = "Hasil Pencarian";
   view.innerHTML = `<div class="back" onclick="history.back()">⬅ Kembali</div>`;
@@ -969,16 +972,24 @@ search.addEventListener("input", function () {
     searchState.keyword = k;
 
     if (!history.state || history.state.page !== "search") {
-      history.pushState({
-        page: "search",
-        data: { keyword: k }
-      }, "", "#search");
-    } else {
-      history.replaceState({
-        page: "search",
-        data: { keyword: k }
-      }, "", "#search");
-    }
+
+  // 🔴 pertama masuk search → buat history baru
+  history.pushState({
+    page: "search",
+    data: { keyword: k },
+    scroll: 0
+  }, "", "#search");
+
+} else {
+
+  // 🔴 masih di search → update saja (tidak nambah history)
+  history.replaceState({
+    page: "search",
+    data: { keyword: k },
+    scroll: window.scrollY
+  }, "", "#search");
+
+}
 
     renderSearchUlang();
 
@@ -1115,8 +1126,9 @@ window.addEventListener("popstate", function(e){
   }
 
   if(e.state?.page === "search"){
-    searchState.keyword = e.state.keyword || "";
-  }
+  searchState.keyword = e.state.data?.keyword || "";
+  search.value = searchState.keyword;
+}
 
   render(e.state.page, e.state.data);
 
