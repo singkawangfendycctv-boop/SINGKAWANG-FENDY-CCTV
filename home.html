@@ -956,10 +956,6 @@ function checkoutWA(){
     return;
   }
 
-  if(p.bonus){
-  text += `Bonus: ${p.bonus}%0A`;
-}
-
   let text = "Halo, saya mau order:%0A%0A";
   let total = 0;
 
@@ -970,6 +966,11 @@ function checkoutWA(){
     total += sub;
 
     text += `${i+1}. ${p.nama}%0A`;
+
+    if(p.bonus){
+  text += `Bonus: ${p.bonus}%0A`;
+}
+
     text += `Harga: Rp ${harga.toLocaleString("id-ID")}%0A`;
     text += `Qty: ${item.qty}%0A`;
     text += `Subtotal: Rp ${sub.toLocaleString("id-ID")}%0A%0A`;
