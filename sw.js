@@ -1,10 +1,9 @@
-const CACHE_STATIC = "fendy-static-v4";
-const CACHE_DYNAMIC = "fendy-dynamic-v4";
+const CACHE_STATIC = "fendy-static-v6";
+const CACHE_DYNAMIC = "fendy-dynamic-v6";
 
 const STATIC_FILES = [
   "/",
   "/index.html",
-  "/home.html",
   "/manifest.json",
   "/logo.png",
   "/bg.jpg",
