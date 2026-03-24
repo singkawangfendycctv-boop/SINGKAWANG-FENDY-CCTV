@@ -258,6 +258,17 @@ header img{width:42px}
   filter: drop-shadow(0 2px 6px rgba(0,0,0,.6));
 }
 
+.badge-bonus{
+  position:absolute;
+  top:10px;
+  left:10px;
+  background:#22c55e;
+  color:#fff;
+  font-size:11px;
+  padding:4px 8px;
+  border-radius:999px;
+  font-weight:700;
+}
 
 
 /* TENGAHKAN TEKS KATEGORI, BRAND, PRODUK */
@@ -568,8 +579,9 @@ fetch("produk.csv")
 .then(r=>r.text())
 .then(t=>{
   produk = t.trim().split("\n").slice(1).map(r=>{
-    const [id,nama,harga,brand,foto,spek,harga_promo,status] = r.split(",");
-    return {
+    const [id,nama,harga,brand,foto,spek,harga_promo,status,bonus] = r.split(",");
+
+return {
   id,
   nama,
   harga:Number(harga),
@@ -577,7 +589,8 @@ fetch("produk.csv")
   foto,
   spek,
   harga_promo: harga_promo ? Number(harga_promo) : 0,
-  status
+  status,
+  bonus // 🔥 TAMBAHAN
 };
   });
 
@@ -635,6 +648,7 @@ function tampilProduk(id,nama){
     <div class="card" onclick="goTo('detail',{id:'${p.id}'})">
 
       ${isApple ? `<div class="badge-tam"></div>` : ``}
+      ${p.bonus && p.bonus.trim() !== "" ? `<div class="badge-bonus">BONUS</div>` : ""}
 
       <img src="${p.foto}" class="img-produk">
       <h3>${p.nama}</h3>
@@ -719,6 +733,21 @@ function tampilDetail(id){
       <h2>${p.nama}</h2>
       <!-- 🔴 PERBAIKAN -->
 <div class="price">Rp ${hargaAktif(p).toLocaleString("id-ID")}</div>
+
+${p.bonus && p.bonus.trim() !== "" ? `
+  <div style="
+    margin-top:12px;
+    padding:10px;
+    background:#22c55e22;
+    border:1px solid #22c55e;
+    border-radius:10px;
+    font-size:14px;
+    text-align:center;
+    font-weight:600;
+  ">
+    🎁 BONUS: ${p.bonus}
+  </div>
+` : ""}
 
       <ul class="spek-list">
   ${
@@ -926,6 +955,10 @@ function checkoutWA(){
     alert("Keranjang masih kosong");
     return;
   }
+
+  if(p.bonus){
+  text += `Bonus: ${p.bonus}%0A`;
+}
 
   let text = "Halo, saya mau order:%0A%0A";
   let total = 0;
