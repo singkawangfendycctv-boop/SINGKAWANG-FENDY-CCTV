@@ -725,6 +725,8 @@ function tampilDetail(id){
   nav.level = "detail";
 
   const p = produk.find(x=>x.id===id);
+  const item = cart.find(x => x.id === p.id);
+const qty = item ? item.qty : 0;
   judul.innerText=p.nama;
   view.innerHTML=`
     <div class="back" onclick="history.back()">⬅ Kembali</div>
@@ -770,7 +772,7 @@ ${p.bonus && p.bonus.trim() !== "" ? `
       <!-- TAMBAHAN QTY + - -->
 <div style="display:flex;gap:10px;justify-content:center;margin-top:10px">
   <button class="btn-cart" onclick="ubahQty('${p.id}',-1)">−</button>
-  <div id="qty-${p.id}" style="font-size:18px;font-weight:bold;line-height:48px">0</div>
+  <div id="qty-${p.id}" style="font-size:18px;font-weight:bold;line-height:48px">${qty}</div>
   <button class="btn-cart" onclick="ubahQty('${p.id}',1)">+</button>
 </div>
     </div>`;
