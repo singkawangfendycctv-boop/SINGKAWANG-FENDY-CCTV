@@ -969,9 +969,10 @@ function checkoutWA(){
 
     text += `${i+1}. ${p.nama}%0A`;
 
-    if(p.bonus){
+    if(p.bonus && p.bonus.trim() !== ""){
   text += `Bonus: ${p.bonus}%0A`;
 }
+
 
     text += `Harga: Rp ${harga.toLocaleString("id-ID")}%0A`;
     text += `Qty: ${item.qty}%0A`;
