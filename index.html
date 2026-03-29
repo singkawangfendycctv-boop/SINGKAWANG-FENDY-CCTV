@@ -420,6 +420,30 @@ footer{
     url("bg.jpg") center/cover no-repeat !important;
 }
 
+/* ===== FIX BACKGROUND KHUSUS iPHONE ===== */
+
+/* default: bg-wrap mati */
+.bg-wrap{
+  display:none;
+}
+
+/* aktif hanya di iPhone */
+.ios .bg-wrap{
+  display:block;
+  position:fixed;
+  inset:0;
+  z-index:-1;
+
+  background:
+    linear-gradient(rgba(2,6,23,.25), rgba(2,6,23,.9)),
+    url("bg.jpg") center/cover no-repeat;
+}
+
+/* matikan background body khusus iPhone */
+.ios body{
+  background:#020617 !important;
+}
+
 </style>
 </head>
 
