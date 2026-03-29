@@ -401,49 +401,6 @@ footer{
   color:#cbd5f5;
   background:rgba(2,6,23,.85);
 }
-
-/* 🔴 KHUSUS iPHONE */
-.ios body{
-  min-height:100dvh;
-  -webkit-overflow-scrolling: touch;
-}
-
-/* 🔴 FIX ZOOM INPUT */
-.ios .search-box input{
-  font-size:16px;
-}
-
-/* 🔴 FIX BACKGROUND iPHONE */
-.ios body{
-  background:
-    linear-gradient(rgba(2,6,23,.25), rgba(2,6,23,.9)),
-    url("bg.jpg") center/cover no-repeat !important;
-}
-
-/* ===== FIX BACKGROUND KHUSUS iPHONE ===== */
-
-/* default: bg-wrap mati */
-.bg-wrap{
-  display:none;
-}
-
-/* aktif hanya di iPhone */
-.ios .bg-wrap{
-  display:block;
-  position:fixed;
-  inset:0;
-  z-index:-1;
-
-  background:
-    linear-gradient(rgba(2,6,23,.25), rgba(2,6,23,.9)),
-    url("bg.jpg") center/cover no-repeat;
-}
-
-/* matikan background body khusus iPhone */
-.ios body{
-  background:#020617 !important;
-}
-
 </style>
 </head>
 
@@ -534,29 +491,6 @@ const view=document.getElementById("view");
 const judul=document.getElementById("judul");
 const zoom=document.getElementById("zoom");
 const zoomImg=document.getElementById("zoomImg");
-
-
-const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-
-if(isIOS){
-  document.documentElement.classList.add("ios");
-}
-
-if(isIOS){
-  const meta1 = document.createElement("meta");
-  meta1.name = "apple-mobile-web-app-capable";
-  meta1.content = "yes";
-
-  const meta2 = document.createElement("meta");
-  meta2.name = "apple-mobile-web-app-status-bar-style";
-  meta2.content = "black-translucent";
-
-  const meta3 = document.createElement("meta");
-  meta3.name = "apple-mobile-web-app-title";
-  meta3.content = "Fendy Store";
-
-  document.head.append(meta1, meta2, meta3);
-}
 
 
 /* 🔴 TAMBAHAN: WA ADMIN (TIDAK DARI CSV) */
@@ -930,6 +864,7 @@ function render(page, data){
     });
   },0);
 
+  renderSearchUlang();
 }
 
 }
@@ -1260,24 +1195,6 @@ window.addEventListener("popstate", function(e){
     });
   },0);
 });
-
-if(isIOS){
-  setTimeout(()=>{
-    const iosInstall = document.createElement("div");
-    iosInstall.innerText = "📲 Install: Share → Add to Home Screen";
-    iosInstall.style.position = "fixed";
-    iosInstall.style.bottom = "0";
-    iosInstall.style.left = "0";
-    iosInstall.style.right = "0";
-    iosInstall.style.background = "#000";
-    iosInstall.style.color = "#fff";
-    iosInstall.style.textAlign = "center";
-    iosInstall.style.padding = "10px";
-    iosInstall.style.zIndex = "9999";
-
-    document.body.appendChild(iosInstall);
-  },2000);
-}
 </script>
 
 </body>
