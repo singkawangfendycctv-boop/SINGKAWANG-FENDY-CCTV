@@ -412,7 +412,7 @@ footer{
 <div class="bg-wrap"></div>
 <!-- ================================================= -->
  
-<header>
+<header onclick="goHome()" style="cursor:pointer">
   <img src="logo.png">
   <h3>Fendy Freelance Store</h3>
 </header>
@@ -783,6 +783,25 @@ function resetSearch(){
   searchState.aktif = false;
   searchState.keyword = "";
   searchState.scroll = 0;
+}
+
+function goHome(){
+  // reset semua state
+  nav.level = "kategori";
+  nav.kategori = null;
+  nav.brand = null;
+
+  // reset search
+  searchState.aktif = false;
+  searchState.keyword = "";
+  search.value = "";
+
+  // render ulang kategori
+  history.pushState({page:"kategori"}, "", "#kategori");
+  render("kategori");
+
+  // scroll ke atas
+  window.scrollTo({top:0});
 }
 
 
