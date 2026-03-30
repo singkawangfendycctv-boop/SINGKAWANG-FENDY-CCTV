@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fendy Freelance Store</title>
@@ -9,7 +11,12 @@
 <link rel="apple-touch-icon" href="logo.png">
 
 <style>
-  html{
+  html, body{
+  height:100%;
+  overflow-x:hidden;
+}
+
+html{
   background:#020617;
   overscroll-behavior: none;
 }
@@ -20,14 +27,28 @@
   --text:#f1f5f9;
 }
 *{box-sizing:border-box}
+
 body{
   margin:0;
   font-family:Segoe UI,Arial,sans-serif;
   color:var(--text);
   min-height:100vh;
+  
+  -webkit-overflow-scrolling: touch;
+
   background:
     linear-gradient(rgba(2,6,23,.25), rgba(2,6,23,.9)),
-    url("bg.jpg") center/cover no-repeat fixed;
+    url("bg.jpg") center/cover no-repeat;
+}
+
+/* 🔴 KHUSUS iPHONE */
+@supports (-webkit-touch-callout: none) {
+  body{
+    background:
+      linear-gradient(rgba(2,6,23,.25), rgba(2,6,23,.9)),
+      url("bg.jpg") center/cover no-repeat;
+    background-attachment: scroll; /* WAJIB */
+  }
 }
 
 header{
@@ -1096,36 +1117,44 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js');
 }
 
-let deferredPrompt;
-let installBtn = document.createElement("button");
+// 🔴 MATIKAN DI iPHONE
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
 
-installBtn.innerText = "📲 Install Aplikasi";
-installBtn.style.position = "fixed";
-installBtn.style.bottom = "90px";
-installBtn.style.right = "20px";
-installBtn.style.padding = "12px 18px";
-installBtn.style.border = "none";
-installBtn.style.borderRadius = "50px";
-installBtn.style.background = "#e11d48";
-installBtn.style.color = "#fff";
-installBtn.style.fontWeight = "bold";
-installBtn.style.display = "none";
-installBtn.style.zIndex = "9999";
+if(!isIOS){
 
-document.body.appendChild(installBtn);
+  let deferredPrompt;
+  let installBtn = document.createElement("button");
 
-window.addEventListener("beforeinstallprompt", (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  installBtn.style.display = "block";
-});
-
-installBtn.addEventListener("click", async () => {
+  installBtn.innerText = "📲 Install Aplikasi";
+  installBtn.style.position = "fixed";
+  installBtn.style.bottom = "90px";
+  installBtn.style.right = "20px";
+  installBtn.style.padding = "12px 18px";
+  installBtn.style.border = "none";
+  installBtn.style.borderRadius = "50px";
+  installBtn.style.background = "#e11d48";
+  installBtn.style.color = "#fff";
+  installBtn.style.fontWeight = "bold";
   installBtn.style.display = "none";
-  deferredPrompt.prompt();
-  const { outcome } = await deferredPrompt.userChoice;
-  deferredPrompt = null;
-});
+  installBtn.style.zIndex = "9999";
+
+  document.body.appendChild(installBtn);
+
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installBtn.style.display = "block";
+  });
+
+  installBtn.addEventListener("click", async () => {
+    installBtn.style.display = "none";
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    deferredPrompt = null;
+  });
+
+}
+
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js').then(reg => {
