@@ -6,9 +6,9 @@
 <title>Fendy Freelance Store</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#e11d48">
+<link rel="apple-touch-icon" href="logo.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="apple-touch-icon" href="logo.png">
 
 <style>
   html{
@@ -16,10 +16,6 @@
   overscroll-behavior: none;
 }
 
-html, body{
-  height:100%;
-  overflow-x:hidden;
-}
 
 :root{
   --primary:#e11d48;
@@ -34,9 +30,8 @@ body{
   min-height:100vh;
   background:
     linear-gradient(rgba(2,6,23,.25), rgba(2,6,23,.9)),
-    url("bg.jpg") center/cover no-repeat;
+    url("bg.jpg") center/cover no-repeat fixed;
 }
-
 body{
   -webkit-overflow-scrolling: touch;
 }
