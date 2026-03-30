@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fendy Freelance Store</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#e11d48">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="apple-touch-icon" href="logo.png">
 
 <style>
-  html, body{
-  height:100%;
-  overflow-x:hidden;
-}
-
-html{
+  html{
   background:#020617;
   overscroll-behavior: none;
+}
+
+html, body{
+  height:100%;
+  overflow-x:hidden;
 }
 
 :root{
@@ -27,18 +27,18 @@ html{
   --text:#f1f5f9;
 }
 *{box-sizing:border-box}
-
 body{
   margin:0;
   font-family:Segoe UI,Arial,sans-serif;
   color:var(--text);
   min-height:100vh;
-  
-  -webkit-overflow-scrolling: touch;
-
   background:
     linear-gradient(rgba(2,6,23,.25), rgba(2,6,23,.9)),
     url("bg.jpg") center/cover no-repeat;
+}
+
+body{
+  -webkit-overflow-scrolling: touch;
 }
 
 /* 🔴 KHUSUS iPHONE */
@@ -1154,7 +1154,6 @@ if(!isIOS){
   });
 
 }
-
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js').then(reg => {
