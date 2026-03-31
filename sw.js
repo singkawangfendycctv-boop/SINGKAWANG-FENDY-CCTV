@@ -1,5 +1,5 @@
-const CACHE_STATIC = "fendy-static-v6";
-const CACHE_DYNAMIC = "fendy-dynamic-v6";
+const CACHE_STATIC = "fendy-static-v7";
+const CACHE_DYNAMIC = "fendy-dynamic-v7";
 
 const STATIC_FILES = [
   "/",
@@ -9,7 +9,12 @@ const STATIC_FILES = [
   "/bg.jpg",
   "/kategori.csv",
   "/brand.csv",
-  "/produk.csv"
+  "/produk.csv",
+  
+  // 🔴 TAMBAHAN IKLAN
+  "/iklan1.jpg",
+  "/iklan2.jpg",
+  "/iklan3.jpg",
 ];
 
 // ================= INSTALL =================
