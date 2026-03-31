@@ -14,11 +14,14 @@
   html{
   background:#020617;
   overscroll-behavior: none;
+  height:auto;
 }
 html, body{
   min-height:100%;
   overflow-x:hidden;
+  overflow-y:auto;
 }
+
 
 :root{
   --primary:#e11d48;
@@ -31,6 +34,8 @@ body{
   font-family:Segoe UI,Arial,sans-serif;
   color:var(--text);
   min-height:100vh;
+  overflow-x:hidden;
+  overflow-y:auto;
   background:
     linear-gradient(rgba(2,6,23,.25), rgba(2,6,23,.9)),
     url("bg.jpg") center/cover no-repeat;
