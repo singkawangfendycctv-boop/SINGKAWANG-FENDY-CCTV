@@ -944,28 +944,22 @@ function goHome(){
 
 function goTo(page, data = {}){
 
-  // 🔴 simpan scroll sekarang ke state sebelumnya
+  // 🔴 simpan scroll halaman sekarang
   const currentState = history.state || {};
-  const scrollY = window.scrollY;
 
   history.replaceState({
     ...currentState,
-    scroll: scrollY
+    scroll: window.scrollY
   }, "");
 
-  // 🔴 push halaman baru
+  // 🔴 masuk halaman baru (default scroll 0)
   history.pushState({
-  page,
-  data,
-  scroll: window.scrollY,
-  keyword: searchState.keyword // 🔥 simpan keyword
-}, "", "#" + page);
+    page,
+    data,
+    scroll: 0
+  }, "", "#" + page);
 
   render(page, data);
-
-// 🔴 navigasi biasa selalu mulai dari atas
-window.scrollTo({top:0});
-
 }
 
 function render(page, data){
@@ -1312,32 +1306,21 @@ if ('serviceWorker' in navigator) {
 
 window.addEventListener("popstate", function(e){
 
-  // 🔥 kalau keluar dari halaman search → kosongkan input
-  if(e.state?.page !== "search"){
-    searchState.aktif = false;
-    searchState.keyword = "";
-    search.value = ""; // ✅ AMAN di sini saja
-  }
-
   if(!e.state){
     render("kategori");
-    window.scrollTo({top:0});
     return;
   }
 
-  if(e.state?.page === "search"){
-  searchState.keyword = e.state.data?.keyword || "";
-  search.value = searchState.keyword;
-}
-
   render(e.state.page, e.state.data);
 
+  // 🔴 restore posisi scroll asli
   setTimeout(()=>{
     window.scrollTo({
-      top: e.state.scroll ?? 0,
+      top: e.state.scroll || 0,
       behavior: "auto"
     });
   },0);
+
 });
 
 let indexIklan = 0;
