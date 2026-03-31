@@ -555,15 +555,15 @@ footer{
   <button class="ads-btn prev" onclick="geserIklan(-1)">‹</button>
 
   <div class="ads-track" id="adsTrack">
-    <div class="ads-item" onclick="bukaMultiProduk(['P346','P347'])">
+    <div class="ads-item" onclick="bukaMultiProduk(['P001','P002','P003'])">
   <img src="iklan1.jpg">
 </div>
 
-    <div class="ads-item" onclick="bukaMultiProduk(['P355','P356','P357'])">
+    <div class="ads-item" onclick="bukaMultiProduk(['P001','P002','P003'])">
   <img src="iklan2.jpg">
 </div>
 
-    <div class="ads-item" onclick="bukaMultiProduk(['P282','P283'])">
+    <div class="ads-item" onclick="bukaMultiProduk(['P001','P002','P003'])">
   <img src="iklan3.jpg">
 </div>
 
@@ -944,22 +944,28 @@ function goHome(){
 
 function goTo(page, data = {}){
 
-  // 🔴 simpan scroll halaman sekarang
+  // 🔴 simpan scroll sekarang ke state sebelumnya
   const currentState = history.state || {};
+  const scrollY = window.scrollY;
 
   history.replaceState({
     ...currentState,
-    scroll: window.scrollY
+    scroll: scrollY
   }, "");
 
-  // 🔴 masuk halaman baru (default scroll 0)
+  // 🔴 push halaman baru
   history.pushState({
-    page,
-    data,
-    scroll: 0
-  }, "", "#" + page);
+  page,
+  data,
+  scroll: window.scrollY,
+  keyword: searchState.keyword // 🔥 simpan keyword
+}, "", "#" + page);
 
   render(page, data);
+
+// 🔴 navigasi biasa selalu mulai dari atas
+window.scrollTo({top:0});
+
 }
 
 function render(page, data){
@@ -984,9 +990,14 @@ function render(page, data){
     tampilDetail(data.id);
   }
 
+  else if(page === "iklan"){
+  tampilIklan(data.ids);
+}
+
   else if(page === "search"){
   searchState.keyword = data.keyword;
   renderSearchUlang();
+
 
   setTimeout(()=>{
     window.scrollTo({
@@ -1306,21 +1317,32 @@ if ('serviceWorker' in navigator) {
 
 window.addEventListener("popstate", function(e){
 
+  // 🔥 kalau keluar dari halaman search → kosongkan input
+  if(e.state?.page !== "search"){
+    searchState.aktif = false;
+    searchState.keyword = "";
+    search.value = ""; // ✅ AMAN di sini saja
+  }
+
   if(!e.state){
     render("kategori");
+    window.scrollTo({top:0});
     return;
   }
 
+  if(e.state?.page === "search"){
+  searchState.keyword = e.state.data?.keyword || "";
+  search.value = searchState.keyword;
+}
+
   render(e.state.page, e.state.data);
 
-  // 🔴 restore posisi scroll asli
   setTimeout(()=>{
     window.scrollTo({
-      top: e.state.scroll || 0,
+      top: e.state.scroll ?? 0,
       behavior: "auto"
     });
   },0);
-
 });
 
 let indexIklan = 0;
@@ -1407,16 +1429,38 @@ updateIklan();
 
 function bukaMultiProduk(ids){
 
-  // ambil produk berdasarkan banyak id
+  // 🔴 simpan posisi scroll saat klik iklan
+  const scrollY = window.scrollY;
+
   const hasil = produk.filter(p => ids.includes(p.id));
 
+  // 🔴 kalau cuma 1 produk → tetap ke detail (TAPI MASUK HISTORY IKLAN DULU)
   if(hasil.length === 1){
-    // kalau cuma 1 tetap ke detail
+
+    history.pushState({
+      page: "iklan",
+      data: { ids: ids },
+      scroll: scrollY
+    }, "", "#iklan");
+
     goTo('detail',{id:hasil[0].id});
     return;
   }
 
-  // kalau lebih dari 1 → tampil seperti search
+  // 🔴 kalau banyak produk → jadikan halaman sendiri
+  history.pushState({
+    page: "iklan",
+    data: { ids: ids },
+    scroll: scrollY
+  }, "", "#iklan");
+
+  render("iklan", { ids });
+}
+
+function tampilIklan(ids){
+
+  const hasil = produk.filter(p => ids.includes(p.id));
+
   judul.innerText = "Produk Iklan";
   view.innerHTML = `<div class="back" onclick="history.back()">⬅ Kembali</div>`;
 
