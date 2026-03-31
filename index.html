@@ -555,17 +555,17 @@ footer{
   <button class="ads-btn prev" onclick="geserIklan(-1)">‹</button>
 
   <div class="ads-track" id="adsTrack">
-    <div class="ads-item" onclick="goTo('detail',{id:'P346,P347'})">
-      <img src="iklan1.jpg">
-    </div>
+    <div class="ads-item" onclick="bukaMultiProduk(['P346','P347'])">
+  <img src="iklan1.jpg">
+</div>
 
-    <div class="ads-item" onclick="goTo('detail',{id:'P355,P356,P357'})">
-      <img src="iklan2.jpg">
-    </div>
+    <div class="ads-item" onclick="bukaMultiProduk(['P355','P356','P357'])">
+  <img src="iklan2.jpg">
+</div>
 
-    <div class="ads-item" onclick="goTo('detail',{id:'P282,P283'})">
-      <img src="iklan3.jpg">
-    </div>
+    <div class="ads-item" onclick="bukaMultiProduk(['P282','P283'])">
+  <img src="iklan3.jpg">
+</div>
 
   </div>
 
@@ -1006,26 +1006,6 @@ function render(page, data){
 
 }
 
-function tampilProdukIklan(ids){
-
-  nav.level = "iklan";
-  judul.innerText = "Promo Pilihan";
-
-  view.innerHTML = `<div class="back" onclick="history.back()">⬅ Kembali</div>`;
-
-  const hasil = produk.filter(p => ids.includes(p.id));
-
-  hasil.forEach(p=>{
-    view.innerHTML += `
-      <div class="card" onclick="goTo('detail',{id:'${p.id}'})">
-        <img src="${p.foto}">
-        <h3>${p.nama}</h3>
-        <div class="price">Rp ${hargaAktif(p).toLocaleString("id-ID")}</div>
-      </div>
-    `;
-  });
-}
-
 
 /* ================= RESTORE SEARCH TANPA REFRESH ================= */
 function renderSearchUlang(){
@@ -1442,26 +1422,33 @@ track.addEventListener("touchend", e=>{
 /* 🔴 INIT */
 updateIklan();
 
-document.addEventListener("click", function(e){
-  const img = e.target.closest(".ads-track img");
-  if(!img) return;
+function bukaMultiProduk(ids){
 
-  const ids = img.dataset.id;
-  if(!ids) return;
+  // ambil produk berdasarkan banyak id
+  const hasil = produk.filter(p => ids.includes(p.id));
 
-  const list = ids.split(",");
-
-  // kalau cuma 1 → langsung detail
-  if(list.length === 1){
-    goTo("detail", { id: list[0] });
+  if(hasil.length === 1){
+    // kalau cuma 1 tetap ke detail
+    goTo('detail',{id:hasil[0].id});
+    return;
   }
-  
-  // kalau lebih dari 1 → tampil list produk
-  else{
-    tampilProdukIklan(list);
-  }
-});
 
+  // kalau lebih dari 1 → tampil seperti search
+  judul.innerText = "Produk Iklan";
+  view.innerHTML = `<div class="back" onclick="history.back()">⬅ Kembali</div>`;
+
+  hasil.forEach(p=>{
+    view.innerHTML += `
+      <div class="card" onclick="goTo('detail',{id:'${p.id}'})">
+        <img src="${p.foto}">
+        <h3>${p.nama}</h3>
+        <div class="price">Rp ${hargaAktif(p).toLocaleString("id-ID")}</div>
+      </div>
+    `;
+  });
+
+  window.scrollTo({top:0});
+}
 
 </script>
 
