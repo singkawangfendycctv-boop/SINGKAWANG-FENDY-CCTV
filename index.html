@@ -1006,6 +1006,26 @@ function render(page, data){
 
 }
 
+function tampilProdukIklan(ids){
+
+  nav.level = "iklan";
+  judul.innerText = "Promo Pilihan";
+
+  view.innerHTML = `<div class="back" onclick="history.back()">⬅ Kembali</div>`;
+
+  const hasil = produk.filter(p => ids.includes(p.id));
+
+  hasil.forEach(p=>{
+    view.innerHTML += `
+      <div class="card" onclick="goTo('detail',{id:'${p.id}'})">
+        <img src="${p.foto}">
+        <h3>${p.nama}</h3>
+        <div class="price">Rp ${hargaAktif(p).toLocaleString("id-ID")}</div>
+      </div>
+    `;
+  });
+}
+
 
 /* ================= RESTORE SEARCH TANPA REFRESH ================= */
 function renderSearchUlang(){
@@ -1421,6 +1441,28 @@ track.addEventListener("touchend", e=>{
 
 /* 🔴 INIT */
 updateIklan();
+
+document.addEventListener("click", function(e){
+  const img = e.target.closest(".ads-track img");
+  if(!img) return;
+
+  const ids = img.dataset.id;
+  if(!ids) return;
+
+  const list = ids.split(",");
+
+  // kalau cuma 1 → langsung detail
+  if(list.length === 1){
+    goTo("detail", { id: list[0] });
+  }
+  
+  // kalau lebih dari 1 → tampil list produk
+  else{
+    tampilProdukIklan(list);
+  }
+});
+
+
 </script>
 
 </body>
