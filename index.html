@@ -10,12 +10,6 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-<link rel="preload" as="image" href="iklan1.jpg">
-<link rel="preload" as="image" href="iklan2.jpg">
-<link rel="preload" as="image" href="iklan3.jpg">
-<link rel="preload" as="image" href="iklan4.jpg">
-<link rel="preload" as="image" href="iklan5.jpg">
-
 <style>
   html{
   background:#020617;
@@ -429,18 +423,22 @@ footer{
   margin:20px auto;
   width:100%;
   max-width:1100px; /* ⬅ biar gede kayak contoh */
-  aspect-ratio: 2161 / 800; /* ⬅ mirip gambar kamu */
+  aspect-ratio: 16 / 6; /* ⬅ mirip gambar kamu */
   overflow:hidden;
   border-radius:18px;
 }
 
+/* isi slide */
+.ads-slider{
+  aspect-ratio: auto;   /* 🔥 hapus rasio paksa */
+  height:auto;
+}
 
 .ads-item img,
 .ads-item video{
   width:100%;
-  height:100%;
-  object-fit:cover;
-  display:block;
+  height:auto;
+  object-fit:contain;
 }
 
 /* 🔴 TOMBOL IKLAN MODERN */
@@ -473,7 +471,6 @@ footer{
   height:100%;
   transition:0.7s cubic-bezier(0.22, 1, 0.36, 1);
   width:100%;
-  transform: translateZ(0); /* 🔥 GPU FIX */
 }
 
 .ads-track{
@@ -486,11 +483,7 @@ footer{
   height:100%;
   flex-shrink:0;         /* 🔥 biar gak ngecil */
   position:relative;
-  display:flex;           /* 🔥 TAMBAHAN */
-  align-items:center;     /* 🔥 TAMBAHAN */
-  justify-content:center; /* 🔥 TAMBAHAN */
 }
-
 
 .ads-dots{
   position:absolute;
@@ -563,23 +556,23 @@ footer{
 
   <div class="ads-track" id="adsTrack">
     <div class="ads-item" onclick="bukaMultiProduk(['P346','P347'])">
-  <img src="iklan1.jpg" loading="eager" decoding="sync">
+  <img src="iklan1.jpg">
 </div>
 
     <div class="ads-item" onclick="bukaMultiProduk(['P355','P356','P357'])">
-  <img src="iklan2.jpg" loading="eager" decoding="sync">
+  <img src="iklan2.jpg">
 </div>
 
     <div class="ads-item" onclick="bukaMultiProduk(['P282','P283'])">
-  <img src="iklan3.jpg" loading="eager" decoding="sync">
+  <img src="iklan3.jpg">
 </div>
 
     <div class="ads-item" onclick="bukaMultiProduk(['P701','P702','P703','P704','P705','P706','P707','P708','P709','P710','P711','P712','P713','P714'])">
-  <img src="iklan4.jpg" loading="eager" decoding="sync">
+  <img src="iklan4.jpg">
 </div>
 
     <div class="ads-item" onclick="bukaMultiProduk(['P407','P408'])">
-  <img src="iklan5.jpg" loading="eager" decoding="sync">
+  <img src="iklan5.jpg">
 </div>
 
   </div>
@@ -1440,11 +1433,7 @@ track.addEventListener("touchend", e=>{
 });
 
 /* 🔴 INIT */
-window.addEventListener("load", () => {
-  setTimeout(() => {
-    updateIklan();
-  }, 100);
-});
+updateIklan();
 
 function bukaMultiProduk(ids){
 
@@ -1495,32 +1484,6 @@ function tampilIklan(ids){
 
   window.scrollTo({top:0});
 }
-
-window.addEventListener("load", () => {
-  const imgs = document.querySelectorAll(".ads-item img");
-
-  imgs.forEach(img => {
-    const src = img.src;
-    const i = new Image();
-    i.src = src;
-  });
-});
-
-window.addEventListener("load", () => {
-
-  const slider = document.querySelector(".ads-slider");
-
-  // 🔥 paksa reflow (INI KUNCI)
-  slider.style.display = "none";
-  slider.offsetHeight; // trigger reflow
-  slider.style.display = "";
-
-  // 🔥 baru jalankan slider
-  setTimeout(() => {
-    updateIklan();
-  }, 50);
-
-});
 
 </script>
 
