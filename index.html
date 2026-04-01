@@ -422,23 +422,18 @@ footer{
   position:relative;
   margin:20px auto;
   width:100%;
-  max-width:1100px; /* ⬅ biar gede kayak contoh */
-  aspect-ratio: 16 / 6; /* ⬅ mirip gambar kamu */
+  max-width:1100px;
+  aspect-ratio: 16 / 6;   /* ✅ pakai ini saja */
   overflow:hidden;
   border-radius:18px;
 }
 
-/* isi slide */
-.ads-slider{
-  aspect-ratio: auto;   /* 🔥 hapus rasio paksa */
-  height:auto;
-}
 
 .ads-item img,
 .ads-item video{
   width:100%;
-  height:auto;
-  object-fit:contain;
+  height:100%;           /* 🔥 penting */
+  object-fit:cover;      /* atau contain kalau mau full gambar */
 }
 
 /* 🔴 TOMBOL IKLAN MODERN */
@@ -1039,7 +1034,7 @@ function renderSearchUlang(){
     return;
   }
 
-  hasil.slice(0,20).forEach(p=>{
+  hasil.forEach(p=>{
     view.innerHTML += `
       <div class="card" onclick="goTo('detail',{id:'${p.id}'})">
         <img src="${p.foto}">
@@ -1353,10 +1348,23 @@ window.addEventListener("popstate", function(e){
   },0);
 });
 
-let indexIklan = 0;
+let indexIklan = 1;
 const track = document.getElementById("adsTrack");
 const items = track.children;
 const dotsWrap = document.getElementById("adsDots");
+
+const firstClone = items[0].cloneNode(true);
+const lastClone = items[items.length - 1].cloneNode(true);
+
+track.appendChild(firstClone);
+track.insertBefore(lastClone, track.firstChild);
+
+function setPosisiAwal(){
+  track.style.transform = `translateX(-${indexIklan * 100}%)`;
+}
+
+setPosisiAwal();
+
 
 /* 🔴 BUAT DOT */
 for(let i=0;i<items.length;i++){
@@ -1391,11 +1399,10 @@ function updateIklan(){
 function geserIklan(arah){
   indexIklan += arah;
 
-  if(indexIklan < 0) indexIklan = items.length - 1;
-  if(indexIklan >= items.length) indexIklan = 0;
+  track.style.transition = "0.7s cubic-bezier(0.22,1,0.36,1)";
+  track.style.transform = `translateX(-${indexIklan * 100}%)`;
 
-  updateIklan();
-  resetAutoSlide(); // ⬅ TAMBAHAN
+  resetAutoSlide();
 }
 
 function goIklan(i){
@@ -1415,6 +1422,27 @@ function resetAutoSlide(){
   }, 7000);
 }
 
+
+track.addEventListener("transitionend", () => {
+
+  const total = track.children.length;
+
+  // kalau sudah di clone terakhir
+  if(indexIklan === total - 1){
+    track.style.transition = "none";
+    indexIklan = 1;
+    track.style.transform = `translateX(-${indexIklan * 100}%)`;
+  }
+
+  // kalau di clone pertama
+  if(indexIklan === 0){
+    track.style.transition = "none";
+    indexIklan = total - 2;
+    track.style.transform = `translateX(-${indexIklan * 100}%)`;
+  }
+
+});
+
 /* 🔴 SWIPE HP */
 let startX = 0;
 
@@ -1433,7 +1461,9 @@ track.addEventListener("touchend", e=>{
 });
 
 /* 🔴 INIT */
-updateIklan();
+window.addEventListener("load", ()=>{
+  updateIklan();
+});
 
 function bukaMultiProduk(ids){
 
