@@ -1039,7 +1039,7 @@ function renderSearchUlang(){
     return;
   }
 
-  hasil.slice(0,20).forEach(p=>{
+  hasil.forEach(p=>{
     view.innerHTML += `
       <div class="card" onclick="goTo('detail',{id:'${p.id}'})">
         <img src="${p.foto}">
