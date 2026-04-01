@@ -10,6 +10,12 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
+<link rel="preload" as="image" href="iklan1.jpg">
+<link rel="preload" as="image" href="iklan2.jpg">
+<link rel="preload" as="image" href="iklan3.jpg">
+<link rel="preload" as="image" href="iklan4.jpg">
+<link rel="preload" as="image" href="iklan5.jpg">
+
 <style>
   html{
   background:#020617;
@@ -555,23 +561,23 @@ footer{
 
   <div class="ads-track" id="adsTrack">
     <div class="ads-item" onclick="bukaMultiProduk(['P346','P347'])">
-  <img src="iklan1.jpg">
+  <img src="iklan1.jpg" loading="eager" decoding="sync">
 </div>
 
     <div class="ads-item" onclick="bukaMultiProduk(['P355','P356','P357'])">
-  <img src="iklan2.jpg">
+  <img src="iklan2.jpg" loading="eager" decoding="sync">
 </div>
 
     <div class="ads-item" onclick="bukaMultiProduk(['P282','P283'])">
-  <img src="iklan3.jpg">
+  <img src="iklan3.jpg" loading="eager" decoding="sync">
 </div>
 
     <div class="ads-item" onclick="bukaMultiProduk(['P701','P702','P703','P704','P705','P706','P707','P708','P709','P710','P711','P712','P713','P714'])">
-  <img src="iklan4.jpg">
+  <img src="iklan4.jpg" loading="eager" decoding="sync">
 </div>
 
     <div class="ads-item" onclick="bukaMultiProduk(['P407','P408'])">
-  <img src="iklan5.jpg">
+  <img src="iklan5.jpg" loading="eager" decoding="sync">
 </div>
 
   </div>
@@ -1432,7 +1438,11 @@ track.addEventListener("touchend", e=>{
 });
 
 /* 🔴 INIT */
-updateIklan();
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    updateIklan();
+  }, 100);
+});
 
 function bukaMultiProduk(ids){
 
@@ -1483,6 +1493,16 @@ function tampilIklan(ids){
 
   window.scrollTo({top:0});
 }
+
+window.addEventListener("load", () => {
+  const imgs = document.querySelectorAll(".ads-item img");
+
+  imgs.forEach(img => {
+    const src = img.src;
+    const i = new Image();
+    i.src = src;
+  });
+});
 
 </script>
 
