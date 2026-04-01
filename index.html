@@ -437,7 +437,7 @@ footer{
 .ads-item img,
 .ads-item video{
   width:100%;
-  height:100%;
+  height:auto;
   object-fit:contain;
 }
 
@@ -1039,7 +1039,7 @@ function renderSearchUlang(){
     return;
   }
 
-  hasil.forEach(p=>{
+  hasil.slice(0,20).forEach(p=>{
     view.innerHTML += `
       <div class="card" onclick="goTo('detail',{id:'${p.id}'})">
         <img src="${p.foto}">
@@ -1353,26 +1353,13 @@ window.addEventListener("popstate", function(e){
   },0);
 });
 
-let indexIklan = 1;
+let indexIklan = 0;
 const track = document.getElementById("adsTrack");
-const items = [...track.children];
-const totalAsli = items.length - 2; // 
+const items = track.children;
 const dotsWrap = document.getElementById("adsDots");
 
-const firstClone = items[0].cloneNode(true);
-const lastClone = items[items.length - 1].cloneNode(true);
-
-track.appendChild(firstClone);
-track.insertBefore(lastClone, track.firstChild);
-
-function setPosisiAwal(){
-  track.style.transform = `translateX(-${indexIklan * 100}%)`;
-}
-
-setPosisiAwal();
-
 /* 🔴 BUAT DOT */
-for(let i=0;i<items.length - 2;i++){
+for(let i=0;i<items.length;i++){
   const dot = document.createElement("span");
   dot.onclick = ()=>goIklan(i);
   dotsWrap.appendChild(dot);
@@ -1382,19 +1369,9 @@ for(let i=0;i<items.length - 2;i++){
 function updateIklan(){
   track.style.transform = `translateX(-${indexIklan * 100}%)`;
 
-  let realIndex = indexIklan - 1;
-
-// handle clone depan & belakang
-if(indexIklan === 0){
-  realIndex = items.length - 1;
-}
-if(indexIklan === items.length + 1){
-  realIndex = 0;
-}
-
-[...dotsWrap.children].forEach((d,i)=>{
-  d.classList.toggle("active", i === realIndex);
-});
+  [...dotsWrap.children].forEach((d,i)=>{
+    d.classList.toggle("active", i === indexIklan);
+  });
 
   // 🔴 HANDLE VIDEO AUTO PLAY
   [...items].forEach((item,i)=>{
@@ -1414,17 +1391,17 @@ if(indexIklan === items.length + 1){
 function geserIklan(arah){
   indexIklan += arah;
 
-  track.style.transition = "0.7s cubic-bezier(0.22,1,0.36,1)";
-  track.style.transform = `translateX(-${indexIklan * 100}%)`;
+  if(indexIklan < 0) indexIklan = items.length - 1;
+  if(indexIklan >= items.length) indexIklan = 0;
 
-  resetAutoSlide();
+  updateIklan();
+  resetAutoSlide(); // ⬅ TAMBAHAN
 }
 
 function goIklan(i){
-  indexIklan = i + 1; // 🔥 karena ada clone depan
-  track.style.transition = "0.7s cubic-bezier(0.22,1,0.36,1)";
-  track.style.transform = `translateX(-${indexIklan * 100}%)`;
-  resetAutoSlide();
+  indexIklan = i;
+  updateIklan();
+  resetAutoSlide(); // ⬅ TAMBAHAN
 }
 
 let autoSlide = setInterval(()=>{
@@ -1437,26 +1414,6 @@ function resetAutoSlide(){
     geserIklan(1);
   }, 7000);
 }
-
-track.addEventListener("transitionend", () => {
-
-  const total = track.children.length;
-
-  // kalau sudah di clone terakhir
-  if(indexIklan === total - 1){
-    track.style.transition = "none";
-    indexIklan = 1;
-    track.style.transform = `translateX(-${indexIklan * 100}%)`;
-  }
-
-  // kalau di clone pertama
-  if(indexIklan === 0){
-    track.style.transition = "none";
-    indexIklan = total - 2;
-    track.style.transform = `translateX(-${indexIklan * 100}%)`;
-  }
-
-});
 
 /* 🔴 SWIPE HP */
 let startX = 0;
@@ -1476,9 +1433,7 @@ track.addEventListener("touchend", e=>{
 });
 
 /* 🔴 INIT */
-window.addEventListener("load", ()=>{
-  updateIklan();
-});
+updateIklan();
 
 function bukaMultiProduk(ids){
 
