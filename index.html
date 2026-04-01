@@ -1355,7 +1355,7 @@ window.addEventListener("popstate", function(e){
 
 let indexIklan = 1;
 const track = document.getElementById("adsTrack");
-const items = track.children;
+const items = [...track.children];
 const totalAsli = items.length - 2; // 
 const dotsWrap = document.getElementById("adsDots");
 
