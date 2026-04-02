@@ -5,6 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fendy Freelance Store</title>
 <link rel="manifest" href="manifest.json">
+<link rel="preload" as="image" href="iklan1.jpg">
+<link rel="preload" as="image" href="iklan2.jpg">
+<link rel="preload" as="image" href="iklan3.jpg">
+<link rel="preload" as="image" href="iklan4.jpg">
+<link rel="preload" as="image" href="iklan5.jpg">
+<link rel="preload" as="image" href="iklan6.jpg">
 <meta name="theme-color" content="#e11d48">
 <link rel="apple-touch-icon" href="logo.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -423,22 +429,19 @@ footer{
   margin:20px auto;
   width:100%;
   max-width:1100px; /* ⬅ biar gede kayak contoh */
-  aspect-ratio: 16 / 6; /* ⬅ mirip gambar kamu */
+  aspect-ratio: 2161 / 800; /* ⬅ mirip gambar kamu */
   overflow:hidden;
   border-radius:18px;
+  background:#000;
 }
 
-/* isi slide */
-.ads-slider{
-  aspect-ratio: auto;   /* 🔥 hapus rasio paksa */
-  height:auto;
-}
 
 .ads-item img,
 .ads-item video{
   width:100%;
-  height:auto;
-  object-fit:contain;
+  height:100%;
+  object-fit:cover; /* 🔥 WAJIB */
+  display:block;
 }
 
 /* 🔴 TOMBOL IKLAN MODERN */
@@ -467,10 +470,10 @@ footer{
 .ads-btn.next{ right:12px; }
 
 .ads-track{
-  display:flex;          /* 🔥 ini yang bikin jadi ke samping */
+  display:flex;
   height:100%;
-  transition:0.7s cubic-bezier(0.22, 1, 0.36, 1);
   width:100%;
+  transform: translate3d(0,0,0);
 }
 
 .ads-track{
@@ -556,27 +559,27 @@ footer{
 
   <div class="ads-track" id="adsTrack">
     <div class="ads-item" onclick="bukaMultiProduk(['P347','P348'])">
-  <img src="iklan1.jpg">
+  <img src="iklan1.jpg" loading="eager" decoding="async">
 </div>
 
     <div class="ads-item" onclick="bukaMultiProduk(['P356','P357','P358'])">
-  <img src="iklan2.jpg">
+  <img src="iklan2.jpg" loading="eager" decoding="async">
 </div>
 
     <div class="ads-item" onclick="bukaMultiProduk(['P282','P283'])">
-  <img src="iklan3.jpg">
+  <img src="iklan3.jpg" loading="eager" decoding="async">
 </div>
 
     <div class="ads-item" onclick="bukaMultiProduk(['P707','P708','P709','P710','P711','P712','P713','P714','P715','P716','P717','P718','P719','P720'])">
-  <img src="iklan4.jpg">
+  <img src="iklan4.jpg" loading="eager" decoding="async">
 </div>
 
     <div class="ads-item" onclick="bukaMultiProduk(['P408','P409'])">
-  <img src="iklan5.jpg">
+  <img src="iklan5.jpg" loading="eager" decoding="async">
 </div>
 
     <div class="ads-item" onclick="bukaMultiProduk(['P426','P429','P430'])">
-  <img src="iklan6.jpg">
+  <img src="iklan6.jpg" loading="eager" decoding="async">
 </div>
 
   </div>
@@ -1357,28 +1360,61 @@ window.addEventListener("popstate", function(e){
   },0);
 });
 
-let indexIklan = 0;
+
+let indexIklan = 1; 
 const track = document.getElementById("adsTrack");
-const items = track.children;
+let items = track.children;
 const dotsWrap = document.getElementById("adsDots");
 
+let isSliding = false;
+
+const totalAsli = items.length;
+
+// 🔴 CLONE DEPAN & BELAKANG
+const firstClone = items[0].cloneNode(true);
+const lastClone = items[items.length - 1].cloneNode(true);
+
+track.appendChild(firstClone);
+track.insertBefore(lastClone, items[0]);
+
+items = track.children; // 🔴 refresh ulang setelah clone
+
+// 🔴 WAJIB: paksa browser render dulu
+track.offsetHeight;
+
+track.style.transform = `translateX(-100%)`;
+
 /* 🔴 BUAT DOT */
-for(let i=0;i<items.length;i++){
+for(let i=0;i<totalAsli;i++){
   const dot = document.createElement("span");
-  dot.onclick = ()=>goIklan(i);
+
+  dot.onclick = ()=>{
+    indexIklan = i + 1; // 🔴 WAJIB +1 karena clone depan
+    updateIklan();
+    resetAutoSlide();
+  };
+
   dotsWrap.appendChild(dot);
 }
 
 /* 🔴 UPDATE SLIDE */
 function updateIklan(){
+  // 🔴 animasi smooth
+  track.style.transition = "0.7s cubic-bezier(0.22, 1, 0.36, 1)";
   track.style.transform = `translateX(-${indexIklan * 100}%)`;
 
+  // 🔴 FIX DOT (karena pakai clone)
+  let realIndex = indexIklan - 1;
+
+  if(realIndex < 0) realIndex = totalAsli - 1;
+if(realIndex >= totalAsli) realIndex = 0;
+
   [...dotsWrap.children].forEach((d,i)=>{
-    d.classList.toggle("active", i === indexIklan);
+    d.classList.toggle("active", i === realIndex);
   });
 
-  // 🔴 HANDLE VIDEO AUTO PLAY
-  [...items].forEach((item,i)=>{
+  // 🔴 VIDEO AUTO PLAY (TETAP JALAN)
+  [...track.children].forEach((item,i)=>{
     const v = item.querySelector("video");
     if(v){
       if(i === indexIklan){
@@ -1393,19 +1429,36 @@ function updateIklan(){
 
 /* 🔴 PINDAH */
 function geserIklan(arah){
+
+  if(isSliding) return; // 🔴 STOP kalau masih animasi
+
+  isSliding = true;     // 🔴 kunci
+
+  if(track.style.transition === "none"){
+    track.style.transition = "0.7s cubic-bezier(0.22, 1, 0.36, 1)";
+  }
+
   indexIklan += arah;
 
-  if(indexIklan < 0) indexIklan = items.length - 1;
-  if(indexIklan >= items.length) indexIklan = 0;
-
   updateIklan();
-  resetAutoSlide(); // ⬅ TAMBAHAN
+  resetAutoSlide();
 }
 
 function goIklan(i){
   indexIklan = i;
   updateIklan();
   resetAutoSlide(); // ⬅ TAMBAHAN
+}
+
+function updateDots(){
+  let realIndex = indexIklan - 1;
+
+  if(realIndex < 0) realIndex = totalAsli - 1;
+  if(realIndex >= totalAsli) realIndex = 0;
+
+  [...dotsWrap.children].forEach((d,i)=>{
+    d.classList.toggle("active", i === realIndex);
+  });
 }
 
 let autoSlide = setInterval(()=>{
@@ -1436,8 +1489,58 @@ track.addEventListener("touchend", e=>{
   }
 });
 
+track.addEventListener("transitionend", ()=>{
+  const total = track.children.length;
+
+  if(indexIklan === 0){
+    track.style.transition = "none";
+    indexIklan = total - 2;
+    track.style.transform = `translateX(-${indexIklan * 100}%)`;
+  }
+
+  if(indexIklan === total - 1){
+    track.style.transition = "none";
+    indexIklan = 1;
+    track.style.transform = `translateX(-${indexIklan * 100}%)`;
+  }
+
+  isSliding = false; // 🔴 buka kunci setelah selesai
+
+  updateDots();
+});
+
 /* 🔴 INIT */
 updateIklan();
+
+const images = track.querySelectorAll("img");
+
+let loaded = 0;
+
+images.forEach(img => {
+  if(img.complete){
+    loaded++;
+  }else{
+    img.onload = () => {
+      loaded++;
+      if(loaded === images.length){
+        startSlider();
+      }
+    };
+  }
+});
+
+if(loaded === images.length){
+  startSlider();
+}
+
+function startSlider(){
+  track.style.transition = "none";
+  track.style.transform = `translateX(-100%)`;
+
+  setTimeout(()=>{
+    track.style.transition = "0.7s cubic-bezier(0.22, 1, 0.36, 1)";
+  },50);
+}
 
 function bukaMultiProduk(ids){
 
