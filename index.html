@@ -461,6 +461,18 @@ footer{
   cursor:pointer;
   z-index:10;
   transition:.3s;
+
+  outline:none; /* 🔥 HILANGIN KOTAK */
+  -webkit-tap-highlight-color: transparent; /* 🔥 ANDROID */
+}
+
+.ads-btn:focus{
+  outline:none;
+}
+
+.ads-btn:active{
+  outline:none;
+  background:rgba(0,0,0,.25); /* opsional efek tekan */
 }
 
 .ads-btn:hover{
