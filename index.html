@@ -5,16 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fendy Freelance Store</title>
 <link rel="manifest" href="manifest.json">
-<link rel="preload" as="image" href="iklan1.jpg">
-<link rel="preload" as="image" href="iklan2.jpg">
-<link rel="preload" as="image" href="iklan3.jpg">
-<link rel="preload" as="image" href="iklan4.jpg">
-<link rel="preload" as="image" href="iklan5.jpg">
-<link rel="preload" as="image" href="iklan6.jpg">
 <meta name="theme-color" content="#e11d48">
 <link rel="apple-touch-icon" href="logo.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
 <style>
   html{
@@ -36,19 +28,6 @@ body{
   background:
     linear-gradient(rgba(2,6,23,.25), rgba(2,6,23,.9)),
     url("bg.jpg") center/cover no-repeat fixed;
-}
-body{
-  -webkit-overflow-scrolling: touch;
-}
-
-/* 🔴 KHUSUS iPHONE */
-@supports (-webkit-touch-callout: none) {
-  body{
-    background:
-      linear-gradient(rgba(2,6,23,.25), rgba(2,6,23,.9)),
-      url("bg.jpg") center/cover no-repeat;
-    background-attachment: scroll; /* WAJIB */
-  }
 }
 
 header{
@@ -422,111 +401,6 @@ footer{
   color:#cbd5f5;
   background:rgba(2,6,23,.85);
 }
-
-/* 🔴 IKLAN FULL BANNER (IKUT RASIO GAMBAR) */
-.ads-slider{
-  position:relative;
-  margin:20px auto;
-  width:100%;
-  max-width:1100px; /* ⬅ biar gede kayak contoh */
-  aspect-ratio: 2161 / 800; /* ⬅ mirip gambar kamu */
-  overflow:hidden;
-  border-radius:18px;
-  background:#000;
-}
-
-
-.ads-item img,
-.ads-item video{
-  width:100%;
-  height:100%;
-  object-fit:cover; /* 🔥 WAJIB */
-  display:block;
-
-  transform:translateZ(0);
-}
-
-/* 🔴 TOMBOL IKLAN MODERN */
-.ads-btn{
-  position:absolute;
-  top:50%;
-  transform:translateY(-50%);
-  width:38px;
-  height:38px;
-  border-radius:50%;
-  border:none;
-  background:rgba(0,0,0,.10);
-  color:#fff;
-  font-size:28px;
-  cursor:pointer;
-  z-index:10;
-  transition:.3s;
-
-  outline:none; /* 🔥 HILANGIN KOTAK */
-  -webkit-tap-highlight-color: transparent; /* 🔥 ANDROID */
-}
-
-.ads-btn:focus{
-  outline:none;
-}
-
-.ads-btn:active{
-  outline:none;
-  background:rgba(0,0,0,.25); /* opsional efek tekan */
-}
-
-.ads-btn:hover{
-  background:rgba(0,0,0,.7);
-}
-
-.ads-btn.prev{ left:12px; }
-.ads-btn.next{ right:12px; }
-
-.ads-track{
-  display:flex;
-  height:100%;
-  width:100%;
-  transform: translate3d(0,0,0);
-}
-
-.ads-track{
-  will-change: transform;
-}
-
-.ads-item{
-  min-width:100%;        /* 🔥 tiap slide full layar */
-  width:100%;
-  height:100%;
-  flex-shrink:0;         /* 🔥 biar gak ngecil */
-  position:relative;
-
-  background:#020617; /* 🔥 anti hitam kosong */
-}
-
-.ads-dots{
-  position:absolute;
-  bottom:10px;
-  left:50%;
-  transform:translateX(-50%);
-  display:flex;
-  gap:6px;
-  z-index:10;
-}
-
-.ads-dots span{
-  width:8px;
-  height:8px;
-  background:#fff;
-  opacity:.5;
-  border-radius:50%;
-  cursor:pointer;
-}
-
-.ads-dots span.active{
-  opacity:1;
-  background:#facc15;
-}
-
 </style>
 </head>
 
@@ -552,60 +426,21 @@ footer{
     <input id="search" placeholder="Cari produk... (contoh: axioo)">
   </div>
 
-
   <!-- 🔴 TAMBAHAN: RUNNING TEXT -->
 <div class="running-text">
   <div class="marquee">
     <div class="marquee__group">
       <span>⚠️ HATI-HATI PENIPUAN! • TRANSAKSI HANYA MELALUI WA ADMIN RESMI FENDY FREELANCE STORE • WA RESMI HANYA 0821-5371-9616 • FREE ONGKIR AREA SINGKAWANG DAN SEKITARNYA • KETERSEDIAAN STOK TIDAK SELALU READY •
-      HARGA DAPAT BERUBAH SEWAKTU-WAKTU TANPA PEMBERITAHUAN •</span>
+      HARGA DAPAT BERUBAH SEWAKTU-WAKTU TANPA PEMBERITAHUAN • 🤝 FREELANCE TAPI BUKAN ASAL JUAL • 🛠️ SEMASA UNIT DALAM MASA GARANSI JIKA UNIT BERMASALAH / KLAIM GARANSI, AKAN KAMI BANTU SAMPAI TUNTAS  • KAMI TIDAK HANYA FOKUS JUALAN, TAPI JUGA MENJAGA AFTERSALES & KEPERCAYAAN CUSTOMER•</span>
     </div>
     <div class="marquee__group">
       <span>⚠️ HATI-HATI PENIPUAN! • TRANSAKSI HANYA MELALUI WA ADMIN RESMI FENDY FREELANCE STORE • WA RESMI HANYA 0821-5371-9616 • FREE ONGKIR AREA SINGKAWANG DAN SEKITARNYA • KETERSEDIAAN STOK TIDAK SELALU READY •
-      HARGA DAPAT BERUBAH SEWAKTU-WAKTU TANPA PEMBERITAHUAN •</span>
+      HARGA DAPAT BERUBAH SEWAKTU-WAKTU TANPA PEMBERITAHUAN • 🤝 FREELANCE TAPI BUKAN ASAL JUAL • 🛠️ SEMASA UNIT DALAM MASA GARANSI JIKA UNIT BERMASALAH / KLAIM GARANSI, AKAN KAMI BANTU SAMPAI TUNTAS  • KAMI TIDAK HANYA FOKUS JUALAN, TAPI JUGA MENJAGA AFTERSALES & KEPERCAYAAN CUSTOMER•</span>
     </div>
   </div>
 </div>
 
-<!-- 🔴 IKLAN SLIDER -->
-<div class="ads-slider">
 
-  <button class="ads-btn prev" onclick="geserIklan(-1)">‹</button>
-
-  <div class="ads-track" id="adsTrack">
-    <div class="ads-item" onclick="bukaMultiProduk(['P347','P348'])">
-  <img src="iklan1.jpg" loading="eager" decoding="sync">
-</div>
-
-    <div class="ads-item" onclick="bukaMultiProduk(['P356','P357','P358'])">
-  <img src="iklan2.jpg" loading="eager" decoding="sync">
-</div>
-
-    <div class="ads-item" onclick="bukaMultiProduk(['P282','P283'])">
-  <img src="iklan3.jpg" loading="eager" decoding="sync">
-</div>
-
-    <div class="ads-item" onclick="bukaMultiProduk(['P707','P708','P709','P710','P711','P712','P713','P714','P715','P716','P717','P718','P719','P720'])">
-  <img src="iklan4.jpg" loading="eager" decoding="sync">
-</div>
-
-    <div class="ads-item" onclick="bukaMultiProduk(['P408','P409'])">
-  <img src="iklan5.jpg" loading="eager" decoding="sync">
-</div>
-
-    <div class="ads-item" onclick="bukaMultiProduk(['P426','P429','P430'])">
-  <img src="iklan6.jpg" loading="eager" decoding="sync">
-</div>
-
-  </div>
-
-  <!-- 🔴 TOMBOL KANAN -->
-  <button class="ads-btn next" onclick="geserIklan(1)">›</button>
-
-  <!-- 🔴 DOT -->
-  <div class="ads-dots" id="adsDots"></div>
-
-</div>
 
 </section>
 <!-- 🔴 PROMO / FLASH SALE (AUTO HIDE) -->
@@ -1020,14 +855,9 @@ function render(page, data){
     tampilDetail(data.id);
   }
 
-  else if(page === "iklan"){
-  tampilIklan(data.ids);
-}
-
   else if(page === "search"){
   searchState.keyword = data.keyword;
   renderSearchUlang();
-
 
   setTimeout(()=>{
     window.scrollTo({
@@ -1061,7 +891,7 @@ function renderSearchUlang(){
     return;
   }
 
-  hasil.forEach(p=>{
+  hasil.slice(0,20).forEach(p=>{
     view.innerHTML += `
       <div class="card" onclick="goTo('detail',{id:'${p.id}'})">
         <img src="${p.foto}">
@@ -1266,43 +1096,36 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js');
 }
 
-// 🔴 MATIKAN DI iPHONE
-const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+let deferredPrompt;
+let installBtn = document.createElement("button");
 
-if(!isIOS){
+installBtn.innerText = "📲 Install Aplikasi";
+installBtn.style.position = "fixed";
+installBtn.style.bottom = "90px";
+installBtn.style.right = "20px";
+installBtn.style.padding = "12px 18px";
+installBtn.style.border = "none";
+installBtn.style.borderRadius = "50px";
+installBtn.style.background = "#e11d48";
+installBtn.style.color = "#fff";
+installBtn.style.fontWeight = "bold";
+installBtn.style.display = "none";
+installBtn.style.zIndex = "9999";
 
-  let deferredPrompt;
-  let installBtn = document.createElement("button");
+document.body.appendChild(installBtn);
 
-  installBtn.innerText = "📲 Install Aplikasi";
-  installBtn.style.position = "fixed";
-  installBtn.style.bottom = "90px";
-  installBtn.style.right = "20px";
-  installBtn.style.padding = "12px 18px";
-  installBtn.style.border = "none";
-  installBtn.style.borderRadius = "50px";
-  installBtn.style.background = "#e11d48";
-  installBtn.style.color = "#fff";
-  installBtn.style.fontWeight = "bold";
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  installBtn.style.display = "block";
+});
+
+installBtn.addEventListener("click", async () => {
   installBtn.style.display = "none";
-  installBtn.style.zIndex = "9999";
-
-  document.body.appendChild(installBtn);
-
-  window.addEventListener("beforeinstallprompt", (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    installBtn.style.display = "block";
-  });
-
-  installBtn.addEventListener("click", async () => {
-    installBtn.style.display = "none";
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    deferredPrompt = null;
-  });
-
-}
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  deferredPrompt = null;
+});
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js').then(reg => {
@@ -1374,244 +1197,6 @@ window.addEventListener("popstate", function(e){
     });
   },0);
 });
-
-
-let indexIklan = 1; 
-const track = document.getElementById("adsTrack");
-let items = track.children;
-const dotsWrap = document.getElementById("adsDots");
-
-let isSliding = false;
-
-const totalAsli = items.length;
-
-// 🔴 CLONE DEPAN & BELAKANG
-const firstClone = items[0].cloneNode(true);
-const lastClone = items[items.length - 1].cloneNode(true);
-
-track.appendChild(firstClone);
-track.insertBefore(lastClone, items[0]);
-
-items = track.children; // 🔴 refresh ulang setelah clone
-
-// 🔴 WAJIB: paksa browser render dulu
-track.offsetHeight;
-
-track.style.transform = `translateX(-100%)`;
-
-/* 🔴 BUAT DOT */
-for(let i=0;i<totalAsli;i++){
-  const dot = document.createElement("span");
-
-  dot.onclick = ()=>{
-    indexIklan = i + 1; // 🔴 WAJIB +1 karena clone depan
-    updateIklan();
-    resetAutoSlide();
-  };
-
-  dotsWrap.appendChild(dot);
-}
-
-/* 🔴 UPDATE SLIDE */
-function updateIklan(){
-  // 🔴 animasi smooth
-  track.style.transition = "0.7s cubic-bezier(0.22, 1, 0.36, 1)";
-  track.style.transform = `translateX(-${indexIklan * 100}%)`;
-
-  // 🔴 FIX DOT (karena pakai clone)
-  let realIndex = indexIklan - 1;
-
-  if(realIndex < 0) realIndex = totalAsli - 1;
-if(realIndex >= totalAsli) realIndex = 0;
-
-  [...dotsWrap.children].forEach((d,i)=>{
-    d.classList.toggle("active", i === realIndex);
-  });
-
-  // 🔴 VIDEO AUTO PLAY (TETAP JALAN)
-  [...track.children].forEach((item,i)=>{
-    const v = item.querySelector("video");
-    if(v){
-      if(i === indexIklan){
-        v.currentTime = 0;
-        v.play();
-      }else{
-        v.pause();
-      }
-    }
-  });
-}
-
-/* 🔴 PINDAH */
-function geserIklan(arah){
-
-  if(isSliding) return; // 🔴 STOP kalau masih animasi
-
-  isSliding = true;     // 🔴 kunci
-
-  if(track.style.transition === "none"){
-    track.style.transition = "0.7s cubic-bezier(0.22, 1, 0.36, 1)";
-  }
-
-  indexIklan += arah;
-
-  updateIklan();
-  resetAutoSlide();
-}
-
-function goIklan(i){
-  indexIklan = i;
-  updateIklan();
-  resetAutoSlide(); // ⬅ TAMBAHAN
-}
-
-function updateDots(){
-  let realIndex = indexIklan - 1;
-
-  if(realIndex < 0) realIndex = totalAsli - 1;
-  if(realIndex >= totalAsli) realIndex = 0;
-
-  [...dotsWrap.children].forEach((d,i)=>{
-    d.classList.toggle("active", i === realIndex);
-  });
-}
-
-let autoSlide;
-
-function startAutoSlide(){
-  autoSlide = setInterval(()=>{
-    geserIklan(1);
-  }, 6000);
-}
-
-function resetAutoSlide(){
-  clearInterval(autoSlide);
-  autoSlide = setInterval(()=>{
-    geserIklan(1);
-  }, 7000);
-}
-
-/* 🔴 SWIPE HP */
-let startX = 0;
-
-track.addEventListener("touchstart", e=>{
-  startX = e.touches[0].clientX;
-});
-
-track.addEventListener("touchend", e=>{
-  let endX = e.changedTouches[0].clientX;
-
-  if(startX - endX > 50){
-    geserIklan(1);
-  }else if(endX - startX > 50){
-    geserIklan(-1);
-  }
-});
-
-track.addEventListener("transitionend", ()=>{
-  const total = track.children.length;
-
-  if(indexIklan === 0){
-    track.style.transition = "none";
-    indexIklan = total - 2;
-    track.style.transform = `translateX(-${indexIklan * 100}%)`;
-  }
-
-  if(indexIklan === total - 1){
-    track.style.transition = "none";
-    indexIklan = 1;
-    track.style.transform = `translateX(-${indexIklan * 100}%)`;
-  }
-
-  isSliding = false; // 🔴 buka kunci setelah selesai
-
-  updateDots();
-});
-
-/* 🔴 INIT */
-updateIklan();
-
-const images = track.querySelectorAll("img");
-
-let loaded = 0;
-
-images.forEach(img => {
-  if(img.complete){
-    loaded++;
-  }else{
-    img.onload = () => {
-      loaded++;
-      if(loaded === images.length){
-        startSlider();
-      }
-    };
-  }
-});
-
-if(loaded === images.length){
-  startSlider();
-}
-
-function startSlider(){
-  track.style.transition = "none";
-  track.style.transform = `translateX(-100%)`;
-
-  setTimeout(()=>{
-    track.style.transition = "0.7s cubic-bezier(0.22, 1, 0.36, 1)";
-    startAutoSlide();
-  },50);
-}
-
-function bukaMultiProduk(ids){
-
-  // 🔴 simpan posisi scroll saat klik iklan
-  const scrollY = window.scrollY;
-
-  const hasil = produk.filter(p => ids.includes(p.id));
-
-  // 🔴 kalau cuma 1 produk → tetap ke detail (TAPI MASUK HISTORY IKLAN DULU)
-  if(hasil.length === 1){
-
-    history.pushState({
-      page: "iklan",
-      data: { ids: ids },
-      scroll: scrollY
-    }, "", "#iklan");
-
-    goTo('detail',{id:hasil[0].id});
-    return;
-  }
-
-  // 🔴 kalau banyak produk → jadikan halaman sendiri
-  history.pushState({
-    page: "iklan",
-    data: { ids: ids },
-    scroll: scrollY
-  }, "", "#iklan");
-
-  render("iklan", { ids });
-}
-
-function tampilIklan(ids){
-
-  const hasil = produk.filter(p => ids.includes(p.id));
-
-  judul.innerText = "Produk Iklan";
-  view.innerHTML = `<div class="back" onclick="history.back()">⬅ Kembali</div>`;
-
-  hasil.forEach(p=>{
-    view.innerHTML += `
-      <div class="card" onclick="goTo('detail',{id:'${p.id}'})">
-        <img src="${p.foto}">
-        <h3>${p.nama}</h3>
-        <div class="price">Rp ${hargaAktif(p).toLocaleString("id-ID")}</div>
-      </div>
-    `;
-  });
-
-  window.scrollTo({top:0});
-}
-
 </script>
 
 </body>
