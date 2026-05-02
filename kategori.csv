@@ -1,4 +1,5 @@
 id,nama,desk,foto
+SMARTPHONE,SMARTPHONE,HP  TABLET  WATCH  DLL,img\kategori\SMARTPHONE.jfif
 PC READY,PC READY,PC rakitan siap pakai,img\kategori\KATEGORI PC1.webp
 LAPTOP,LAPTOP,Bisnis sekolah dan gaming,img\kategori\KATEGORI LAPTOP1.jpg
 MONITOR,MONITOR,Monitor,img\kategori\MONITOR LG.jfif
@@ -12,7 +13,6 @@ HARDDISK,HARDDISK,,img\kategori\HDD LOGO 1.jfif
 SSD,SSD,penyimpanan berkecepatan tinggi,img\kategori\ssd.jpg
 PRINTER,PRINTER,kebutuhan rumah maupun kantor,img\kategori\PRINTER 1.jfif
 SPEAKER,SPEAKER,,img\kategori\HK_AURA_STUDIO_4_BLACK_HERO_POLAR_41834_x4.jpg
-SMARTPHONE,SMARTPHONE,HP  TABLET  WATCH  DLL,img\kategori\SMARTPHONE.jfif
 CCTV,CCTV,Kamera pengawas,img\kategori\KATEGORI CCTV1.jpg
 AKSESORIES ,AKSESORIES,,img\kategori\AKSESORIES LOGO.jfif
 PLAY STATION,PLAY STATION,,img\kategori\SONY PLAYSTATION.png
