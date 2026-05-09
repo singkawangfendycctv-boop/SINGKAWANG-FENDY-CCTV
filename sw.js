@@ -1,5 +1,5 @@
-const CACHE_STATIC = "fendy-static-v2.5";
-const CACHE_DYNAMIC = "fendy-dynamic-v2.5";
+const CACHE_STATIC = "fendy-static-v2.6";
+const CACHE_DYNAMIC = "fendy-dynamic-v2.6";
 
 const STATIC_FILES = [
   "/",
