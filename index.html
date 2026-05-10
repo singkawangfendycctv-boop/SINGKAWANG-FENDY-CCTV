@@ -441,25 +441,17 @@ footer{
 @media(max-width:768px){
 
   .ads-slider{
-    aspect-ratio:auto;
-    height:auto;
-    min-height:190px;
+    aspect-ratio: 16 / 9;
     border-radius:16px;
-  }
-
-  .ads-item{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:#000;
+    background:transparent;
   }
 
   .ads-item img,
   .ads-item video{
     width:100%;
-    height:auto;
-    object-fit:contain;
-    display:block;
+    height:100%;
+    object-fit:cover;
+    object-position:center;
   }
 
 }
