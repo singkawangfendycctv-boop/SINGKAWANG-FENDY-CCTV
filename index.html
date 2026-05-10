@@ -425,34 +425,18 @@ footer{
   background:rgba(2,6,23,.85);
 }
 
-/* 🔴 IKLAN SLIDER FIX SEMUA DEVICE */
+/* 🔴 IKLAN FULL BANNER (IKUT RASIO GAMBAR) */
 .ads-slider{
   position:relative;
   margin:20px auto;
   width:100%;
-  max-width:1100px;
+  max-width:1100px; /* ⬅ biar gede kayak contoh */
+  aspect-ratio: 2161 / 800; /* ⬅ mirip gambar kamu */
   overflow:hidden;
   border-radius:18px;
-  background:transparent;
+  background:#000;
 }
 
-/* 🔴 GAMBAR */
-.ads-item img,
-.ads-item video{
-  width:100%;
-  height:auto;
-  display:block;
-  object-fit:contain;
-}
-
-/* 🔴 MOBILE */
-@media(max-width:768px){
-
-  .ads-slider{
-    border-radius:16px;
-  }
-
-}
 
 .ads-item img,
 .ads-item video{
