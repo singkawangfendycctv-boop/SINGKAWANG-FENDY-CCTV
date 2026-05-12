@@ -1351,10 +1351,30 @@ search.addEventListener("input", function () {
 
 /* ZOOM */
 function zoomFoto(src){
-  zoomImg.src=src;
-  zoom.style.display="flex";
+
+  // 🔴 tambah history khusus zoom
+  history.pushState({
+    zoom:true
+  }, "", "#zoom");
+
+  zoomImg.src = src;
+  zoom.style.display = "flex";
 }
-zoom.onclick=()=>zoom.style.display="none";
+
+function closeZoom(){
+  zoom.style.display = "none";
+}
+
+// klik overlay tutup zoom
+zoom.onclick = ()=>{
+
+  closeZoom();
+
+  // 🔴 balik history zoom
+  if(history.state?.zoom){
+    history.back();
+  }
+};
 
 /* ================================================= */
 /* ===== FIX FOTO PRODUK (PC & MOBILE, TANPA UBAH HTML) ===== */
@@ -1470,6 +1490,12 @@ if ('serviceWorker' in navigator) {
 }
 
 window.addEventListener("popstate", function(e){
+
+    // 🔴 kalau zoom sedang buka → tutup zoom saja
+  if(zoom.style.display === "flex"){
+    closeZoom();
+    return;
+  }
 
   // 🔥 kalau keluar dari halaman search → kosongkan input
   if(e.state?.page !== "search"){
