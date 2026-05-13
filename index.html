@@ -1603,11 +1603,11 @@ if(realIndex >= totalAsli) realIndex = 0;
 }
 
 /* 🔴 PINDAH */
-function geserIklan(arah){
+function geserIklan(arah, manual = true){
 
-  if(isSliding) return; // 🔴 STOP kalau masih animasi
+  if(isSliding) return;
 
-  isSliding = true;     // 🔴 kunci
+  isSliding = true;
 
   if(track.style.transition === "none"){
     track.style.transition = "0.7s cubic-bezier(0.22, 1, 0.36, 1)";
@@ -1616,8 +1616,12 @@ function geserIklan(arah){
   indexIklan += arah;
 
   updateIklan();
-  showDots();
-  resetAutoSlide();
+
+  // 🔥 hanya tampil kalau manual
+  if(manual){
+    showDots();
+    resetAutoSlide();
+  }
 }
 
 function goIklan(i){
@@ -1654,15 +1658,16 @@ let autoSlide;
 
 function startAutoSlide(){
   autoSlide = setInterval(()=>{
-    geserIklan(1);
-  }, 10000);
+    geserIklan(1, false); // 🔥 false = auto
+  }, 15000);
 }
 
 function resetAutoSlide(){
   clearInterval(autoSlide);
+
   autoSlide = setInterval(()=>{
-    geserIklan(1);
-  }, 10000);
+    geserIklan(1, false); // 🔥 false = auto
+  }, 15000);
 }
 
 /* 🔴 SWIPE HP */
