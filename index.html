@@ -521,6 +521,16 @@ footer{
   display:flex;
   gap:6px;
   z-index:10;
+
+  opacity:0;                 /* 🔥 default sembunyi */
+  pointer-events:none;
+  transition:opacity .3s;
+}
+
+/* 🔥 saat aktif */
+.ads-dots.show{
+  opacity:1;
+  pointer-events:auto;
 }
 
 .ads-dots span{
@@ -1606,6 +1616,7 @@ function geserIklan(arah){
   indexIklan += arah;
 
   updateIklan();
+  showDots();
   resetAutoSlide();
 }
 
@@ -1626,19 +1637,32 @@ function updateDots(){
   });
 }
 
+/* 🔴 AUTO SHOW/HIDE DOT */
+let hideDotsTimer;
+
+function showDots(){
+  dotsWrap.classList.add("show");
+
+  clearTimeout(hideDotsTimer);
+
+  hideDotsTimer = setTimeout(()=>{
+    dotsWrap.classList.remove("show");
+  }, 2500); // ⬅ 2.5 detik hilang lagi
+}
+
 let autoSlide;
 
 function startAutoSlide(){
   autoSlide = setInterval(()=>{
     geserIklan(1);
-  }, 6000);
+  }, 10000);
 }
 
 function resetAutoSlide(){
   clearInterval(autoSlide);
   autoSlide = setInterval(()=>{
     geserIklan(1);
-  }, 7000);
+  }, 10000);
 }
 
 /* 🔴 SWIPE HP */
@@ -1654,6 +1678,7 @@ track.addEventListener("touchend", e=>{
   if(startX - endX > 50){
     geserIklan(1);
   }else if(endX - startX > 50){
+    showDots();
     geserIklan(-1);
   }
 });
