@@ -70,7 +70,11 @@ header{
 }
 header img{width:42px}
 
-.hero{text-align:center;padding:70px 20px}
+.hero{
+  text-align:center;
+  padding:70px 20px;
+  position:relative;
+}
 .search-box input{
   width:100%;
   max-width:420px;
@@ -656,6 +660,43 @@ flex-wrap:wrap;
 </header>
 
 <section class="hero">
+  <!-- 🔴 TOMBOL TESTIMONI POJOK KANAN ATAS -->
+<div style="
+position:absolute;
+top:18px;
+right:18px;
+z-index:50;
+">
+
+  <button onclick="bukaTestimoni()" style="
+  padding:11px 18px;
+  border:none;
+  border-radius:999px;
+
+  background:
+  linear-gradient(
+    135deg,
+    #e11d48,
+    #be123c
+  );
+
+  color:#fff;
+  font-weight:700;
+  font-size:13px;
+  cursor:pointer;
+
+  box-shadow:
+  0 0 14px rgba(225,29,72,.35);
+
+  transition:.3s;
+  ">
+
+    Foto Testimoni
+
+  </button>
+
+</div>
+
   <h2>SELAMAT DATANG</h2>
   <p>Komputer • Laptop • CCTV • Smartphone • Service • Dll</p>
   <div class="search-box">
@@ -1792,7 +1833,167 @@ function tampilIklan(ids){
   window.scrollTo({top:0});
 }
 
-</script>
+/* ================= TESTIMONI ================= */
 
+const daftarTestimoni = [];
+
+for(let i = 1; i <= 49; i++){
+
+  daftarTestimoni.push(`T${i}.jpg`);
+
+}
+
+let indexTestimoni = 0;
+
+function bukaTestimoni(){
+
+  document.getElementById("testimoniBox").style.display = "flex";
+
+  tampilTestimoni();
+}
+
+function tutupTestimoni(){
+
+  document.getElementById("testimoniBox").style.display = "none";
+}
+
+function tampilTestimoni(){
+
+  document.getElementById("testimoniImg").src =
+    daftarTestimoni[indexTestimoni];
+}
+
+function geserTestimoni(arah){
+
+  indexTestimoni += arah;
+
+  if(indexTestimoni < 0){
+    indexTestimoni = daftarTestimoni.length - 1;
+  }
+
+  if(indexTestimoni >= daftarTestimoni.length){
+    indexTestimoni = 0;
+  }
+
+  tampilTestimoni();
+}
+
+/* 🔴 SWIPE HP */
+let startXTestimoni = 0;
+
+const testiBox = document.getElementById("testimoniBox");
+
+testiBox.addEventListener("touchstart", e=>{
+
+  startXTestimoni = e.touches[0].clientX;
+});
+
+testiBox.addEventListener("touchend", e=>{
+
+  const endX = e.changedTouches[0].clientX;
+
+  if(startXTestimoni - endX > 50){
+    geserTestimoni(1);
+  }
+
+  else if(endX - startXTestimoni > 50){
+    geserTestimoni(-1);
+  }
+
+});
+
+</script>
+<!-- ================= TESTIMONI ================= -->
+
+<div id="testimoniBox" style="
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.96);
+z-index:99999;
+
+display:none;
+align-items:center;
+justify-content:center;
+
+overflow:hidden;
+">
+
+  <!-- TOMBOL KIRI -->
+  <button onclick="geserTestimoni(-1)" style="
+  position:absolute;
+  left:16px;
+  top:50%;
+  transform:translateY(-50%);
+
+  width:52px;
+  height:52px;
+
+  border:none;
+  border-radius:50%;
+
+  background:rgba(255,255,255,.14);
+  color:#fff;
+
+  font-size:34px;
+  cursor:pointer;
+  z-index:10;
+  ">
+    ‹
+  </button>
+
+  <!-- GAMBAR -->
+  <img id="testimoniImg" src="" style="
+  max-width:100%;
+  max-height:100%;
+  object-fit:contain;
+  ">
+
+  <!-- TOMBOL KANAN -->
+  <button onclick="geserTestimoni(1)" style="
+  position:absolute;
+  right:16px;
+  top:50%;
+  transform:translateY(-50%);
+
+  width:52px;
+  height:52px;
+
+  border:none;
+  border-radius:50%;
+
+  background:rgba(255,255,255,.14);
+  color:#fff;
+
+  font-size:34px;
+  cursor:pointer;
+  z-index:10;
+  ">
+    ›
+  </button>
+
+  <!-- TUTUP -->
+  <button onclick="tutupTestimoni()" style="
+  position:absolute;
+  top:20px;
+  right:20px;
+
+  width:46px;
+  height:46px;
+
+  border:none;
+  border-radius:50%;
+
+  background:#e11d48;
+  color:#fff;
+
+  font-size:22px;
+  cursor:pointer;
+
+  z-index:11;
+  ">
+    ✕
+  </button>
+
+</div>
 </body>
 </html>
