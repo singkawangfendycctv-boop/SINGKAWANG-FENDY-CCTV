@@ -1577,6 +1577,12 @@ if ('serviceWorker' in navigator) {
 
 window.addEventListener("popstate", function(e){
 
+  // 🔴 kalau testimoni sedang buka → tutup dulu
+  if(document.getElementById("testimoniBox").style.display === "flex"){
+    tutupTestimoni();
+    return;
+  }
+
     // 🔴 kalau zoom sedang buka → tutup zoom saja
   if(zoom.style.display === "flex"){
     closeZoom();
@@ -1881,6 +1887,11 @@ for(let i = 1; i <= 49; i++){
 let indexTestimoni = 0;
 
 function bukaTestimoni(){
+
+  // 🔴 tambah history khusus testimoni
+  history.pushState({
+    testimoni:true
+  }, "", "#testimoni");
 
   indexTestimoni = 0;
 
