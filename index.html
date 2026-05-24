@@ -1479,17 +1479,37 @@ document.addEventListener("click", function(e){
   zoomFoto(img.src);
 }, true);
 
-document.addEventListener("touchstart", function(e){
+/* ================================================= */
+/* ===== FIX FOTO PRODUK MOBILE ANTI SALAH KLIK ===== */
+/* ================================================= */
+
+let touchMoved = false;
+
+document.addEventListener("touchmove", function(){
+  touchMoved = true;
+}, { passive:true });
+
+document.addEventListener("touchstart", function(){
+  touchMoved = false;
+}, { passive:true });
+
+document.addEventListener("click", function(e){
+
   const img = e.target.closest(".img-produk");
   if(!img) return;
 
+  // hanya aktif di halaman detail
   if(nav.level !== "detail") return;
+
+  // kalau habis scroll / geser jangan zoom
+  if(touchMoved) return;
 
   e.preventDefault();
   e.stopPropagation();
-  e.stopImmediatePropagation();
+
   zoomFoto(img.src);
-}, { capture:true, passive:false });
+
+}, true);
 
 
 if ('serviceWorker' in navigator) {
