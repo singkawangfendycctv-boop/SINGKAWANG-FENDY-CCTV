@@ -582,6 +582,17 @@ footer{
   border:0;
 }
 
+@keyframes blinkPromo{
+  0%,100%{
+    opacity:1;
+    transform:scale(1);
+  }
+  50%{
+    opacity:.75;
+    transform:scale(1.05);
+  }
+}
+
 </style>
 </head>
 
@@ -884,6 +895,49 @@ function hargaAktif(p){
   return p.harga;
 }
 
+function renderPromoInfo(p){
+
+  if(
+    p.harga_promo &&
+    p.harga_promo > 0 &&
+    p.harga_promo < p.harga
+  ){
+
+    const hemat = p.harga - p.harga_promo;
+    const diskon = Math.round((hemat / p.harga) * 100);
+
+    return `
+      <div class="price-normal">
+        Rp ${p.harga.toLocaleString("id-ID")}
+      </div>
+
+      <div class="price-promo">
+        Rp ${p.harga_promo.toLocaleString("id-ID")}
+      </div>
+
+      <div style="
+        margin-top:6px;
+        display:inline-block;
+        background:#dc2626;
+        color:#fff;
+        padding:4px 10px;
+        border-radius:999px;
+        font-size:12px;
+        font-weight:700;
+        animation:blinkPromo 1.4s infinite;
+      ">
+        🔥 PROMO HEMAT ${diskon}%
+      </div>
+    `;
+  }
+
+  return `
+    <div class="price">
+      Rp ${p.harga.toLocaleString("id-ID")}
+    </div>
+  `;
+}
+
 /* NAV STATE */
 /* ================= FIX SCROLL (TANPA GANGGU KODING LAIN) ================= */
 let nav={
@@ -1033,8 +1087,7 @@ function tampilProduk(id,nama){
 
       <img src="${p.foto}" class="img-produk">
       <h3>${p.nama}</h3>
-      <div class="price">
-        Rp ${hargaAktif(p).toLocaleString("id-ID")}
+      ${renderPromoInfo(p)}
       </div>
 
     </div>`;
@@ -1114,8 +1167,8 @@ const qty = item ? item.qty : 0;
     <div class="card">
       <img src="${p.foto}" class="img-produk">
       <h2>${p.nama}</h2>
-      <!-- 🔴 PERBAIKAN -->
-<div class="price">Rp ${hargaAktif(p).toLocaleString("id-ID")}</div>
+
+${renderPromoInfo(p)}
 
 ${p.bonus && p.bonus.trim() !== "" ? `
   <div style="
@@ -1280,7 +1333,7 @@ function renderSearchUlang(){
       <div class="card" onclick="goTo('detail',{id:'${p.id}'})">
         <img src="${p.foto}">
         <h3>${p.nama}</h3>
-        <div class="price">Rp ${Number(p.harga).toLocaleString("id-ID")}</div>
+        ${renderPromoInfo(p)}
       </div>`;
   });
 }
@@ -1890,7 +1943,7 @@ function tampilIklan(ids){
       <div class="card" onclick="goTo('detail',{id:'${p.id}'})">
         <img src="${p.foto}">
         <h3>${p.nama}</h3>
-        <div class="price">Rp ${hargaAktif(p).toLocaleString("id-ID")}</div>
+        ${renderPromoInfo(p)}
       </div>
     `;
   });
