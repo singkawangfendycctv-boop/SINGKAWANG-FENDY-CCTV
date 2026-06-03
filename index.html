@@ -593,16 +593,6 @@ footer{
   }
 }
 
-#testimoniBox{
-  touch-action: pan-y;
-}
-
-#testimoniImg{
-  touch-action: pan-y;
-  user-select:none;
-  -webkit-user-drag:none;
-}
-
 </style>
 </head>
 
@@ -1966,16 +1956,13 @@ function tampilIklan(ids){
 const daftarTestimoni = [];
 
 for(let i = 1; i <= 64; i++){
-
   daftarTestimoni.push(`T${i}.jpg`);
-
 }
 
 let indexTestimoni = 0;
 
 function bukaTestimoni(){
 
-  // 🔴 tambah history khusus testimoni
   history.pushState({
     testimoni:true
   }, "", "#testimoni");
@@ -1988,7 +1975,6 @@ function bukaTestimoni(){
 }
 
 function tutupTestimoni(){
-
   document.getElementById("testimoniBox").style.display = "none";
 }
 
@@ -1997,22 +1983,9 @@ function tampilTestimoni(){
   const img = document.getElementById("testimoniImg");
 
   img.src = daftarTestimoni[indexTestimoni];
-
-  const next = new Image();
-
-  next.src =
-    daftarTestimoni[
-      (indexTestimoni + 1) % daftarTestimoni.length
-    ];
 }
 
-let geserLock = false;
-
 function geserTestimoni(arah){
-
-  if(geserLock) return;
-
-  geserLock = true;
 
   indexTestimoni += arah;
 
@@ -2025,43 +1998,89 @@ function geserTestimoni(arah){
   }
 
   tampilTestimoni();
-
-  setTimeout(()=>{
-    geserLock = false;
-  },150);
 }
 
-/* 🔴 SWIPE HP */
-let startXTestimoni = 0;
-let endXTestimoni = 0;
+/* ================= SWIPE TESTIMONI ================= */
 
 const testiBox = document.getElementById("testimoniBox");
+
+let startXTestimoni = 0;
+let startYTestimoni = 0;
+let isDraggingTestimoni = false;
 
 testiBox.addEventListener("touchstart", e=>{
 
   startXTestimoni = e.touches[0].clientX;
-  endXTestimoni = startXTestimoni;
+  startYTestimoni = e.touches[0].clientY;
+  isDraggingTestimoni = true;
 
 },{passive:true});
 
 testiBox.addEventListener("touchmove", e=>{
 
-  endXTestimoni = e.touches[0].clientX;
+  if(!isDraggingTestimoni) return;
 
 },{passive:true});
 
-testiBox.addEventListener("touchend", ()=>{
+testiBox.addEventListener("touchend", e=>{
 
-  const diff = startXTestimoni - endXTestimoni;
+  if(!isDraggingTestimoni) return;
 
-  if(Math.abs(diff) < 40) return;
+  isDraggingTestimoni = false;
 
-  if(diff > 0){
-    geserTestimoni(1);
-  }else{
-    geserTestimoni(-1);
+  const endX = e.changedTouches[0].clientX;
+  const endY = e.changedTouches[0].clientY;
+
+  const diffX = endX - startXTestimoni;
+  const diffY = endY - startYTestimoni;
+
+  if(
+    Math.abs(diffX) > 50 &&
+    Math.abs(diffX) > Math.abs(diffY)
+  ){
+
+    if(diffX < 0){
+      geserTestimoni(1);
+    }else{
+      geserTestimoni(-1);
+    }
+
   }
 
+},{passive:true});
+
+/* ================= DRAG MOUSE PC ================= */
+
+let mouseStartX = 0;
+let mouseDown = false;
+
+testiBox.addEventListener("mousedown", e=>{
+  mouseDown = true;
+  mouseStartX = e.clientX;
+});
+
+testiBox.addEventListener("mouseup", e=>{
+
+  if(!mouseDown) return;
+
+  mouseDown = false;
+
+  const diffX = e.clientX - mouseStartX;
+
+  if(Math.abs(diffX) > 80){
+
+    if(diffX < 0){
+      geserTestimoni(1);
+    }else{
+      geserTestimoni(-1);
+    }
+
+  }
+
+});
+
+testiBox.addEventListener("mouseleave", ()=>{
+  mouseDown = false;
 });
 
 
@@ -2079,10 +2098,14 @@ align-items:center;
 justify-content:center;
 
 overflow:hidden;
+
+touch-action: pan-y;
+user-select:none;
+-webkit-user-select:none;
 ">
 
   <!-- TOMBOL KIRI -->
-  <button onclick="geserTestimoni(-1)" style="
+  <button type="button" onclick="event.stopPropagation();geserTestimoni(-1)">
   position:absolute;
   left:16px;
   top:50%;
@@ -2114,7 +2137,7 @@ box-shadow:0 0 12px rgba(250,204,21,.35);
   ">
 
   <!-- TOMBOL KANAN -->
-  <button onclick="geserTestimoni(1)" style="
+  <button type="button" onclick="event.stopPropagation();geserTestimoni(1)">
   position:absolute;
   right:16px;
   top:50%;
