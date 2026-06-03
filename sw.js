@@ -1,5 +1,5 @@
-const CACHE_STATIC = "fendy-static-v3.0";
-const CACHE_DYNAMIC = "fendy-dynamic-v3.0";
+const CACHE_STATIC = "fendy-static-v3.1";
+const CACHE_DYNAMIC = "fendy-dynamic-v3.1";
 
 const STATIC_FILES = [
   "/",
@@ -12,21 +12,20 @@ const STATIC_FILES = [
   "/produk.csv",
   
   // 🔴 TAMBAHAN IKLAN
-  "/iklan1.jpg",
-  "/iklan2.jpg",
-  "/iklan3.jpg",
-  "/iklan4.jpg",
-  "/iklan5.jpg",
-  "/iklan6.jpg",
-  "/iklan7.jpg",
-  "/iklan8.jpg",
-  "/iklan9.jpg",
-  "/iklan10.jpg",
-  "/iklan11.jpg",
-  "/iklan12.jpg",
-  "/iklan13.jpg",
-  "/iklan14.jpg",
-  "/iklan15.jpg",
+  "/iklan/iklan1.jpg",
+  "/iklan/iklan2.jpg",
+  "/iklan/iklan3.jpg",
+  "/iklan/iklan4.jpg",
+  "/iklan/iklan5.jpg",
+  "/iklan/iklan6.jpg",
+  "/iklan/iklan7.jpg",
+  "/iklan/iklan8.jpg",
+  "/iklan/iklan9.jpg",
+  "/iklan/iklan10.jpg",
+  "/iklan/iklan11.jpg",
+  "/iklan/iklan12.jpg",
+  "/iklan/iklan13.jpg",
+  "/iklan/iklan14.jpg"
 ];
 
 // ================= INSTALL =================

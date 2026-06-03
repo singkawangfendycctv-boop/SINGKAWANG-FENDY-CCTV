@@ -1569,10 +1569,6 @@ document.addEventListener("click", function(e){
 }, true);
 
 
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js');
-}
-
 // 🔴 MATIKAN DI iPHONE
 const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
 
