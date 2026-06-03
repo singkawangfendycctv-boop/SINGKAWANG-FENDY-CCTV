@@ -1953,6 +1953,8 @@ function tampilIklan(ids){
 
 /* ================= TESTIMONI ================= */
 
+/* ================= TESTIMONI ================= */
+
 const daftarTestimoni = [];
 
 for(let i = 1; i <= 64; i++){
@@ -2105,7 +2107,7 @@ user-select:none;
 ">
 
   <!-- TOMBOL KIRI -->
-  <button type="button" onclick="event.stopPropagation();geserTestimoni(-1)">
+  <button onclick="geserTestimoni(-1)" style="
   position:absolute;
   left:16px;
   top:50%;
@@ -2137,7 +2139,7 @@ box-shadow:0 0 12px rgba(250,204,21,.35);
   ">
 
   <!-- TOMBOL KANAN -->
-  <button type="button" onclick="event.stopPropagation();geserTestimoni(1)">
+  <button onclick="geserTestimoni(1)" style="
   position:absolute;
   right:16px;
   top:50%;
