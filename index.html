@@ -593,13 +593,6 @@ footer{
   }
 }
 
-#testimoniBox button{
-  touch-action: manipulation;
-  user-select:none;
-  -webkit-user-select:none;
-  -webkit-tap-highlight-color:transparent;
-}
-
 </style>
 </head>
 
@@ -1991,25 +1984,11 @@ function tutupTestimoni(){
 
 function tampilTestimoni(){
 
-  const img = document.getElementById("testimoniImg");
-
-  img.src = daftarTestimoni[indexTestimoni];
-
-  const next =
-    daftarTestimoni[
-      (indexTestimoni + 1) % daftarTestimoni.length
-    ];
-
-  new Image().src = next;
+  document.getElementById("testimoniImg").src =
+    daftarTestimoni[indexTestimoni];
 }
 
-let isChangingTesti = false;
-
 function geserTestimoni(arah){
-
-  if(isChangingTesti) return;
-
-  isChangingTesti = true;
 
   indexTestimoni += arah;
 
@@ -2022,44 +2001,31 @@ function geserTestimoni(arah){
   }
 
   tampilTestimoni();
-
-  setTimeout(()=>{
-    isChangingTesti = false;
-  },200);
 }
 
 /* 🔴 SWIPE HP */
 let startXTestimoni = 0;
-let startYTestimoni = 0;
 
-const testiImg = document.getElementById("testimoniImg");
+const testiBox = document.getElementById("testimoniBox");
 
-testiImg.addEventListener("touchstart",(e)=>{
+testiBox.addEventListener("touchstart", e=>{
 
   startXTestimoni = e.touches[0].clientX;
-  startYTestimoni = e.touches[0].clientY;
+});
 
-},{passive:true});
-
-testiImg.addEventListener("touchend",(e)=>{
+testiBox.addEventListener("touchend", e=>{
 
   const endX = e.changedTouches[0].clientX;
-  const endY = e.changedTouches[0].clientY;
 
-  const diffX = endX - startXTestimoni;
-  const diffY = endY - startYTestimoni;
-
-  if(Math.abs(diffX) > 50 && Math.abs(diffX) > Math.abs(diffY)){
-
-    if(diffX < 0){
-      geserTestimoni(1);
-    }else{
-      geserTestimoni(-1);
-    }
-
+  if(startXTestimoni - endX > 50){
+    geserTestimoni(1);
   }
 
-},{passive:true});
+  else if(endX - startXTestimoni > 50){
+    geserTestimoni(-1);
+  }
+
+});
 
 
 </script>
@@ -2105,11 +2071,10 @@ box-shadow:0 0 12px rgba(250,204,21,.35);
 
   <!-- GAMBAR -->
   <img id="testimoniImg" src="" style="
-max-width:100%;
-max-height:100%;
-object-fit:contain;
-transition:.25s ease;
-">
+  max-width:100%;
+  max-height:100%;
+  object-fit:contain;
+  ">
 
   <!-- TOMBOL KANAN -->
   <button onclick="geserTestimoni(1)" style="
