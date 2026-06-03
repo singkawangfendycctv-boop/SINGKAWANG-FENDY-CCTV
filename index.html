@@ -593,6 +593,16 @@ footer{
   }
 }
 
+#testimoniBox{
+  touch-action: pan-y;
+}
+
+#testimoniImg{
+  touch-action: pan-y;
+  user-select:none;
+  -webkit-user-drag:none;
+}
+
 </style>
 </head>
 
@@ -1984,11 +1994,25 @@ function tutupTestimoni(){
 
 function tampilTestimoni(){
 
-  document.getElementById("testimoniImg").src =
-    daftarTestimoni[indexTestimoni];
+  const img = document.getElementById("testimoniImg");
+
+  img.src = daftarTestimoni[indexTestimoni];
+
+  const next = new Image();
+
+  next.src =
+    daftarTestimoni[
+      (indexTestimoni + 1) % daftarTestimoni.length
+    ];
 }
 
+let geserLock = false;
+
 function geserTestimoni(arah){
+
+  if(geserLock) return;
+
+  geserLock = true;
 
   indexTestimoni += arah;
 
@@ -2001,27 +2025,40 @@ function geserTestimoni(arah){
   }
 
   tampilTestimoni();
+
+  setTimeout(()=>{
+    geserLock = false;
+  },150);
 }
 
 /* 🔴 SWIPE HP */
 let startXTestimoni = 0;
+let endXTestimoni = 0;
 
 const testiBox = document.getElementById("testimoniBox");
 
 testiBox.addEventListener("touchstart", e=>{
 
   startXTestimoni = e.touches[0].clientX;
-});
+  endXTestimoni = startXTestimoni;
 
-testiBox.addEventListener("touchend", e=>{
+},{passive:true});
 
-  const endX = e.changedTouches[0].clientX;
+testiBox.addEventListener("touchmove", e=>{
 
-  if(startXTestimoni - endX > 50){
+  endXTestimoni = e.touches[0].clientX;
+
+},{passive:true});
+
+testiBox.addEventListener("touchend", ()=>{
+
+  const diff = startXTestimoni - endXTestimoni;
+
+  if(Math.abs(diff) < 40) return;
+
+  if(diff > 0){
     geserTestimoni(1);
-  }
-
-  else if(endX - startXTestimoni > 50){
+  }else{
     geserTestimoni(-1);
   }
 
