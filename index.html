@@ -593,6 +593,13 @@ footer{
   }
 }
 
+#testimoniBox button{
+  touch-action: manipulation;
+  user-select:none;
+  -webkit-user-select:none;
+  -webkit-tap-highlight-color:transparent;
+}
+
 </style>
 </head>
 
@@ -1953,18 +1960,19 @@ function tampilIklan(ids){
 
 /* ================= TESTIMONI ================= */
 
-/* ================= TESTIMONI ================= */
-
 const daftarTestimoni = [];
 
 for(let i = 1; i <= 64; i++){
+
   daftarTestimoni.push(`T${i}.jpg`);
+
 }
 
 let indexTestimoni = 0;
 
 function bukaTestimoni(){
 
+  // 🔴 tambah history khusus testimoni
   history.pushState({
     testimoni:true
   }, "", "#testimoni");
@@ -1977,20 +1985,31 @@ function bukaTestimoni(){
 }
 
 function tutupTestimoni(){
+
   document.getElementById("testimoniBox").style.display = "none";
 }
 
 function tampilTestimoni(){
 
-  scale = 1;
-
   const img = document.getElementById("testimoniImg");
 
-  img.style.transform = "scale(1)";
   img.src = daftarTestimoni[indexTestimoni];
+
+  const next =
+    daftarTestimoni[
+      (indexTestimoni + 1) % daftarTestimoni.length
+    ];
+
+  new Image().src = next;
 }
 
+let isChangingTesti = false;
+
 function geserTestimoni(arah){
+
+  if(isChangingTesti) return;
+
+  isChangingTesti = true;
 
   indexTestimoni += arah;
 
@@ -2003,35 +2022,26 @@ function geserTestimoni(arah){
   }
 
   tampilTestimoni();
+
+  setTimeout(()=>{
+    isChangingTesti = false;
+  },200);
 }
 
-/* ================= SWIPE TESTIMONI ================= */
-
-const testiBox = document.getElementById("testimoniBox");
-
+/* 🔴 SWIPE HP */
 let startXTestimoni = 0;
 let startYTestimoni = 0;
-let isDraggingTestimoni = false;
 
-testiBox.addEventListener("touchstart", e=>{
+const testiImg = document.getElementById("testimoniImg");
+
+testiImg.addEventListener("touchstart",(e)=>{
 
   startXTestimoni = e.touches[0].clientX;
   startYTestimoni = e.touches[0].clientY;
-  isDraggingTestimoni = true;
 
 },{passive:true});
 
-testiBox.addEventListener("touchmove", e=>{
-
-  if(!isDraggingTestimoni) return;
-
-},{passive:true});
-
-testiBox.addEventListener("touchend", e=>{
-
-  if(!isDraggingTestimoni) return;
-
-  isDraggingTestimoni = false;
+testiImg.addEventListener("touchend",(e)=>{
 
   const endX = e.changedTouches[0].clientX;
   const endY = e.changedTouches[0].clientY;
@@ -2039,10 +2049,7 @@ testiBox.addEventListener("touchend", e=>{
   const diffX = endX - startXTestimoni;
   const diffY = endY - startYTestimoni;
 
-  if(
-    Math.abs(diffX) > 50 &&
-    Math.abs(diffX) > Math.abs(diffY)
-  ){
+  if(Math.abs(diffX) > 50 && Math.abs(diffX) > Math.abs(diffY)){
 
     if(diffX < 0){
       geserTestimoni(1);
@@ -2054,87 +2061,6 @@ testiBox.addEventListener("touchend", e=>{
 
 },{passive:true});
 
-/* ================= DRAG MOUSE PC ================= */
-
-let mouseStartX = 0;
-let mouseDown = false;
-
-testiBox.addEventListener("mousedown", e=>{
-  mouseDown = true;
-  mouseStartX = e.clientX;
-});
-
-testiBox.addEventListener("mouseup", e=>{
-
-  if(!mouseDown) return;
-
-  mouseDown = false;
-
-  const diffX = e.clientX - mouseStartX;
-
-  if(Math.abs(diffX) > 80){
-
-    if(diffX < 0){
-      geserTestimoni(1);
-    }else{
-      geserTestimoni(-1);
-    }
-
-  }
-
-});
-
-testiBox.addEventListener("mouseleave", ()=>{
-  mouseDown = false;
-});
-
-/* ================= ZOOM TESTIMONI ================= */
-
-let scale = 1;
-let startDistance = 0;
-
-function getDistance(touches){
-  const dx = touches[0].clientX - touches[1].clientX;
-  const dy = touches[0].clientY - touches[1].clientY;
-  return Math.sqrt(dx*dx + dy*dy);
-}
-
-const imgTesti = document.getElementById("testimoniImg");
-
-imgTesti.addEventListener("touchstart",(e)=>{
-
-  if(e.touches.length === 2){
-    startDistance = getDistance(e.touches);
-  }
-
-},{passive:false});
-
-imgTesti.addEventListener("touchmove",(e)=>{
-
-  if(e.touches.length === 2){
-
-    e.preventDefault();
-
-    const newDistance = getDistance(e.touches);
-
-    scale *= newDistance / startDistance;
-
-    if(scale < 1) scale = 1;
-    if(scale > 4) scale = 4;
-
-    imgTesti.style.transform = `scale(${scale})`;
-
-    startDistance = newDistance;
-  }
-
-},{passive:false});
-
-imgTesti.addEventListener("dblclick",()=>{
-
-  scale = 1;
-
-  imgTesti.style.transform = "scale(1)";
-});
 
 </script>
 <!-- ================= TESTIMONI ================= -->
@@ -2150,10 +2076,6 @@ align-items:center;
 justify-content:center;
 
 overflow:hidden;
-
-touch-action: pan-y;
-user-select:none;
--webkit-user-select:none;
 ">
 
   <!-- TOMBOL KIRI -->
@@ -2182,30 +2104,12 @@ box-shadow:0 0 12px rgba(250,204,21,.35);
   </button>
 
   <!-- GAMBAR -->
-  <div id="testimoniScroll" style="
-width:100%;
-height:100%;
-overflow-x:auto;
-overflow-y:hidden;
-display:flex;
-align-items:center;
-justify-content:center;
--webkit-overflow-scrolling:touch;
-">
-
   <img id="testimoniImg" src="" style="
-  max-width:none;
-  max-height:95%;
-  object-fit:contain;
-  ">
-
-</div>
-
-#testimoniImg{
-  transform-origin:center center;
-  touch-action:none;
-  cursor:grab;
-}
+max-width:100%;
+max-height:100%;
+object-fit:contain;
+transition:.25s ease;
+">
 
   <!-- TOMBOL KANAN -->
   <button onclick="geserTestimoni(1)" style="
