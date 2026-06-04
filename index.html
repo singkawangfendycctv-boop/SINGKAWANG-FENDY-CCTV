@@ -560,12 +560,16 @@ footer{
     opacity .18s ease,
     transform .18s ease;
 
-  will-change: transform, opacity;
+  will-change:
+    transform,
+    opacity;
 
   user-select:none;
   -webkit-user-drag:none;
 
-  touch-action:pan-y;
+  cursor:grab;
+
+  touch-action:none;
 }
 
 
@@ -2083,58 +2087,73 @@ function geserTestimoni(arah){
   },220);
 }
 
-/* ================= SWIPE HP ================= */
+/* ================= SWIPE TESTIMONI ================= */
 
 const testiBox =
   document.getElementById("testimoniBox");
 
-let startXTestimoni = 0;
-let startYTestimoni = 0;
-let geserAktif = false;
+const testiImg =
+  document.getElementById("testimoniImg");
 
-testiBox.addEventListener("touchstart", e=>{
+let startXTestimoni = 0;
+let currentXTestimoni = 0;
+let draggingTestimoni = false;
+
+/* 🔴 TOUCH START */
+testiImg.addEventListener("touchstart", e=>{
 
   startXTestimoni = e.touches[0].clientX;
-  startYTestimoni = e.touches[0].clientY;
 
-  geserAktif = true;
+  draggingTestimoni = true;
 
 },{ passive:true });
 
-testiBox.addEventListener("touchmove", e=>{
+/* 🔴 TOUCH MOVE */
+testiImg.addEventListener("touchmove", e=>{
 
-  if(!geserAktif) return;
+  if(!draggingTestimoni) return;
 
-  const moveX =
-    e.touches[0].clientX - startXTestimoni;
+  currentXTestimoni =
+    e.touches[0].clientX;
 
-  const moveY =
-    e.touches[0].clientY - startYTestimoni;
+  const diff =
+    currentXTestimoni - startXTestimoni;
 
-  /* 🔴 hanya horizontal */
-  if(Math.abs(moveX) > Math.abs(moveY)){
-    e.preventDefault();
-  }
+  /* 🔴 efek geser realtime */
+  testiImg.style.transition = "none";
 
-},{ passive:false });
+  testiImg.style.transform =
+    `translateX(${diff * 0.35}px)`;
 
-testiBox.addEventListener("touchend", e=>{
+},{ passive:true });
 
-  if(!geserAktif) return;
+/* 🔴 TOUCH END */
+testiImg.addEventListener("touchend", e=>{
+
+  if(!draggingTestimoni) return;
+
+  draggingTestimoni = false;
 
   const endX =
     e.changedTouches[0].clientX;
 
-  const diff = startXTestimoni - endX;
+  const diff =
+    endX - startXTestimoni;
 
-  if(diff > 50){
+  testiImg.style.transition =
+    "transform .18s ease, opacity .18s ease";
+
+  testiImg.style.transform =
+    "translateX(0)";
+
+  if(diff < -60){
+
     geserTestimoni(1);
-  }
-  else if(diff < -50){
+
+  }else if(diff > 60){
+
     geserTestimoni(-1);
   }
-
-  geserAktif = false;
 
 });
 
@@ -2143,35 +2162,58 @@ testiBox.addEventListener("touchend", e=>{
 let mouseDown = false;
 let mouseStart = 0;
 
-testiBox.addEventListener("mousedown", e=>{
+/* 🔴 MOUSE DOWN */
+testiImg.addEventListener("mousedown", e=>{
 
   mouseDown = true;
   mouseStart = e.clientX;
 
+  testiImg.style.cursor = "grabbing";
 });
 
+/* 🔴 MOUSE MOVE */
+window.addEventListener("mousemove", e=>{
+
+  if(!mouseDown) return;
+
+  const diff =
+    e.clientX - mouseStart;
+
+  testiImg.style.transition = "none";
+
+  testiImg.style.transform =
+    `translateX(${diff * 0.35}px)`;
+
+});
+
+/* 🔴 MOUSE UP */
 window.addEventListener("mouseup", e=>{
 
   if(!mouseDown) return;
 
-  const diff = mouseStart - e.clientX;
-
-  if(diff > 50){
-    geserTestimoni(1);
-  }
-  else if(diff < -50){
-    geserTestimoni(-1);
-  }
+  const diff =
+    e.clientX - mouseStart;
 
   mouseDown = false;
 
-});
+  testiImg.style.cursor = "grab";
 
-/* 🔴 PRELOAD AWAL */
-daftarTestimoni.forEach(src=>{
-  preloadImg(src);
-});
+  testiImg.style.transition =
+    "transform .18s ease, opacity .18s ease";
 
+  testiImg.style.transform =
+    "translateX(0)";
+
+  if(diff < -60){
+
+    geserTestimoni(1);
+
+  }else if(diff > 60){
+
+    geserTestimoni(-1);
+  }
+
+});
 
 
 </script>
