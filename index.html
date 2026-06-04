@@ -551,6 +551,24 @@ footer{
   background:#facc15;
 }
 
+#testimoniImg{
+  max-width:100%;
+  max-height:100%;
+  object-fit:contain;
+
+  transition:
+    opacity .18s ease,
+    transform .18s ease;
+
+  will-change: transform, opacity;
+
+  user-select:none;
+  -webkit-user-drag:none;
+
+  touch-action:pan-y;
+}
+
+
 /* 🔴 TESTIMONI DESKTOP */
 @media(min-width:1024px){
 
@@ -591,35 +609,6 @@ footer{
     opacity:.75;
     transform:scale(1.05);
   }
-}
-
-/* 🔴 TESTIMONI IMAGE SMOOTH */
-#testimoniImg{
-  max-width:100%;
-  max-height:100%;
-  object-fit:contain;
-
-  transition:
-    opacity .18s ease,
-    transform .18s ease;
-
-  will-change: transform, opacity;
-
-  user-select:none;
-  -webkit-user-drag:none;
-
-  touch-action:pan-y;
-}
-
-/* efek geser */
-#testimoniImg.geser-kiri{
-  opacity:.25;
-  transform:translateX(-40px);
-}
-
-#testimoniImg.geser-kanan{
-  opacity:.25;
-  transform:translateX(40px);
 }
 
 </style>
@@ -1976,7 +1965,7 @@ function tampilIklan(ids){
   window.scrollTo({top:0});
 }
 
-/* ================= TESTIMONI ================= */
+/* ================= TESTIMONI SUPER SMOOTH ================= */
 
 const daftarTestimoni = [];
 
@@ -1985,17 +1974,33 @@ for(let i = 1; i <= 64; i++){
 }
 
 let indexTestimoni = 0;
+let sedangGeserTesti = false;
 
-const testimoniImg = document.getElementById("testimoniImg");
+const preloadTestimoni = {};
 
-/* 🔴 PRELOAD SEMUA GAMBAR */
-const preloadTestimoni = [];
+/* 🔴 PRELOAD */
+function preloadImg(src){
+  if(preloadTestimoni[src]) return;
 
-daftarTestimoni.forEach(src=>{
   const img = new Image();
   img.src = src;
-  preloadTestimoni.push(img);
-});
+
+  preloadTestimoni[src] = true;
+}
+
+/* 🔴 PRELOAD NEXT + PREV */
+function preloadSekitar(){
+
+  const next =
+    (indexTestimoni + 1) % daftarTestimoni.length;
+
+  const prev =
+    (indexTestimoni - 1 + daftarTestimoni.length)
+    % daftarTestimoni.length;
+
+  preloadImg(daftarTestimoni[next]);
+  preloadImg(daftarTestimoni[prev]);
+}
 
 /* 🔴 BUKA */
 function bukaTestimoni(){
@@ -2006,126 +2011,167 @@ function bukaTestimoni(){
 
   indexTestimoni = 0;
 
-  document.getElementById("testimoniBox").style.display = "flex";
+  const box = document.getElementById("testimoniBox");
+
+  box.style.display = "flex";
 
   tampilTestimoni(false);
+
+  preloadSekitar();
 }
 
 /* 🔴 TUTUP */
 function tutupTestimoni(){
-  document.getElementById("testimoniBox").style.display = "none";
+
+  document.getElementById("testimoniBox").style.display =
+    "none";
 }
 
 /* 🔴 TAMPIL */
-function tampilTestimoni(animasi = true, arah = 1){
+function tampilTestimoni(animasi = true){
+
+  const img =
+    document.getElementById("testimoniImg");
 
   if(animasi){
 
-    testimoniImg.classList.remove(
-      "geser-kiri",
-      "geser-kanan"
-    );
+    img.style.opacity = "0";
+    img.style.transform = "scale(.985)";
 
-    void testimoniImg.offsetWidth;
+    setTimeout(()=>{
 
-    testimoniImg.classList.add(
-      arah > 0
-      ? "geser-kanan"
-      : "geser-kiri"
-    );
+      img.src = daftarTestimoni[indexTestimoni];
+
+      requestAnimationFrame(()=>{
+
+        img.style.opacity = "1";
+        img.style.transform = "scale(1)";
+      });
+
+    },120);
+
+  }else{
+
+    img.src = daftarTestimoni[indexTestimoni];
   }
 
-  const nextSrc = daftarTestimoni[indexTestimoni];
-
-  const img = new Image();
-
-  img.src = nextSrc;
-
-  img.onload = ()=>{
-
-    testimoniImg.src = nextSrc;
-
-    requestAnimationFrame(()=>{
-      testimoniImg.classList.remove(
-        "geser-kiri",
-        "geser-kanan"
-      );
-    });
-
-  };
+  preloadSekitar();
 }
 
 /* 🔴 GESER */
 function geserTestimoni(arah){
 
+  if(sedangGeserTesti) return;
+
+  sedangGeserTesti = true;
+
   indexTestimoni += arah;
 
   if(indexTestimoni < 0){
-    indexTestimoni = daftarTestimoni.length - 1;
+    indexTestimoni =
+      daftarTestimoni.length - 1;
   }
 
   if(indexTestimoni >= daftarTestimoni.length){
     indexTestimoni = 0;
   }
 
-  tampilTestimoni(true, arah);
+  tampilTestimoni(true);
+
+  setTimeout(()=>{
+    sedangGeserTesti = false;
+  },220);
 }
 
-/* ================================================= */
-/* 🔴 SWIPE GALERI HP SUPER SMOOTH */
-/* ================================================= */
+/* ================= SWIPE HP ================= */
 
-const testiBox = document.getElementById("testimoniBox");
+const testiBox =
+  document.getElementById("testimoniBox");
 
 let startXTestimoni = 0;
-let currentXTestimoni = 0;
-let isDraggingTestimoni = false;
+let startYTestimoni = 0;
+let geserAktif = false;
 
 testiBox.addEventListener("touchstart", e=>{
 
   startXTestimoni = e.touches[0].clientX;
-  currentXTestimoni = startXTestimoni;
+  startYTestimoni = e.touches[0].clientY;
 
-  isDraggingTestimoni = true;
+  geserAktif = true;
 
-}, { passive:true });
+},{ passive:true });
 
 testiBox.addEventListener("touchmove", e=>{
 
-  if(!isDraggingTestimoni) return;
+  if(!geserAktif) return;
 
-  currentXTestimoni = e.touches[0].clientX;
+  const moveX =
+    e.touches[0].clientX - startXTestimoni;
 
-  const diff = currentXTestimoni - startXTestimoni;
+  const moveY =
+    e.touches[0].clientY - startYTestimoni;
 
-  testimoniImg.style.transition = "none";
+  /* 🔴 hanya horizontal */
+  if(Math.abs(moveX) > Math.abs(moveY)){
+    e.preventDefault();
+  }
 
-  testimoniImg.style.transform =
-    `translateX(${diff * 0.35}px)`;
+},{ passive:false });
 
-}, { passive:true });
+testiBox.addEventListener("touchend", e=>{
 
-testiBox.addEventListener("touchend", ()=>{
+  if(!geserAktif) return;
 
-  if(!isDraggingTestimoni) return;
+  const endX =
+    e.changedTouches[0].clientX;
 
-  isDraggingTestimoni = false;
+  const diff = startXTestimoni - endX;
 
-  const diff = currentXTestimoni - startXTestimoni;
-
-  testimoniImg.style.transition =
-    "transform .18s ease";
-
-  testimoniImg.style.transform = "";
-
-  if(diff < -60){
+  if(diff > 50){
     geserTestimoni(1);
   }
-  else if(diff > 60){
+  else if(diff < -50){
     geserTestimoni(-1);
   }
 
+  geserAktif = false;
+
 });
+
+/* ================= DRAG DESKTOP ================= */
+
+let mouseDown = false;
+let mouseStart = 0;
+
+testiBox.addEventListener("mousedown", e=>{
+
+  mouseDown = true;
+  mouseStart = e.clientX;
+
+});
+
+window.addEventListener("mouseup", e=>{
+
+  if(!mouseDown) return;
+
+  const diff = mouseStart - e.clientX;
+
+  if(diff > 50){
+    geserTestimoni(1);
+  }
+  else if(diff < -50){
+    geserTestimoni(-1);
+  }
+
+  mouseDown = false;
+
+});
+
+/* 🔴 PRELOAD AWAL */
+daftarTestimoni.forEach(src=>{
+  preloadImg(src);
+});
+
 
 
 </script>
