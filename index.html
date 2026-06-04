@@ -593,6 +593,35 @@ footer{
   }
 }
 
+/* 🔴 TESTIMONI IMAGE SMOOTH */
+#testimoniImg{
+  max-width:100%;
+  max-height:100%;
+  object-fit:contain;
+
+  transition:
+    opacity .18s ease,
+    transform .18s ease;
+
+  will-change: transform, opacity;
+
+  user-select:none;
+  -webkit-user-drag:none;
+
+  touch-action:pan-y;
+}
+
+/* efek geser */
+#testimoniImg.geser-kiri{
+  opacity:.25;
+  transform:translateX(-40px);
+}
+
+#testimoniImg.geser-kanan{
+  opacity:.25;
+  transform:translateX(40px);
+}
+
 </style>
 </head>
 
@@ -1952,16 +1981,25 @@ function tampilIklan(ids){
 const daftarTestimoni = [];
 
 for(let i = 1; i <= 64; i++){
-
   daftarTestimoni.push(`testimoni/T${i}.jpg`);
-
 }
 
 let indexTestimoni = 0;
 
+const testimoniImg = document.getElementById("testimoniImg");
+
+/* 🔴 PRELOAD SEMUA GAMBAR */
+const preloadTestimoni = [];
+
+daftarTestimoni.forEach(src=>{
+  const img = new Image();
+  img.src = src;
+  preloadTestimoni.push(img);
+});
+
+/* 🔴 BUKA */
 function bukaTestimoni(){
 
-  // 🔴 tambah history khusus testimoni
   history.pushState({
     testimoni:true
   }, "", "#testimoni");
@@ -1970,20 +2008,54 @@ function bukaTestimoni(){
 
   document.getElementById("testimoniBox").style.display = "flex";
 
-  tampilTestimoni();
+  tampilTestimoni(false);
 }
 
+/* 🔴 TUTUP */
 function tutupTestimoni(){
-
   document.getElementById("testimoniBox").style.display = "none";
 }
 
-function tampilTestimoni(){
+/* 🔴 TAMPIL */
+function tampilTestimoni(animasi = true, arah = 1){
 
-  document.getElementById("testimoniImg").src =
-    daftarTestimoni[indexTestimoni];
+  if(animasi){
+
+    testimoniImg.classList.remove(
+      "geser-kiri",
+      "geser-kanan"
+    );
+
+    void testimoniImg.offsetWidth;
+
+    testimoniImg.classList.add(
+      arah > 0
+      ? "geser-kanan"
+      : "geser-kiri"
+    );
+  }
+
+  const nextSrc = daftarTestimoni[indexTestimoni];
+
+  const img = new Image();
+
+  img.src = nextSrc;
+
+  img.onload = ()=>{
+
+    testimoniImg.src = nextSrc;
+
+    requestAnimationFrame(()=>{
+      testimoniImg.classList.remove(
+        "geser-kiri",
+        "geser-kanan"
+      );
+    });
+
+  };
 }
 
+/* 🔴 GESER */
 function geserTestimoni(arah){
 
   indexTestimoni += arah;
@@ -1996,28 +2068,60 @@ function geserTestimoni(arah){
     indexTestimoni = 0;
   }
 
-  tampilTestimoni();
+  tampilTestimoni(true, arah);
 }
 
-/* 🔴 SWIPE HP */
-let startXTestimoni = 0;
+/* ================================================= */
+/* 🔴 SWIPE GALERI HP SUPER SMOOTH */
+/* ================================================= */
 
 const testiBox = document.getElementById("testimoniBox");
+
+let startXTestimoni = 0;
+let currentXTestimoni = 0;
+let isDraggingTestimoni = false;
 
 testiBox.addEventListener("touchstart", e=>{
 
   startXTestimoni = e.touches[0].clientX;
-});
+  currentXTestimoni = startXTestimoni;
 
-testiBox.addEventListener("touchend", e=>{
+  isDraggingTestimoni = true;
 
-  const endX = e.changedTouches[0].clientX;
+}, { passive:true });
 
-  if(startXTestimoni - endX > 50){
+testiBox.addEventListener("touchmove", e=>{
+
+  if(!isDraggingTestimoni) return;
+
+  currentXTestimoni = e.touches[0].clientX;
+
+  const diff = currentXTestimoni - startXTestimoni;
+
+  testimoniImg.style.transition = "none";
+
+  testimoniImg.style.transform =
+    `translateX(${diff * 0.35}px)`;
+
+}, { passive:true });
+
+testiBox.addEventListener("touchend", ()=>{
+
+  if(!isDraggingTestimoni) return;
+
+  isDraggingTestimoni = false;
+
+  const diff = currentXTestimoni - startXTestimoni;
+
+  testimoniImg.style.transition =
+    "transform .18s ease";
+
+  testimoniImg.style.transform = "";
+
+  if(diff < -60){
     geserTestimoni(1);
   }
-
-  else if(endX - startXTestimoni > 50){
+  else if(diff > 60){
     geserTestimoni(-1);
   }
 
