@@ -551,6 +551,43 @@ footer{
   background:#facc15;
 }
 
+/* 🔴 TESTIMONI SMOOTH */
+#testimoniImg{
+  max-width:100%;
+  max-height:100%;
+  object-fit:contain;
+
+  opacity:1;
+  transform:translateX(0) scale(1);
+
+  transition:
+    transform .22s ease,
+    opacity .22s ease;
+
+  will-change:transform, opacity;
+
+  user-select:none;
+  -webkit-user-drag:none;
+
+  touch-action:pan-y;
+}
+
+/* 🔴 efek saat geser */
+#testimoniImg.geser-kiri{
+  opacity:.15;
+  transform:translateX(-40px) scale(.98);
+}
+
+#testimoniImg.geser-kanan{
+  opacity:.15;
+  transform:translateX(40px) scale(.98);
+}
+
+#testimoniImg.aktif{
+  opacity:1;
+  transform:translateX(0) scale(1);
+}
+
 /* 🔴 TESTIMONI DESKTOP */
 @media(min-width:1024px){
 
@@ -1952,76 +1989,160 @@ function tampilIklan(ids){
 const daftarTestimoni = [];
 
 for(let i = 1; i <= 66; i++){
-
   daftarTestimoni.push(`testimoni/T${i}.jpg`);
-
 }
 
 let indexTestimoni = 0;
+let sedangGeserTesti = false;
 
+const testiCache = [];
+
+/* 🔴 PRELOAD SEMUA TESTIMONI */
+daftarTestimoni.forEach(src=>{
+  const img = new Image();
+  img.src = src;
+  testiCache.push(img);
+});
+
+/* 🔴 BUKA */
 function bukaTestimoni(){
 
-  // 🔴 tambah history khusus testimoni
   history.pushState({
     testimoni:true
   }, "", "#testimoni");
 
   indexTestimoni = 0;
 
-  document.getElementById("testimoniBox").style.display = "flex";
+  const box = document.getElementById("testimoniBox");
 
-  tampilTestimoni();
+  box.style.display = "flex";
+
+  tampilTestimoni(true);
 }
 
+/* 🔴 TUTUP */
 function tutupTestimoni(){
-
   document.getElementById("testimoniBox").style.display = "none";
 }
 
-function tampilTestimoni(){
+/* 🔴 TAMPIL */
+function tampilTestimoni(first = false){
 
-  document.getElementById("testimoniImg").src =
-    daftarTestimoni[indexTestimoni];
+  const img = document.getElementById("testimoniImg");
+
+  if(first){
+    img.src = daftarTestimoni[indexTestimoni];
+    return;
+  }
+
+  img.classList.remove(
+    "geser-kiri",
+    "geser-kanan",
+    "aktif"
+  );
+
+  void img.offsetWidth;
+
+  img.src = daftarTestimoni[indexTestimoni];
+
+  img.classList.add("aktif");
 }
 
+/* 🔴 GESER */
 function geserTestimoni(arah){
 
-  indexTestimoni += arah;
+  if(sedangGeserTesti) return;
 
-  if(indexTestimoni < 0){
-    indexTestimoni = daftarTestimoni.length - 1;
+  sedangGeserTesti = true;
+
+  const img = document.getElementById("testimoniImg");
+
+  img.classList.remove(
+    "geser-kiri",
+    "geser-kanan",
+    "aktif"
+  );
+
+  if(arah === 1){
+    img.classList.add("geser-kiri");
+  }else{
+    img.classList.add("geser-kanan");
   }
 
-  if(indexTestimoni >= daftarTestimoni.length){
-    indexTestimoni = 0;
-  }
+  setTimeout(()=>{
 
-  tampilTestimoni();
+    indexTestimoni += arah;
+
+    if(indexTestimoni < 0){
+      indexTestimoni = daftarTestimoni.length - 1;
+    }
+
+    if(indexTestimoni >= daftarTestimoni.length){
+      indexTestimoni = 0;
+    }
+
+    img.src = daftarTestimoni[indexTestimoni];
+
+    img.classList.remove(
+      "geser-kiri",
+      "geser-kanan"
+    );
+
+    img.classList.add("aktif");
+
+  },120);
+
+  setTimeout(()=>{
+    sedangGeserTesti = false;
+  },260);
+}
+
+/* 🔴 PRELOAD SEKITAR FOTO */
+function preloadSekitar(){
+
+  const next =
+    (indexTestimoni + 1) % daftarTestimoni.length;
+
+  const prev =
+    (indexTestimoni - 1 + daftarTestimoni.length)
+    % daftarTestimoni.length;
+
+  new Image().src = daftarTestimoni[next];
+  new Image().src = daftarTestimoni[prev];
 }
 
 /* 🔴 SWIPE HP */
 let startXTestimoni = 0;
+let movingTestimoni = false;
 
-const testiBox = document.getElementById("testimoniBox");
+const testiBox =
+  document.getElementById("testimoniBox");
 
 testiBox.addEventListener("touchstart", e=>{
 
   startXTestimoni = e.touches[0].clientX;
-});
+  movingTestimoni = true;
+
+},{passive:true});
 
 testiBox.addEventListener("touchend", e=>{
 
+  if(!movingTestimoni) return;
+
   const endX = e.changedTouches[0].clientX;
 
-  if(startXTestimoni - endX > 50){
+  const jarak = startXTestimoni - endX;
+
+  if(jarak > 40){
     geserTestimoni(1);
   }
-
-  else if(endX - startXTestimoni > 50){
+  else if(jarak < -40){
     geserTestimoni(-1);
   }
 
-});
+  movingTestimoni = false;
+
+},{passive:true});
 
 
 </script>
