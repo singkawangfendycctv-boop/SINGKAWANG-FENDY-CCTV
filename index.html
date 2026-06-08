@@ -2001,13 +2001,6 @@ let sedangGeserTesti = false;
 
 const testiCache = [];
 
-/* 🔴 PRELOAD SEMUA TESTIMONI */
-daftarTestimoni.forEach(src=>{
-  const img = new Image();
-  img.src = src;
-  testiCache.push(img);
-});
-
 /* 🔴 BUKA */
 function bukaTestimoni(){
 
@@ -2022,6 +2015,8 @@ function bukaTestimoni(){
   box.style.display = "flex";
 
   tampilTestimoni(true);
+
+  preloadSekitar();
 }
 
 /* 🔴 TUTUP */
@@ -2086,6 +2081,8 @@ function geserTestimoni(arah){
     }
 
     img.src = daftarTestimoni[indexTestimoni];
+
+    preloadSekitar();
 
     img.classList.remove(
       "geser-kiri",
