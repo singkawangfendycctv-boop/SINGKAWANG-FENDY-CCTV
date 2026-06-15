@@ -1,5 +1,5 @@
-const CACHE_STATIC = "fendy-static-v3.3";
-const CACHE_DYNAMIC = "fendy-dynamic-v3.3";
+const CACHE_STATIC = "fendy-static-v3.6";
+const CACHE_DYNAMIC = "fendy-dynamic-v3.6";
 
 const STATIC_FILES = [
   "/",
@@ -25,8 +25,9 @@ const STATIC_FILES = [
   "/iklan/iklan11.jpg",
   "/iklan/iklan12.jpg",
   "/iklan/iklan13.jpg",
-  "/iklan/iklan14.jpg"
-  "/iklan/iklan15.jpg"
+  "/iklan/iklan14.jpg",
+  "/iklan/iklan15.jpg",
+  "/iklan/iklan16.jpg",
 ];
 
 // ================= INSTALL =================
