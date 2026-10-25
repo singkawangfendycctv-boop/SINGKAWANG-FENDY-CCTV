@@ -766,7 +766,7 @@ flex-wrap:wrap;
 <!-- PEMBERITAHUAN JAM OPERASIONAL OTOMATIS -->
 <div id="statusToko" role="status" aria-live="polite">
   <strong>🌙 Toko Sedang Tutup</strong>
-  <p>Anda tetap dapat melihat produk dan mengirim pesanan melalui WhatsApp. Pesanan akan diproses admin pada jam operasional berikutnya. Jam operasional setiap hari pukul 07.30–17.00 WIB. </p>
+  <p>Anda tetap dapat melihat produk dan mengirim pesanan melalui WhatsApp. Pesanan akan diproses admin pada jam operasional berikutnya. Jam operasional Senin–Sabtu pukul 07.30–17.00 WIB. Hari Minggu toko tutup seharian.</p>
 </div>
 
 
@@ -2281,7 +2281,7 @@ box-shadow:0 0 12px rgba(250,204,21,.35);
 </div>
 
 <script>
-/* JAM OPERASIONAL: setiap hari, 07.30-17.00 WIB (Asia/Jakarta) */
+/* JAM OPERASIONAL: Senin-Sabtu 07.30-17.00 WIB; Minggu tutup seharian */
 (function(){
   const banner = document.getElementById("statusToko");
   if (!banner) return;
@@ -2290,17 +2290,23 @@ box-shadow:0 0 12px rgba(250,204,21,.35);
     try {
       const parts = new Intl.DateTimeFormat("en-GB", {
         timeZone: "Asia/Jakarta",
+        weekday: "short",
         hour: "2-digit",
         minute: "2-digit",
         hourCycle: "h23"
       }).formatToParts(new Date());
+
+      const hari = parts.find(p => p.type === "weekday").value;
       const jam = Number(parts.find(p => p.type === "hour").value);
       const menit = Number(parts.find(p => p.type === "minute").value);
       const totalMenit = jam * 60 + menit;
-      const tokoBuka = totalMenit >= (7 * 60 + 30) && totalMenit < (17 * 60);
+      const hariMinggu = hari === "Sun";
+      const dalamJamBuka = totalMenit >= (7 * 60 + 30) && totalMenit < (17 * 60);
+      const tokoBuka = !hariMinggu && dalamJamBuka;
+
       banner.style.display = tokoBuka ? "none" : "block";
     } catch (e) {
-      // Jika waktu zona tidak dapat dibaca, jangan menghalangi pengunjung melihat toko.
+      // Jika zona waktu gagal dibaca, jangan menghalangi akses ke produk.
       banner.style.display = "none";
     }
   }
