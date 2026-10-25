@@ -630,6 +630,31 @@ footer{
   }
 }
 
+
+/* JAM OPERASIONAL TOKO: pemberitahuan saat di luar jam buka */
+#statusToko{
+  display:none;
+  max-width:1100px;
+  margin:14px auto 0;
+  padding:14px 18px;
+  border-radius:14px;
+  border:1px solid rgba(250,204,21,.55);
+  background:linear-gradient(135deg,rgba(120,53,15,.92),rgba(30,41,59,.96));
+  color:#fff7ed;
+  text-align:center;
+  box-shadow:0 8px 24px rgba(0,0,0,.22);
+}
+#statusToko strong{
+  display:block;
+  font-size:17px;
+  margin-bottom:5px;
+  color:#facc15;
+}
+#statusToko p{margin:0;font-size:14px;line-height:1.5}
+@media(max-width:600px){
+  #statusToko{margin:12px 12px 0;padding:12px}
+}
+
 </style>
 </head>
 
@@ -737,6 +762,13 @@ flex-wrap:wrap;
   </div>
 
 </header>
+
+<!-- PEMBERITAHUAN JAM OPERASIONAL OTOMATIS -->
+<div id="statusToko" role="status" aria-live="polite">
+  <strong>🌙 Toko Sedang Tutup</strong>
+  <p>Produk tetap bisa dilihat dan dimasukkan ke keranjang. Jam operasional setiap hari pukul 07.30–17.00 WIB. Silakan hubungi admin melalui WhatsApp; pesanan akan ditindaklanjuti saat jam operasional.</p>
+</div>
+
 
 <section class="hero">
   <!-- 🔴 TOMBOL TESTIMONI POJOK KANAN ATAS -->
@@ -2247,5 +2279,39 @@ box-shadow:0 0 12px rgba(250,204,21,.35);
   </button>
 
 </div>
+
+<script>
+/* JAM OPERASIONAL: setiap hari, 07.30-17.00 WIB (Asia/Jakarta) */
+(function(){
+  const banner = document.getElementById("statusToko");
+  if (!banner) return;
+
+  function perbaruiStatusToko(){
+    try {
+      const parts = new Intl.DateTimeFormat("en-GB", {
+        timeZone: "Asia/Jakarta",
+        hour: "2-digit",
+        minute: "2-digit",
+        hourCycle: "h23"
+      }).formatToParts(new Date());
+      const jam = Number(parts.find(p => p.type === "hour").value);
+      const menit = Number(parts.find(p => p.type === "minute").value);
+      const totalMenit = jam * 60 + menit;
+      const tokoBuka = totalMenit >= (7 * 60 + 30) && totalMenit < (17 * 60);
+      banner.style.display = tokoBuka ? "none" : "block";
+    } catch (e) {
+      // Jika waktu zona tidak dapat dibaca, jangan menghalangi pengunjung melihat toko.
+      banner.style.display = "none";
+    }
+  }
+
+  perbaruiStatusToko();
+  window.setInterval(perbaruiStatusToko, 30000);
+  document.addEventListener("visibilitychange", function(){
+    if (!document.hidden) perbaruiStatusToko();
+  });
+})();
+</script>
+
 </body>
 </html>
